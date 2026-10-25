@@ -248,12 +248,19 @@
   }
 
   /* ---------- pieces ---------- */
+  // a subtitle may be a title kept in its original language; tag it so the right font is used
+  function altLangAttr(text, w) {
+    var l = "";
+    if (/[\u3040-\u30ff]/.test(text)) l = "ja";
+    else if (/[\u4e00-\u9fff]/.test(text) && [w.title, w.subtitle].some(function (f) { return f && f.zh === text; })) l = "zh-CN";
+    return l && l !== HTML_LANG[LANG] ? ' lang="' + l + '"' : "";
+  }
   function tile(w, wide) {
     var alt = t(w.subtitle);
     var go = linkable(w), tag = go ? "a" : "div", href = go ? ' href="' + workHref(w) + '"' : "";
     if (w.category === "writing" || !w.cover) {
       return "<" + tag + ' class="tile tile--text rise' + (go ? "" : " tile--static") + '"' + href + '><div class="tile__body">' +
-        '<div><h3 class="tile__title">' + esc(t(w.title)) + "</h3>" + (alt ? '<p class="tile__alt">' + esc(alt) + "</p>" : "") + "</div>" +
+        '<div><h3 class="tile__title">' + esc(t(w.title)) + "</h3>" + (alt ? '<p class="tile__alt"' + altLangAttr(alt, w) + ">" + esc(alt) + "</p>" : "") + "</div>" +
         (t(w.summary) ? '<p class="tile__sum">' + esc(t(w.summary)) + "</p>" : "") +
         '<p class="tile__roles">' + esc(t(w.roles)) + "</p></div></" + tag + ">";
     }
@@ -261,7 +268,7 @@
     return "<" + tag + ' class="tile rise' + (wide ? " tile--wide" : "") + (go ? "" : " tile--static") + '"' + href + '>' +
       '<div class="tile__img">' + img(w.cover, t(w.title)) + "</div>" +
       '<div class="tile__body"><h3 class="tile__title">' + esc(t(w.title)) + "</h3>" +
-      (sub ? '<p class="tile__alt">' + esc(sub) + "</p>" : "") +
+      (sub ? '<p class="tile__alt"' + altLangAttr(sub, w) + ">" + esc(sub) + "</p>" : "") +
       '<p class="tile__roles">' + esc(t(w.roles)) + "</p></div></" + tag + ">";
   }
   function card(w) {
@@ -329,7 +336,7 @@
       h.push('<section class="band band--cinema" id="featured" aria-labelledby="feat-title"><div class="wrap feature">' +
         (feat.poster || feat.cover ? '<a class="feature__poster rise" href="' + workHref(feat) + '" tabindex="-1" aria-hidden="true">' + img(feat.poster || feat.cover, "") + "</a>" : "") +
         '<div class="rise-2"><h2 class="feature__title" id="feat-title">' + esc(t(feat.title)) + "</h2>" +
-        (alt && alt !== t(feat.title) ? '<p class="feature__alt">' + esc(alt) + "</p>" : "") +
+        (alt && alt !== t(feat.title) ? '<p class="feature__alt"' + altLangAttr(alt, feat) + ">" + esc(alt) + "</p>" : "") +
         '<p class="feature__roles">' + esc([t(feat.roles), t(feat.place), feat.year].filter(Boolean).join("　·　")) + "</p>" +
         '<p class="feature__sum">' + esc(t(feat.summary)) + "</p>" +
         '<div class="actions">' + (feat.video ? '<a class="btn" href="' + esc(safeUrl(feat.video)) + '" target="_blank" rel="noopener">' + ICON.play + esc(u("watchFilm")) + "</a>" : "") + more(workHref(feat), u("learnMore"), true) + "</div>" +
@@ -446,7 +453,7 @@
     h.push('<header class="wrap w-head fade-in">' +
       (w.category === "commercial" && t(w.client) ? '<p class="w-head__client">' + esc(t(w.client)) + "</p>" : "") +
       "<h1>" + esc(t(w.title)) + "</h1>" +
-      (alt && alt !== t(w.title) ? '<p class="w-head__alt">' + esc(alt) + "</p>" : "") +
+      (alt && alt !== t(w.title) ? '<p class="w-head__alt"' + altLangAttr(alt, w) + ">" + esc(alt) + "</p>" : "") +
       (meta.length ? '<p class="w-head__meta">' + meta.map(function (m) { return "<span>" + esc(m) + "</span>"; }).join("") + "</p>" : "") +
       "</header>");
     if (w.cover) h.push('<figure class="w-frame fade-in"><div class="w-frame__in">' + img(w.cover, t(w.title), "", true) + "</div></figure>");

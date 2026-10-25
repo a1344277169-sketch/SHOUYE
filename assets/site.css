@@ -86,6 +86,9 @@ body {
 }
 html:lang(ja) body { font-family: var(--f-latin), var(--f-ja); line-height: 1.7; }
 html:lang(zh-CN) body { font-family: var(--f-latin), var(--f-zh); line-height: 1.7; }
+/* text tagged with another language inside the page uses that language's font */
+body [lang="ja"] { font-family: var(--f-latin), var(--f-ja); }
+body [lang="zh-CN"] { font-family: var(--f-latin), var(--f-zh); }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--nav-bg); }
 ::selection { background: var(--sel); }
 img { max-width: 100%; display: block; }
