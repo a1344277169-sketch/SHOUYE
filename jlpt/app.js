@@ -290,6 +290,9 @@
       (gt ? '<section class="section"><div class="section__head"><h2>今日辨析</h2><a href="#/compare">全部 ' + GROUPS.length + ' 组</a></div>' +
         '<a class="card teaser" href="#/compare/' + gt.id + '"><div class="eyebrow">' + (gt.star ? '★ 重点辨析' : '辨析') + '</div><h3 lang="ja">' + esc(gt.t) + '</h3><p>' + esc(gt.s) + '</p></a></section>' : '') +
 
+      '<section class="section"><div class="section__head"><h2>单词</h2><a href="#/words/list">词表</a></div>' +
+        '<a class="card teaser wteaser" href="#/words"><div><div class="eyebrow">N2 词汇 1439 个 · 不考试</div><h3>翻几张单词卡，混个眼熟</h3>' +
+        '<p>今天看了 ' + ((S.w && S.w.days && S.w.days[t]) || 0) + ' 个</p></div><span class="wteaser__go" aria-hidden="true">' + ICON.back + '</span></a></section>' +
       '<section class="section"><div class="card card--flat"><p class="small muted">每天先复习到期的语法，再学新的。答对后间隔会拉长（1 → 3 → 7 → 14 → 30 天……），答错的第二天会再出现，并且当场在最后再考一次。连续答对到 30 天间隔就算“已掌握”。右上角可以设置每天新学几条。</p></div></section>' +
       '</div>';
   }
@@ -422,6 +425,122 @@
   }
   function viewNotFound() { return '<div class="wrap page"><div class="empty">没有这个页面。<a href="#/">回到今日</a></div></div>'; }
 
+  /* ---------- words（单词：不考试，只为混个眼熟） ---------- */
+  var W = null;
+  function loadWords(cb) {
+    if (window.WORDS) { W = window.WORDS; cb(); return; }
+    var sc = document.createElement('script'); sc.src = 'words.js';
+    sc.onload = function () { W = window.WORDS; cb(); };
+    sc.onerror = function () { $('#main').innerHTML = '<div class="wrap page"><div class="empty">单词数据加载失败，请刷新重试。</div></div>'; };
+    document.head.appendChild(sc);
+  }
+  function ws() {
+    var w = S.w || (S.w = {});
+    if (typeof w.seed !== 'number') w.seed = Math.floor(Math.random() * 1e9);
+    w.pos = w.pos || {}; w.cat = w.cat == null ? -1 : w.cat; w.days = w.days || {};
+    return w;
+  }
+  var wordOrder = null;
+  function wordList(cat) {
+    if (!wordOrder) { var st = ws(); wordOrder = W.words.slice().sort(function (a, b) { return hash(st.seed + ':' + a[0]) - hash(st.seed + ':' + b[0]); }); }
+    return cat < 0 ? wordOrder : wordOrder.filter(function (x) { return x[1] === cat; });
+  }
+  var flashOpen = false;
+  function wordsTabs(cur) {
+    var tabs = [['', '刷单词'], ['list', '词表'], ['yomi', '易错读音'], ['pairs', '近义同音'], ['parts', '构词']];
+    return '<nav class="chips chips--scroll wtabs" aria-label="单词">' + tabs.map(function (t) { return '<a class="chip" href="#/words' + (t[0] ? '/' + t[0] : '') + '" aria-pressed="' + (cur === t[0]) + '">' + t[1] + '</a>'; }).join('') + '</nav>';
+  }
+  function wordsHead(cur, sub) {
+    return '<div class="eyebrow">N2 文字・词汇 · ' + W.words.length + ' 词</div><h1 class="h1 h1--sm">单词</h1>' +
+      '<p class="lead lead--sm">' + sub + '</p>' + wordsTabs(cur);
+  }
+  function catChips(cur, act) {
+    return '<div class="chips chips--scroll" style="margin-top:10px">' + [[-1, '全部']].concat(W.cats.map(function (c, i) { return [i, c]; })).map(function (c) {
+      return '<button class="chip" type="button" data-act="' + act + '" data-v="' + c[0] + '" aria-pressed="' + (cur === c[0]) + '">' + esc(c[1]) + '</button>';
+    }).join('') + '</div>';
+  }
+  function viewFlash() {
+    var st = ws(); var list = wordList(st.cat); var key = String(st.cat);
+    var i = ((st.pos[key] || 0) % list.length + list.length) % list.length;
+    var w = list[i]; var kana = w[2] === w[3];
+    var today = st.days[todayKey()] || 0;
+    var open = flashOpen || st.reveal;
+    return '<div class="wrap page fade-in">' + wordsHead('', '不打分、不重复出题：一个接一个往下翻，见得多了自然眼熟。') +
+      catChips(st.cat, 'wcat') +
+      '<div class="flash">' +
+      '<div class="flash__meta"><span>' + esc(W.cats[w[1]]) + '</span><span class="num">本轮 ' + (i + 1) + ' / ' + list.length + ' · 今天看了 ' + today + ' 个</span></div>' +
+      '<div class="card flash__card' + (open ? ' is-open' : '') + '" data-act="wflip" role="button" tabindex="0" aria-label="点一下看读音和意思">' +
+      '<div class="flash__word" lang="ja">' + esc(w[2]) + '</div>' +
+      '<div class="flash__back">' +
+      (kana ? '' : '<div class="flash__yomi" lang="ja">' + esc(w[3]) + '</div>') +
+      '<div class="flash__mean">' + esc(w[4]) + '</div>' +
+      (w[5] ? '<div class="flash__ex" lang="ja">' + esc(w[5]) + '</div>' : '') + '</div>' +
+      '<div class="flash__tap">点一下看读音和意思</div>' +
+      (canSpeak && S.set.tts ? '<button class="say flash__say" type="button" data-act="say" data-text="' + esc(w[3]) + '" aria-label="朗读">' + ICON.say + '</button>' : '') +
+      '</div>' +
+      '<div class="flash__nav"><button class="btn btn--plain" type="button" data-act="wprev" aria-label="上一个">' + ICON.back + '</button>' +
+      '<button class="btn flash__next" type="button" data-act="wnext">下一个</button></div>' +
+      '<label class="flash__opt"><input type="checkbox" data-act="wreveal"' + (st.reveal ? ' checked' : '') + '> 直接显示读音和意思（快速过一遍）</label>' +
+      '<p class="hint">左右滑动或按 ← → 翻页，空格翻面</p></div></div>';
+  }
+  function todayKey() { return today(); }
+  function flashMove(d) {
+    var st = ws(); var key = String(st.cat);
+    st.pos[key] = (st.pos[key] || 0) + d;
+    if (d > 0) { var t = todayKey(); st.days[t] = (st.days[t] || 0) + 1; }
+    flashOpen = false; save();
+    $('#main').innerHTML = viewFlash();
+  }
+
+  var WL = { q: '', cat: -1, hide: false, n: 80 };
+  function wordRows() {
+    var q = WL.q.trim().toLowerCase();
+    var list = W.words.filter(function (w) {
+      if (WL.cat >= 0 && w[1] !== WL.cat) return false;
+      if (!q) return true;
+      return (w[2] + ' ' + w[3] + ' ' + w[4] + ' ' + w[5]).toLowerCase().indexOf(q) >= 0;
+    });
+    if (!list.length) return '<div class="empty">没有找到</div>';
+    return '<p class="small muted" style="margin-top:4px">' + list.length + ' 个</p><ul class="wrows' + (WL.hide ? ' is-hidden' : '') + '">' + list.slice(0, WL.n).map(function (w) {
+      return '<li class="wrow"><span class="wrow__w" lang="ja">' + esc(w[2]) + '</span><span class="wrow__r" lang="ja">' + (w[2] === w[3] ? '' : esc(w[3])) + '</span>' +
+        '<span class="wrow__m" data-act="wpeek">' + esc(w[4]) + '</span><span class="wrow__x" lang="ja">' + esc(w[5]) + '</span></li>';
+    }).join('') + '</ul>' + (list.length > WL.n ? '<div style="text-align:center;margin-top:18px"><button class="btn btn--ghost btn--sm" data-act="wmore">再显示 ' + Math.min(80, list.length - WL.n) + ' 个</button></div>' : '');
+  }
+  function viewWordList() {
+    return '<div class="wrap page fade-in">' + wordsHead('list', '整张表扫一遍。打开“遮住中文”可以先自己想意思，点一下再看。') +
+      '<div class="toolbar"><label class="search">' + ICON.search + '<input id="wq" type="search" placeholder="搜索单词、读音或中文" value="' + esc(WL.q) + '" autocomplete="off"></label>' +
+      '<div class="chips"><button class="chip" type="button" data-act="whide" aria-pressed="' + WL.hide + '">遮住中文</button></div></div>' +
+      catChips(WL.cat, 'wlcat') + '<div id="wresults">' + wordRows() + '</div></div>';
+  }
+  function viewYomi() {
+    var out = ''; var cur = null;
+    W.yomi.forEach(function (y) {
+      if (y[0] !== cur) { if (cur !== null) out += '</ul></div>'; cur = y[0]; out += '<div class="cat"><h3>' + esc(cur) + '</h3><ul class="wrows">'; }
+      out += '<li class="wrow"><span class="wrow__w" lang="ja">' + esc(y[1]) + '</span><span class="wrow__r" lang="ja">' + esc(y[2]) + '</span><span class="wrow__m">' + esc(y[3]) + '</span></li>';
+    });
+    return '<div class="wrap page fade-in">' + wordsHead('yomi', '长音、促音、浊音和特殊读法，最容易在读音题里丢分。') + out + '</ul></div></div>';
+  }
+  function viewPairs() {
+    return '<div class="wrap page fade-in">' + wordsHead('pairs', '同音或近义的词放在一起看：意思、写法和搭配的区别。') +
+      '<div class="pairs-grid">' + W.pairs.map(function (p) {
+        return '<div class="card wpair"><div class="wpair__w" lang="ja">' + esc(p[0]) + '</div><div class="wpair__r" lang="ja">' + esc(p[1]) + '</div><p class="wpair__n">' + esc(p[2]) + '</p><p class="wpair__x" lang="ja">' + esc(p[3]) + '</p></div>';
+      }).join('') + '</div></div>';
+  }
+  function viewParts() {
+    return '<div class="wrap page fade-in">' + wordsHead('parts', '常见前缀、后缀和复合动词后项。要连同现成的词一起记。') +
+      '<ul class="wrows wrows--parts">' + W.parts.map(function (p) {
+        return '<li class="wrow"><span class="wrow__w" lang="ja">' + esc(p[0]) + '</span><span class="wrow__r" lang="ja">' + esc(p[1]) + '</span><span class="wrow__m">' + esc(p[2]) + '</span><span class="wrow__x" lang="ja">' + esc(p[3]) + (p[4] ? '　<span class="muted">' + esc(p[4]) + '</span>' : '') + '</span></li>';
+      }).join('') + '</ul></div>';
+  }
+  function viewWords(sub) {
+    if (!W) { loadWords(render); return '<div class="wrap page"><div class="empty">正在加载单词……</div></div>'; }
+    if (sub === 'list') return viewWordList();
+    if (sub === 'yomi') return viewYomi();
+    if (sub === 'pairs') return viewPairs();
+    if (sub === 'parts') return viewParts();
+    return viewFlash();
+  }
+
   /* ---------- router ---------- */
   function route() {
     var h = location.hash.replace(/^#/, '') || '/';
@@ -435,10 +554,11 @@
     else if (r.name === 'list') html = viewList();
     else if (r.name === 'item') { html = viewItem(+r.arg); tab = 'list'; }
     else if (r.name === 'compare') html = viewCompare(r.arg);
+    else if (r.name === 'words') html = viewWords(r.arg);
     else html = viewNotFound();
     main.innerHTML = html;
     document.querySelectorAll('.nav__tabs a').forEach(function (a) { if (a.dataset.tab === tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-    var titles = { today: '每日语法', study: '练习', list: '语法库', item: '语法', compare: '易混淆辨析' };
+    var titles = { today: '每日语法', study: '练习', list: '语法库', item: '语法', compare: '易混淆辨析', words: '单词' };
     document.title = (r.name === 'item' && BY[+r.arg] ? BY[+r.arg].p + ' · ' : (titles[r.name] && r.name !== 'today' ? titles[r.name] + ' · ' : '')) + '每日语法 · labagound';
     if (r.name === 'compare' && r.arg) {
       var el = document.getElementById('g-' + r.arg);
@@ -471,12 +591,34 @@
     if (act === 'one') { startExtra([{ id: +el.dataset.id, k: 'review' }], '单题练习'); return; }
     if (act === 'redo') { startExtra(shuffle(el.dataset.ids.split(',').map(function (x) { return { id: +x, k: 'review' }; })), '错题练习'); return; }
     if (act === 'filter') { LF[el.dataset.k] = el.dataset.v; render(); return; }
+    if (act === 'wflip') { if (ev.target.closest('.say')) return; flashOpen = !flashOpen; el.classList.toggle('is-open', flashOpen || ws().reveal); return; }
+    if (act === 'wnext') { flashMove(1); return; }
+    if (act === 'wprev') { flashMove(-1); return; }
+    if (act === 'wcat') { ws().cat = +el.dataset.v; flashOpen = false; save(); render(); return; }
+    if (act === 'wreveal') { ws().reveal = el.checked; save(); render(); return; }
+    if (act === 'wlcat') { WL.cat = +el.dataset.v; WL.n = 80; render(); return; }
+    if (act === 'whide') { WL.hide = !WL.hide; render(); return; }
+    if (act === 'wpeek') { if (WL.hide) el.classList.toggle('is-peek'); return; }
+    if (act === 'wmore') { WL.n += 80; $('#wresults').innerHTML = wordRows(); return; }
   });
   document.addEventListener('input', function (ev) {
     if (ev.target.id === 'q') { LF.q = ev.target.value; $('#results').innerHTML = listResults(); }
+    if (ev.target.id === 'wq') { WL.q = ev.target.value; WL.n = 80; $('#wresults').innerHTML = wordRows(); }
   });
   document.addEventListener('keydown', function (ev) {
-    if (route().name !== 'study' || ev.metaKey || ev.ctrlKey || ev.altKey) return;
+    if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+    var rn = route();
+    if (rn.name === 'words' && !rn.arg && W && !(ev.target.closest && ev.target.closest('input, select, textarea'))) {
+      if (ev.key === 'ArrowRight') { flashMove(1); ev.preventDefault(); }
+      else if (ev.key === 'ArrowLeft') { flashMove(-1); ev.preventDefault(); }
+      else if (ev.key === ' ' || ev.key === 'Enter') {
+        if (ev.target.closest && ev.target.closest('button, a')) return;
+        var fc = $('.flash__card'); if (fc && !fc.classList.contains('is-open')) { flashOpen = true; fc.classList.add('is-open'); } else flashMove(1);
+        ev.preventDefault();
+      }
+      return;
+    }
+    if (rn.name !== 'study') return;
     if ($('#settings').open) return;
     var s = activeSession();
     if (s.phase === 'quiz' && /^[1-4]$/.test(ev.key)) { var o = s.opts[+ev.key - 1]; if (o) { answer(s, o); render(); var nb = $('#nextBtn'); if (nb) nb.focus({ preventScroll: true }); } ev.preventDefault(); }
@@ -521,6 +663,13 @@
     var keep = S.set; S = fresh(); S.set = keep; EXTRA = null; save(); dlg.close(); render(); toast('记录已清空');
   });
 
+  var tsx = null, tsy = 0;
+  document.addEventListener('touchstart', function (ev) { if (ev.target.closest && ev.target.closest('.flash__card')) { tsx = ev.touches[0].clientX; tsy = ev.touches[0].clientY; } else tsx = null; }, { passive: true });
+  document.addEventListener('touchend', function (ev) {
+    if (tsx === null) return;
+    var dx = ev.changedTouches[0].clientX - tsx, dy = ev.changedTouches[0].clientY - tsy; tsx = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { flashMove(dx < 0 ? 1 : -1); }
+  }, { passive: true });
   function applyFuri() { document.documentElement.classList.toggle('furi-all', S.set.furi === 'always'); }
   applyFuri();
   onHash();

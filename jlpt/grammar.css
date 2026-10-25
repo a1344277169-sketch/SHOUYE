@@ -327,3 +327,55 @@ mark ruby.fg rt { color: var(--mark-ink); }
 @media (hover: hover) { ruby.fg:hover { background: var(--chip); } }
 .h4-hint { font-weight: 400; color: var(--ink-3); margin-left: 8px; letter-spacing: 0; }
 .furi-all .h4-hint { display: none; }
+
+/* words */
+.wtabs { margin-top: 20px; }
+.wtabs .chip { text-decoration: none; }
+.flash { max-width: 560px; margin: 24px auto 0; }
+.flash__meta { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--ink-2); margin-bottom: 10px; }
+.flash__card { position: relative; min-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; touch-action: pan-y; }
+.flash__word { font-size: clamp(40px, 11vw, 64px); font-weight: 700; line-height: 1.2; letter-spacing: .02em; }
+.flash__back { display: none; margin-top: 18px; }
+.flash__card.is-open .flash__back { display: block; animation: fade .3s var(--ease); }
+.flash__card.is-open .flash__tap { display: none; }
+.flash__yomi { font-size: 22px; color: var(--link); font-weight: 600; }
+.flash__mean { font-size: 19px; margin-top: 8px; }
+.flash__ex { font-size: 16px; color: var(--ink-2); margin-top: 10px; background: var(--bg-alt); border-radius: 10px; padding: 6px 12px; display: inline-block; }
+.flash__tap { margin-top: 22px; font-size: 13px; color: var(--ink-3); }
+.flash__say { position: absolute; top: 14px; right: 14px; }
+.flash__nav { display: grid; grid-template-columns: 56px 1fr; gap: 10px; margin-top: 14px; }
+.flash__nav .btn--plain { padding: 0; }
+.flash__nav .btn--plain svg { width: 16px; height: 16px; }
+.flash__opt { display: flex; align-items: center; gap: 8px; justify-content: center; font-size: 14px; color: var(--ink-2); margin-top: 16px; cursor: pointer; }
+.flash__opt input { width: 18px; height: 18px; accent-color: var(--btn); }
+.wrows { list-style: none; margin: 14px 0 0; padding: 0; }
+.wrow { display: grid; grid-template-columns: minmax(6em, 1.1fr) minmax(6em, 1fr) 2fr; gap: 2px 14px; padding: 12px 4px; border-bottom: 1px solid var(--line); align-items: baseline; }
+.wrow__w { font-weight: 600; font-size: 17px; }
+.wrow__r { color: var(--link); font-size: 15px; }
+.wrow__m { font-size: 15px; }
+.wrow__x { grid-column: 3; font-size: 14px; color: var(--ink-2); }
+.wrows.is-hidden .wrow__m { color: transparent; background: var(--chip); border-radius: 6px; cursor: pointer; transition: color .2s; }
+.wrows.is-hidden .wrow__m.is-peek { color: var(--ink); background: transparent; }
+.wrows--parts .wrow { grid-template-columns: minmax(5em, .8fr) minmax(5em, .8fr) 2fr; }
+@media (max-width: 560px) {
+  .wrow, .wrows--parts .wrow { grid-template-columns: auto 1fr; gap: 2px 10px; }
+  .wrow__m, .wrow__x { grid-column: 1 / -1; }
+}
+.pairs-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+@media (max-width: 640px) { .pairs-grid { grid-template-columns: 1fr; } }
+.wpair { padding: 20px 22px; }
+.wpair__w { font-size: 20px; font-weight: 700; }
+.wpair__r { color: var(--link); font-size: 14px; margin-top: 2px; }
+.wpair__n { margin-top: 10px; font-size: 15px; }
+.wpair__x { margin-top: 8px; font-size: 14px; color: var(--ink-2); background: var(--bg-alt); border-radius: 10px; padding: 8px 12px; }
+.wteaser { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.wteaser__go { width: 34px; height: 34px; border-radius: 50%; background: var(--chip); display: grid; place-items: center; flex: none; }
+.wteaser__go svg { width: 14px; height: 14px; transform: rotate(180deg); }
+.chips--scroll { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -16px; padding-inline: 16px; scroll-padding-inline: 16px; }
+.chips--scroll::-webkit-scrollbar { display: none; }
+.chips--scroll .chip { flex: none; }
+@media (min-width: 640px) { .chips--scroll { margin-inline: 0; padding-inline: 0; flex-wrap: wrap; } }
+.h1--sm { font-size: clamp(30px, 5vw, 44px); }
+.lead--sm { font-size: 15px; margin-top: 6px; }
+.flash { margin-top: 18px; }
+@media (max-width: 560px) { .flash__card { min-height: 260px; } }
