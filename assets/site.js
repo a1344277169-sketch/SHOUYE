@@ -863,6 +863,12 @@
     }, 220);
   });
   render(false);
-  // the top bar plays its entrance once, on first load only
-  setTimeout(function () { var n = document.getElementById("nav"); if (n) n.removeAttribute("data-intro"); }, 1800);
+  // the top bar plays its entrance once, on first load only — starting now that it has its logo and menu
+  (function () {
+    var n = document.getElementById("nav"); if (!n) return;
+    requestAnimationFrame(function () {
+      n.setAttribute("data-ready", "");
+      setTimeout(function () { n.removeAttribute("data-intro"); }, 1700);
+    });
+  })();
 })();
