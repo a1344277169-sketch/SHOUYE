@@ -106,8 +106,8 @@
       seen["w" + w.id] = 1;
     });
     (data.posts || []).forEach(function (p) {
-      if (!/^[a-z0-9][a-z0-9-]*$/.test(p.id || "")) out.push("随笔“" + first(p.title) + "”的网址名只能用小写字母、数字和 -");
-      if (seen["p" + p.id]) out.push("有两篇随笔用了同一个网址名：" + p.id);
+      if (!/^[a-z0-9][a-z0-9-]*$/.test(p.id || "")) out.push("文章“" + first(p.title) + "”的网址名只能用小写字母、数字和 -");
+      if (seen["p" + p.id]) out.push("有两篇文章用了同一个网址名：" + p.id);
       seen["p" + p.id] = 1;
     });
     return out;
@@ -341,10 +341,10 @@
     } else {
       var list = sortedPosts();
       list.forEach(function (p, i) { box.appendChild(listItem(p, i, p.date)); });
-      box.appendChild(mkBtn("+ 新建随笔", "b", function () {
+      box.appendChild(mkBtn("+ 新建文章", "b", function () {
         var today = new Date(); var d = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
         var n = 1; while (data.posts.some(function (p) { return p.id === "post-" + n; })) n++;
-        var p = { id: "post-" + n, date: d, tag: { zh: "", ja: "", en: "" }, title: { zh: "新随笔", ja: "", en: "" }, excerpt: { zh: "", ja: "", en: "" }, cover: "", body: { zh: "", ja: "", en: "" } };
+        var p = { id: "post-" + n, date: d, tag: { zh: "", ja: "", en: "" }, title: { zh: "新文章", ja: "", en: "" }, excerpt: { zh: "", ja: "", en: "" }, cover: "", body: { zh: "", ja: "", en: "" } };
         data.posts.push(p); state.index = sortedPosts().indexOf(p); changed(); renderAll();
       }));
     }
@@ -361,7 +361,7 @@
     var f = $("#form"); f.innerHTML = "";
     if (state.tab === "site") return siteForm(f);
     if (state.tab === "works") { var w = data.works[state.index]; if (!w) { f.innerHTML = '<p class="sub">还没有作品。点左边“新建作品”。</p>'; return; } return workForm(f, w); }
-    var p = sortedPosts()[state.index]; if (!p) { f.innerHTML = '<p class="sub">还没有随笔。点左边“新建随笔”。</p>'; return; }
+    var p = sortedPosts()[state.index]; if (!p) { f.innerHTML = '<p class="sub">还没有文章。点左边“新建文章”。</p>'; return; }
     postForm(f, p);
   }
   function header(f, title, sub, tools) {
@@ -465,7 +465,7 @@
       field("数据", stats, "上面一行显示数字，下面一行显示说明"),
       field("合作品牌", textInput(s, "brands"))
     ]));
-    f.appendChild(section("随笔区", [field("说明", i18nInput(s, "journalText", { area: true, rows: 2 }))]));
+    f.appendChild(section("树屋", [field("说明", i18nInput(s, "journalText", { area: true, rows: 2 }))]));
     s.profile = s.profile || { name: { zh: "", ja: "", en: "" }, reading: { zh: "", ja: "", en: "" }, facts: [] };
     s.profile.facts = s.profile.facts || [];
     var facts = document.createElement("div"); facts.className = "rows";

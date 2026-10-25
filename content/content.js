@@ -546,9 +546,9 @@ window.SITE_CONTENT = {
       "id": "wx-cage",
       "date": "2025-12-03",
       "tag": {
-        "zh": "杂念树屋",
-        "ja": "杂念树屋",
-        "en": "杂念树屋"
+        "zh": "诗",
+        "ja": "詩",
+        "en": "Poem"
       },
       "title": {
         "zh": "囚笼",
@@ -572,9 +572,9 @@ window.SITE_CONTENT = {
       "id": "wx-sea-boat",
       "date": "2025-04-30",
       "tag": {
-        "zh": "杂念树屋",
-        "ja": "杂念树屋",
-        "en": "杂念树屋"
+        "zh": "诗",
+        "ja": "詩",
+        "en": "Poem"
       },
       "title": {
         "zh": "海船",
@@ -598,9 +598,9 @@ window.SITE_CONTENT = {
       "id": "wx-dear-friend",
       "date": "2024-10-06",
       "tag": {
-        "zh": "杂念树屋",
-        "ja": "杂念树屋",
-        "en": "杂念树屋"
+        "zh": "诗",
+        "ja": "詩",
+        "en": "Poem"
       },
       "title": {
         "zh": "心中的挚友",
@@ -624,9 +624,9 @@ window.SITE_CONTENT = {
       "id": "wx-rare",
       "date": "2024-09-23",
       "tag": {
-        "zh": "杂念树屋",
-        "ja": "杂念树屋",
-        "en": "杂念树屋"
+        "zh": "诗",
+        "ja": "詩",
+        "en": "Poem"
       },
       "title": {
         "zh": "难得",
@@ -650,9 +650,9 @@ window.SITE_CONTENT = {
       "id": "wx-saw-you-again",
       "date": "2024-09-23",
       "tag": {
-        "zh": "杂念树屋",
-        "ja": "杂念树屋",
-        "en": "杂念树屋"
+        "zh": "诗",
+        "ja": "詩",
+        "en": "Poem"
       },
       "title": {
         "zh": "我又一次看见你",
@@ -676,9 +676,9 @@ window.SITE_CONTENT = {
       "id": "wx-caged-bird",
       "date": "2024-09-16",
       "tag": {
-        "zh": "杂念树屋",
-        "ja": "杂念树屋",
-        "en": "杂念树屋"
+        "zh": "诗",
+        "ja": "詩",
+        "en": "Poem"
       },
       "title": {
         "zh": "笼中鸟",
@@ -702,9 +702,9 @@ window.SITE_CONTENT = {
       "id": "wx-clouds",
       "date": "2024-04-09",
       "tag": {
-        "zh": "杂念树屋",
-        "ja": "杂念树屋",
-        "en": "杂念树屋"
+        "zh": "诗",
+        "ja": "詩",
+        "en": "Poem"
       },
       "title": {
         "zh": "天边正是云霞",
@@ -728,9 +728,9 @@ window.SITE_CONTENT = {
       "id": "wx-romance",
       "date": "2022-06-28",
       "tag": {
-        "zh": "杂念树屋",
-        "ja": "杂念树屋",
-        "en": "杂念树屋"
+        "zh": "诗",
+        "ja": "詩",
+        "en": "Poem"
       },
       "title": {
         "zh": "落俗不是停止浪漫",
@@ -754,9 +754,9 @@ window.SITE_CONTENT = {
       "id": "wx-pear-blossoms",
       "date": "2022-06-06",
       "tag": {
-        "zh": "杂念树屋",
-        "ja": "杂念树屋",
-        "en": "杂念树屋"
+        "zh": "随笔",
+        "ja": "随筆",
+        "en": "Essay"
       },
       "title": {
         "zh": "梨花飘落，是老去的模样",
@@ -780,9 +780,9 @@ window.SITE_CONTENT = {
       "id": "wx-long-road",
       "date": "2022-06-02",
       "tag": {
-        "zh": "杂念树屋",
-        "ja": "杂念树屋",
-        "en": "杂念树屋"
+        "zh": "随笔",
+        "ja": "随筆",
+        "en": "Essay"
       },
       "title": {
         "zh": "漫漫长路何无可，只是留念",
@@ -806,9 +806,9 @@ window.SITE_CONTENT = {
       "id": "wx-face-it",
       "date": "2022-03-20",
       "tag": {
-        "zh": "杂念树屋",
-        "ja": "杂念树屋",
-        "en": "杂念树屋"
+        "zh": "诗",
+        "ja": "詩",
+        "en": "Poem"
       },
       "title": {
         "zh": "既已发生，面对便是",
@@ -832,9 +832,9 @@ window.SITE_CONTENT = {
       "id": "wx-cotton",
       "date": "2022-01-02",
       "tag": {
-        "zh": "杂念树屋",
-        "ja": "杂念树屋",
-        "en": "杂念树屋"
+        "zh": "随笔",
+        "ja": "随筆",
+        "en": "Essay"
       },
       "title": {
         "zh": "风中飘着棉花",
