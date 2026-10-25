@@ -773,3 +773,15 @@ html:lang(en) .me-text p { line-height: 1.65; }
 #main[data-motion="calm"] [data-reveal="text"] { --rv-x: -32px; transition: opacity .9s var(--ease), transform 1s var(--ease); transition-delay: var(--rv-d, 0ms); }
 #main[data-motion="calm"] [data-reveal="text"]:not(.is-in) { filter: none; }
 #main[data-motion="calm"] [data-reveal="title"][data-side="right"] { --rv-x: -64px; }
+
+/* phone: no full-width black bands; the page stays in light tones from top to bottom */
+@media (max-width: 760px) {
+  .band--cinema {
+    --cinema: var(--bg-alt); --cinema-alt: var(--surface); --cinema-ink: var(--ink); --cinema-2: var(--ink-2); --cinema-link: var(--link);
+    background: var(--bg-alt); color: var(--ink);
+  }
+  .band--cinema .paddle { background: var(--chip); color: var(--ink); }
+  .band--cinema .paddle:hover { background: var(--line); }
+  .band--cinema .btn--ghost { color: var(--link) !important; }
+  .lead + .band--cinema { padding-top: var(--band); }
+}
