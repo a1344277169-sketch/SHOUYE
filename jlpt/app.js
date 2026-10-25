@@ -1,4 +1,4 @@
-/* labagound · 每日语法
+/* labagound · 每日目标（JLPT 语法 + 单词）
    纯静态，无需构建。进度保存在浏览器 localStorage（labagound-grammar-v1）。
    复习采用间隔重复：答对后间隔 1→3→7→14→30→60→120 天；答错回到第二天重来。连续答对到 30 天间隔算“已掌握”。 */
 (function () {
@@ -262,6 +262,7 @@
       head = '复习 ' + reviewN + ' 条 · 新学 ' + newN + ' 条'; body = reviewN ? '先把到期的复习做完，再学今天的新语法。' : '每条新语法先看讲解，再做一道选择题。';
       btns = '<a class="btn" href="#/study" data-act="daily">开始练习</a>';
     }
+    btns += '<a class="btn btn--ghost" href="#/words">单词卡</a>';
     var T = totals();
     var days = ''; for (var k = 13; k >= 0; k--) {
       var ds = addDays(t, -k); var x = S.days[ds]; var n = x ? x.n : 0;
@@ -274,7 +275,7 @@
 
     return '<div class="wrap page fade-in">' +
       '<div class="eyebrow">' + (d.getMonth() + 1) + '月' + d.getDate() + '日 · 星期' + WEEK[d.getDay()] + '</div>' +
-      '<h1 class="h1">每日语法</h1>' +
+      '<h1 class="h1">每日目标</h1>' +
       '<div class="hero"><div class="ring" role="img" aria-label="今日进度 ' + Math.round(pct * 100) + '%"><svg viewBox="0 0 120 120"><circle class="ring__track" cx="60" cy="60" r="54" fill="none" stroke-width="10"/><circle class="ring__bar" cx="60" cy="60" r="54" fill="none" stroke-width="10" stroke-linecap="round" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + (C * (1 - pct)).toFixed(1) + '"/></svg>' +
       '<div class="ring__label"><span class="ring__big num">' + (total ? doneN + '<span class="muted" style="font-size:18px">/' + total + '</span>' : '—') + '</span><span class="ring__small">今日</span></div></div>' +
       '<div class="hero__body"><h2>' + head + '</h2><p>' + body + '</p><div class="btn-row">' + btns + '</div></div></div>' +
@@ -558,8 +559,8 @@
     else html = viewNotFound();
     main.innerHTML = html;
     document.querySelectorAll('.nav__tabs a').forEach(function (a) { if (a.dataset.tab === tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-    var titles = { today: '每日语法', study: '练习', list: '语法库', item: '语法', compare: '易混淆辨析', words: '单词' };
-    document.title = (r.name === 'item' && BY[+r.arg] ? BY[+r.arg].p + ' · ' : (titles[r.name] && r.name !== 'today' ? titles[r.name] + ' · ' : '')) + '每日语法 · labagound';
+    var titles = { today: '每日目标', study: '练习', list: '语法库', item: '语法', compare: '易混淆辨析', words: '单词' };
+    document.title = (r.name === 'item' && BY[+r.arg] ? BY[+r.arg].p + ' · ' : (titles[r.name] && r.name !== 'today' ? titles[r.name] + ' · ' : '')) + '每日目标 · labagound';
     if (r.name === 'compare' && r.arg) {
       var el = document.getElementById('g-' + r.arg);
       if (el) { setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); }, 30); }

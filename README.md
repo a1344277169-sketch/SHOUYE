@@ -48,14 +48,14 @@ media/              图片；编辑器新加的图片会放进 media/uploads/
   "url": "https://jlpt.labagound.cc",
   "mark": "文",                       // 图标里的一个字
   "tag":   { "zh": "日语学习", "ja": "日本語学習", "en": "Japanese" },
-  "title": { "zh": "JLPT 每日语法", "ja": "JLPT 文法ドリル", "en": "JLPT Grammar Drill" },
+  "title": { "zh": "JLPT 每日目标", "ja": "JLPT デイリー学習", "en": "JLPT Daily Practice" },
   "text":  { "zh": "一句话介绍", "ja": "", "en": "" }
 }
 ```
 
-## JLPT 每日语法（jlpt/ 文件夹）
+## JLPT 每日目标（jlpt/ 文件夹）
 
-`jlpt/` 是独立的刷语法页面（N3・N2 297 条），对应 jlpt.labagound.cc，也可以从 labagound.cc/jlpt/ 打开。
+`jlpt/` 是独立的学习页面（N3・N2 语法 297 条 + N2 单词 1439 个），对应 jlpt.labagound.cc，也可以从 labagound.cc/jlpt/ 打开。
 
 - `data.js`：全部语法、例句、辨析组和假名注音
 - `words.js`：N2 单词 1439 个，以及易错读音、近义同音、构词法（来自 JLPT_N2_Vocabulary_Kanji.xlsx）。“单词”页只用来翻卡片混眼熟，不计分、不安排复习

@@ -131,14 +131,14 @@ window.SITE_CONTENT = {
           "en": "Japanese"
         },
         "title": {
-          "zh": "JLPT 每日语法",
-          "ja": "JLPT 文法ドリル",
-          "en": "JLPT Grammar Drill"
+          "zh": "JLPT 每日目标",
+          "ja": "JLPT デイリー学習",
+          "en": "JLPT Daily Practice"
         },
         "text": {
-          "zh": "N3・N2 共 297 条语法。每天复习加新学，附接续、例句和易混淆辨析。",
-          "ja": "N3・N2 の文法 297 項目。毎日の復習と新規学習に、接続・例文・類似表現の比較つき（解説は中国語）。",
-          "en": "297 N3–N2 grammar points with daily spaced review, example sentences and side-by-side comparisons (explanations in Chinese)."
+          "zh": "N3・N2 语法 297 条，每天复习加新学，附接续、例句和易混淆辨析；还有 N2 单词 1439 个的单词卡，翻一翻混个眼熟。",
+          "ja": "N3・N2 の文法 297 項目を毎日の復習と新規学習で。接続・例文・類似表現の比較つき。N2 単語 1439 語の単語カードも（解説は中国語）。",
+          "en": "297 N3–N2 grammar points with daily spaced review, examples and side-by-side comparisons, plus flashcards for 1,439 N2 words (explanations in Chinese)."
         }
       }
     ]
