@@ -82,6 +82,7 @@
     pause: { zh: "暂停播放", ja: "一時停止", en: "Pause" },
     play: { zh: "继续播放", ja: "再生", en: "Play" },
     slide: { zh: "第 {n} 张", ja: "{n} 枚目", en: "Slide {n}" },
+    readJournal: { zh: "阅读随笔", ja: "ジャーナルを読む", en: "Read the journal" },
     email: { zh: "邮箱", ja: "メール", en: "Email" },
     navHome: { zh: "首页", ja: "ホーム", en: "Home" },
     aboutMore: { zh: "了解更多", ja: "プロフィールを見る", en: "More about me" },
@@ -298,7 +299,7 @@
       '<div class="lead__bg" aria-hidden="true"><i class="orb orb--1"></i><i class="orb orb--2"></i><i class="orb orb--3"></i><i class="lead__grain"></i></div>' +
       '<div class="lead__in wrap"><h1 id="hero-title" class="lead__title" aria-label="' + esc(title.replace(/\n/g, "")) + '"><span aria-hidden="true">' + chars + "</span></h1>" +
       (t(SITE.heroText) ? '<p class="lead__text">' + esc(t(SITE.heroText)) + "</p>" : "") +
-      '<div class="actions lead__actions">' + (feat && feat.video ? '<a class="btn" href="' + esc(safeUrl(feat.video)) + '" target="_blank" rel="noopener">' + ICON.play + esc(u("watchFilm")) + "</a>" : "") + more("#works", u("seeWork"), true) + "</div></div>" +
+      '<div class="actions lead__actions"><a class="btn" href="#works">' + esc(u("seeWork")) + "</a>" + more("#journal", u("readJournal"), true) + "</div></div>" +
       '<div class="lead__foot wrap">' + (t(SITE.skills) ? '<p class="lead__skills">' + esc(t(SITE.skills)) + "</p>" : "<span></span>") +
       '<a class="lead__cue" href="#featured"><span>' + esc(u("scrollHint")) + '</span><i aria-hidden="true"></i></a></div>' +
       "</section>");
