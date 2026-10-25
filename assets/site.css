@@ -150,20 +150,21 @@ html:lang(en) h3 { letter-spacing: -0.012em; }
   .nav__in { gap: 12px; }
   .sheet[data-open="true"] {
     display: block; position: fixed; inset: calc(53px + env(safe-area-inset-top, 0px)) 0 0; z-index: 49;
-    background: rgba(0, 0, 0, 0.14); animation: sheet .3s var(--ease);
   }
+  /* the dim layer fades on its own, so the panel's blur works from the first frame */
+  .sheet[data-open="true"]::before { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.12); animation: sheet .3s ease; pointer-events: none; }
   .sheet__in {
-    display: flex; flex-direction: column; width: 100%; min-height: 50svh; max-width: none;
-    padding-block: 14px 28px;
+    display: flex; flex-direction: column; width: 100%; max-width: none;
+    padding-block: 10px 22px;
     background: var(--nav-bg);
-    -webkit-backdrop-filter: saturate(180%) blur(24px); backdrop-filter: saturate(180%) blur(24px);
-    border-radius: 0 0 24px 24px; box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.28);
-    animation: panelIn .45s var(--ease) both;
+    -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
+    border-radius: 0 0 22px 22px; box-shadow: 0 18px 36px -22px rgba(0, 0, 0, 0.3);
+    position: relative; will-change: transform; animation: panelIn .42s cubic-bezier(.22, .9, .26, 1) both;
   }
-  @keyframes panelIn { from { opacity: 0; transform: translateY(-18px); } }
+  @keyframes panelIn { from { transform: translate3d(0, -100%, 0); } to { transform: none; } }
   .sheet__link {
     display: block; padding: 10px 0; font-size: 30px; font-weight: 600; color: var(--ink) !important;
-    animation: sheetItem .45s var(--ease) both; animation-delay: calc(var(--i) * 50ms + 40ms);
+    animation: sheetItem .4s var(--ease) both; animation-delay: calc(var(--i) * 45ms + 230ms);
   }
   .sheet__link:hover, .sheet__link:active { text-decoration: none; }
   .sheet__link[aria-current="page"] { color: var(--ink-2) !important; }
