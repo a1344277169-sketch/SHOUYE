@@ -797,4 +797,6 @@
     }, 220);
   });
   render(false);
+  // the top bar plays its entrance once, on first load only
+  setTimeout(function () { var n = document.getElementById("nav"); if (n) n.removeAttribute("data-intro"); }, 1800);
 })();
