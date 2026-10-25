@@ -29,6 +29,7 @@ media/              图片；编辑器新加的图片会放进 media/uploads/
 - 全部作品：`/#works`，按类别：`/#works-film`、`/#works-commercial`、`/#works-photo`、`/#works-writing`
 - 单个作品：`/#w-作品网址名`，例如 `/#w-kochira`
 - 随笔：`/#journal`，单篇：`/#p-随笔网址名`
+- 工具：`/#tools`
 - 指定语言打开：在网址后加 `?lang=zh`、`?lang=ja` 或 `?lang=en`
 
 访客第一次打开时按浏览器语言自动选择，之后记住他们的选择。
@@ -36,3 +37,19 @@ media/              图片；编辑器新加的图片会放进 media/uploads/
 ## 上线前
 
 - 如果不想公开编辑器，上传时可以不传 `admin.html` 和 `assets/admin.js`（编辑器本身不能改动线上网站，留着也没有风险）。
+
+## 工具页
+
+工具列表写在 `content/content.js` 的 `site.tools` 里（编辑器暂时不能改这一项，直接改文件即可，编辑器保存时会原样保留）。每个工具：
+
+```js
+{
+  "id": "jlpt",
+  "url": "https://jlpt.labagound.cc",
+  "mark": "文",                       // 图标里的一个字
+  "tag":   { "zh": "日语学习", "ja": "日本語学習", "en": "Japanese" },
+  "title": { "zh": "JLPT 每日语法", "ja": "JLPT 文法ドリル", "en": "JLPT Grammar Drill" },
+  "text":  { "zh": "一句话介绍", "ja": "", "en": "" }
+}
+```
+

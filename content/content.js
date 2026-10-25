@@ -119,7 +119,29 @@ window.SITE_CONTENT = {
       },
       "facts": [],
       "photo": "media/profile/portrait.webp"
-    }
+    },
+    "tools": [
+      {
+        "id": "jlpt",
+        "url": "https://jlpt.labagound.cc",
+        "mark": "文",
+        "tag": {
+          "zh": "日语学习",
+          "ja": "日本語学習",
+          "en": "Japanese"
+        },
+        "title": {
+          "zh": "JLPT 每日语法",
+          "ja": "JLPT 文法ドリル",
+          "en": "JLPT Grammar Drill"
+        },
+        "text": {
+          "zh": "N3・N2 共 297 条语法。每天复习加新学，附接续、例句和易混淆辨析。",
+          "ja": "N3・N2 の文法 297 項目。毎日の復習と新規学習に、接続・例文・類似表現の比較つき（解説は中国語）。",
+          "en": "297 N3–N2 grammar points with daily spaced review, example sentences and side-by-side comparisons (explanations in Chinese)."
+        }
+      }
+    ]
   },
   "works": [
     {

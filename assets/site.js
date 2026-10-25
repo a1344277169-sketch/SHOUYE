@@ -40,6 +40,9 @@
     works: { zh: "作品", ja: "作品", en: "Work" },
     journal: { zh: "树屋", ja: "樹屋", en: "Treehouse" },
     about: { zh: "关于", ja: "プロフィール", en: "About" },
+    tools: { zh: "工具", ja: "ツール", en: "Tools" },
+    toolsText: { zh: "自己做的小工具，学习和工作时用得上。", ja: "自分で作った、勉強や仕事に役立つ小さな道具。", en: "Small things I built for studying and work." },
+    openTool: { zh: "打开", ja: "開く", en: "Open" },
     menu: { zh: "菜单", ja: "メニュー", en: "Menu" },
     language: { zh: "语言", ja: "言語", en: "Language" },
     watchFilm: { zh: "观看影片", ja: "本編を見る", en: "Watch the film" },
@@ -215,6 +218,7 @@
     var links = [
       ["#works", u("works"), cur === "works" || cur === "work"],
       ["#journal", u("journal"), cur === "journal" || cur === "post"],
+      ["#tools", u("tools"), cur === "tools"],
       ["#about", u("about"), cur === "about"]
     ];
     var linkHtml = links.map(function (l) { return '<a href="' + l[0] + '"' + (l[2] ? ' aria-current="page"' : "") + ">" + esc(l[1]) + "</a>"; }).join("");
@@ -230,6 +234,7 @@
       ["#", u("navHome"), (WORKS.filter(function (w) { return w.category === "photo"; })[0] || {}).cover, t(SITE.heroTitle), cur === "home"],
       ["#works", u("works"), feat && feat.cover, u("worksText"), cur === "works" || cur === "work"],
       ["#journal", u("journal"), (POSTS[0] || {}).cover, t(SITE.journalText) || u("journalText"), cur === "journal" || cur === "post"],
+      ["#tools", u("tools"), null, u("toolsText"), cur === "tools"],
       ["#about", u("about"), prof.photo, t(SITE.skills), cur === "about"]
     ];
     var sheet = document.getElementById("sheet");
@@ -496,6 +501,21 @@
       (others.length ? '<section class="band band--alt" style="margin-top:var(--band)"><div class="wrap"><div class="head"><h2>' + esc(u("morePosts")) + "</h2>" + more("#journal", u("allPosts")) + '</div><div class="posts">' + others.map(function (x) { return postCard(x); }).join("") + "</div></div></section>" : '<div style="height:var(--band)"></div>');
   }
 
+  function pageTools() {
+    var list = (SITE.tools || []).filter(function (x) { return x.url && t(x.title); });
+    return '<section class="wrap page-head fade-in"><h1>' + esc(u("tools")) + "</h1><p>" + esc(t(SITE.toolsText) || u("toolsText")) + "</p></section>" +
+      '<section class="wrap" style="padding-bottom:var(--band)"><div class="tools">' + list.map(function (x) {
+        var ext = isExternal(x.url);
+        var host = ext ? x.url.replace(/^https?:\/\//i, "").replace(/\/$/, "") : "";
+        return '<a class="tool rise" href="' + esc(safeUrl(x.url)) + '"' + (ext ? ' target="_blank" rel="noopener"' : "") + ">" +
+          '<span class="tool__mark" aria-hidden="true">' + esc(x.mark || t(x.title).charAt(0)) + "</span>" +
+          '<span class="tool__body">' + (t(x.tag) ? '<span class="tool__tag">' + esc(t(x.tag)) + "</span>" : "") +
+          '<span class="tool__title">' + esc(t(x.title)) + "</span>" +
+          (t(x.text) ? '<span class="tool__text">' + esc(t(x.text)) + "</span>" : "") +
+          '<span class="tool__go">' + esc(u("openTool")) + (host ? ' <span class="tool__host">' + esc(host) + "</span>" : "") + (ext ? ICON.ext : ICON.chev) + "</span></span></a>";
+      }).join("") + "</div></section>";
+  }
+
   function pageMissing() {
     return '<section class="wrap empty"><h1>' + esc(u("notFound")) + "</h1><p>" + esc(u("notFoundText")) + "</p>" + more("#", u("home")) + "</section>";
   }
@@ -509,6 +529,7 @@
     if (h.indexOf("works-") === 0) return { type: "works", filter: h.slice(6) };
     if (h === "journal") return { type: "journal" };
     if (h === "about") return { type: "about" };
+    if (h === "tools") return { type: "tools" };
     return { type: "home", anchor: h };
   }
   var lastKey = null;
@@ -525,6 +546,7 @@
     else if (r.type === "works") { html = pageWorks(r.filter); title = u("works") + " · " + title; }
     else if (r.type === "journal") { html = pageJournal(); title = u("journalTitle") + " · " + title; }
     else if (r.type === "about") { html = pageAbout(); title = u("about") + " · " + title; }
+    else if (r.type === "tools") { html = pageTools(); title = u("tools") + " · " + title; }
     else html = pageHome();
     main.innerHTML = html;
     wire.instant = !!keepScroll;

@@ -370,6 +370,31 @@ html:lang(en) .hero__text { max-width: 30em; }
 .page-head { padding-top: clamp(56px, 8vw, 104px); padding-bottom: clamp(40px, 5vw, 64px); }
 .page-head h1 { font-size: var(--t-h1); line-height: 1.04; }
 .page-head p { font-size: var(--t-lead); color: var(--ink-2); margin-top: 14px; }
+
+/* ---------- tools ---------- */
+.tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.tool {
+  display: flex; gap: 22px; align-items: flex-start; padding: 30px; border-radius: var(--r-tile); background: var(--bg-alt); color: var(--ink);
+  transition: transform .5s var(--ease), box-shadow .5s var(--ease);
+}
+.tool:hover { text-decoration: none; transform: translateY(-4px); box-shadow: 0 18px 40px -18px rgba(0,0,0,.28); }
+.tool__mark {
+  flex: none; width: 64px; height: 64px; border-radius: 16px; display: grid; place-items: center;
+  background: var(--btn); color: #fff; font-size: 30px; font-weight: 600; font-family: var(--f-latin), var(--f-ja);
+}
+.tool__body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.tool__tag { font-size: var(--t-small); color: var(--ink-2); font-weight: 500; }
+.tool__title { font-size: var(--t-h3); line-height: 1.2; font-weight: 600; }
+.tool__text { color: var(--ink-2); line-height: 1.6; }
+.tool__go { margin-top: 10px; color: var(--link); display: inline-flex; align-items: center; gap: 4px; }
+.tool__go svg { width: .62em; height: .62em; margin-left: 3px; transition: transform .3s var(--ease); }
+.tool:hover .tool__go svg { transform: translate(2px, -2px); }
+.tool__host { color: var(--ink-3); font-size: var(--t-small); }
+@media (max-width: 760px) {
+  .tools { grid-template-columns: 1fr; gap: 16px; }
+  .tool { padding: 24px; gap: 18px; }
+  .tool__mark { width: 52px; height: 52px; font-size: 24px; border-radius: 13px; }
+}
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
 .chip { height: 36px; padding: 0 16px; border-radius: 999px; border: 0; background: var(--chip); color: var(--ink); font-size: 14px; cursor: pointer; transition: background .2s, color .2s; display: inline-flex; align-items: center; gap: 8px; }
 .chip:hover { text-decoration: none; background: var(--line); }
