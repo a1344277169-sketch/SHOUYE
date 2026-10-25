@@ -183,11 +183,30 @@
   }
 
   /* ---------- chrome: nav + footer ---------- */
-  function langSwitch(id) {
-    return '<div class="lang" role="group" aria-label="' + esc(u("language")) + '"' + (id ? ' id="' + id + '"' : "") + ">" + LANGS.map(function (l) {
-      return '<button type="button" data-lang="' + l + '" aria-pressed="' + (l === LANG) + '" lang="' + HTML_LANG[l] + '" title="' + LANG_NAME[l] + '"><span aria-hidden="true">' + LANG_LABEL[l] + '</span><span class="sr">' + LANG_NAME[l] + "</span></button>";
-    }).join("") + "</div>";
+  var GLOBE = '<svg class="lang__globe" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="8" r="6.4"/><path d="M1.6 8h12.8M8 1.6c1.9 1.9 2.8 4 2.8 6.4S9.9 12.5 8 14.4M8 1.6C6.1 3.5 5.2 5.6 5.2 8s.9 4.5 2.8 6.4"/></g></svg>';
+  var CHECK = '<svg class="lang__check" viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.4 5.6 10.4 11.5 3.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  // one button showing the current language; tapping it opens a small list of the three
+  function langSwitch(where) {
+    return '<div class="lang lang--' + where + '" data-open="false">' +
+      '<button class="lang__btn" type="button" aria-haspopup="true" aria-expanded="false" title="' + esc(u("language")) + '" aria-label="' + esc(u("language")) + ": " + LANG_NAME[LANG] + '">' +
+      GLOBE + '<span aria-hidden="true">' + LANG_NAME[LANG] + "</span></button>" +
+      '<div class="lang__menu" role="menu" aria-label="' + esc(u("language")) + '">' + LANGS.map(function (l) {
+        return '<button type="button" role="menuitemradio" data-lang="' + l + '" aria-checked="' + (l === LANG) + '" lang="' + HTML_LANG[l] + '" tabindex="-1">' + CHECK + "<span>" + LANG_NAME[l] + "</span></button>";
+      }).join("") + "</div></div>";
   }
+  function closeLang(except) {
+    Array.prototype.forEach.call(document.querySelectorAll(".lang[data-open='true']"), function (box) {
+      if (box === except) return;
+      box.setAttribute("data-open", "false");
+      box.querySelector(".lang__btn").setAttribute("aria-expanded", "false");
+    });
+  }
+  document.addEventListener("click", function (e) { if (!e.target.closest || !e.target.closest(".lang")) closeLang(); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    var open = document.querySelector(".lang[data-open='true']");
+    if (open) { closeLang(); open.querySelector(".lang__btn").focus(); }
+  });
   function renderChrome(route) {
     var name = esc(SITE.name || "labagound");
     var cur = route.type;
@@ -200,7 +219,7 @@
     document.getElementById("nav").innerHTML =
       '<a class="skip" href="#main" data-skip>' + esc(u("skip")) + "</a>" +
       '<div class="wrap nav__in"><a class="nav__mark" href="#" aria-label="' + name + '">' + mark() + "</a>" +
-      '<nav class="nav__links" aria-label="' + esc(u("menu")) + '">' + linkHtml + "</nav>" + langSwitch() +
+      '<nav class="nav__links" aria-label="' + esc(u("menu")) + '">' + linkHtml + "</nav>" + langSwitch("nav") +
       '<button class="nav__menu" type="button" aria-expanded="false" aria-controls="sheet" aria-label="' + esc(u("menu")) + '">' + ICON.menu + "</button></div>";
     // the phone menu lives outside the blurred nav bar, so it can cover the whole screen
     var feat = byId(SITE.featuredWork) || WORKS[0];
@@ -224,7 +243,7 @@
       '<div class="foot__row"><nav class="foot__links" aria-label="footer">' + linkHtml +
       (SITE.links || []).filter(function (l) { return l.url; }).map(function (l) { return '<a href="' + esc(safeUrl(l.url)) + '" target="_blank" rel="noopener">' + esc(t(l.label)) + (l.handle ? " · " + esc(l.handle) : "") + "</a>"; }).join("") +
       (SITE.email ? '<a href="mailto:' + esc(SITE.email) + '">' + esc(SITE.email) + "</a>" : "") +
-      "</nav>" + langSwitch() + "</div>" +
+      "</nav>" + langSwitch("foot") + "</div>" +
       '<p class="foot__copy">© ' + year + " " + name + ". " + esc(u("rights")) + "</p></div>";
   }
 
@@ -524,8 +543,24 @@
         LANG = b.getAttribute("data-lang");
         try { localStorage.setItem("labagound-lang", LANG); } catch (e) {}
         render(true);
-        var again = document.querySelector('.nav [data-lang="' + LANG + '"]');
+        var again = document.querySelector(".nav .lang__btn");
         if (again && b.closest(".nav")) again.focus();
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".lang__btn"), function (btn) {
+      btn.addEventListener("click", function () {
+        var box = btn.parentNode, open = box.getAttribute("data-open") !== "true";
+        closeLang(box);
+        box.setAttribute("data-open", open); btn.setAttribute("aria-expanded", open);
+        if (open) { var cur = box.querySelector('[aria-checked="true"]'); if (cur) cur.focus({ preventScroll: true }); }
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".lang__menu"), function (m) {
+      m.addEventListener("keydown", function (e) {
+        if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+        e.preventDefault();
+        var items = Array.prototype.slice.call(m.querySelectorAll("[data-lang]")), i = items.indexOf(document.activeElement);
+        items[(i + (e.key === "ArrowDown" ? 1 : items.length - 1)) % items.length].focus();
       });
     });
     // mobile sheet
