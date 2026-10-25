@@ -53,3 +53,12 @@ media/              图片；编辑器新加的图片会放进 media/uploads/
 }
 ```
 
+## JLPT 每日语法（jlpt/ 文件夹）
+
+`jlpt/` 是独立的刷语法页面（N3・N2 297 条），对应 jlpt.labagound.cc，也可以从 labagound.cc/jlpt/ 打开。
+
+- `data.js`：全部语法、例句、辨析组和假名注音
+- `app.js` / `grammar.css` / `index.html`：页面本体，学习进度存在访客浏览器里
+
+让 jlpt.labagound.cc 指向这个文件夹：在 Cloudflare 新建一个 Pages 项目，连接同一个仓库，构建设置里把“根目录（Root directory）”设为 `jlpt`，构建命令留空、输出目录留空，然后在“自定义域”里添加 `jlpt.labagound.cc`。之后这个文件夹有改动，两个站点都会自动更新。
+

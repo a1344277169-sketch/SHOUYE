@@ -1,0 +1,527 @@
+/* labagound · 每日语法
+   纯静态，无需构建。进度保存在浏览器 localStorage（labagound-grammar-v1）。
+   复习采用间隔重复：答对后间隔 1→3→7→14→30→60→120 天；答错回到第二天重来。连续答对到 30 天间隔算“已掌握”。 */
+(function () {
+  'use strict';
+
+  var DATA = window.GRAMMAR || { items: [], groups: [] };
+  var ITEMS = DATA.items.slice().sort(function (a, b) { return a.id - b.id; });
+  var BY = {}; ITEMS.forEach(function (i) { BY[i.id] = i; });
+  var GROUPS = DATA.groups;
+  var FURI = DATA.furi || {};
+  var GBY = {}; GROUPS.forEach(function (g) { g.items = []; GBY[g.id] = g; });
+  ITEMS.forEach(function (i) { (i.g || []).forEach(function (gid) { if (GBY[gid]) GBY[gid].items.push(i.id); }); });
+
+  var KEY = 'labagound-grammar-v1';
+  var INTERVAL = [1, 1, 3, 7, 14, 30, 60, 120];
+  var MASTER = 5;
+  var WEEK = ['日', '一', '二', '三', '四', '五', '六'];
+
+  /* ---------- storage ---------- */
+  function fresh() {
+    return { v: 1, seed: Math.floor(Math.random() * 1e9), cards: {}, days: {}, set: { per: 8, scope: 'all', order: 'seq', tts: true, furi: 'tap' }, daily: null };
+  }
+  function load() {
+    var s = null;
+    try { s = JSON.parse(localStorage.getItem(KEY)); } catch (e) { s = null; }
+    var base = fresh();
+    if (!s || typeof s !== 'object') return base;
+    s.set = Object.assign(base.set, s.set || {});
+    s.cards = s.cards || {}; s.days = s.days || {};
+    if (typeof s.seed !== 'number') s.seed = base.seed;
+    return s;
+  }
+  var S = load();
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* 隐私模式等情况下忽略 */ } }
+
+  /* ---------- utils ---------- */
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function dstr(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function today() { return dstr(new Date()); }
+  function addDays(s, n) { var p = s.split('-'); return dstr(new Date(+p[0], +p[1] - 1, +p[2] + n)); }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  // 汉字注音：{漢字|かな} → <ruby>，点击汉字显示假名
+  function rb(s) { return esc(s).replace(/\{([^|}]+)\|([^}]+)\}/g, '<ruby class="fg">$1<rt>$2</rt></ruby>'); }
+  function jp(s) { return rb(FURI[s] || s).replace(/【([^】]*)】/g, '<mark>$1</mark>'); }
+  function hl(s) { return jp(s); }
+  function strip(s) { return String(s).replace(/[【】]/g, ''); }
+  function hash(str) { var h = 2166136261; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function $(sel, root) { return (root || document).querySelector(sel); }
+  function lvTag(lv) { return '<span class="tag tag--' + lv.toLowerCase() + '">' + lv + '</span>'; }
+
+  var ICON = {
+    say: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 6h2.2L8 3.3v9.4L4.7 10H2.5z" fill="currentColor"/><path d="M10.6 5.4a3.6 3.6 0 0 1 0 5.2M12.4 3.6a6.2 6.2 0 0 1 0 8.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
+    ok: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    bad: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+    back: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2.5L4.5 7 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    chev: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 5.2L7 9.2l4-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    search: '<svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12.2 12.2L16 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'
+  };
+
+  function toast(msg) {
+    var t = $('#toast'); t.textContent = msg; t.classList.add('is-on');
+    clearTimeout(toast.tm); toast.tm = setTimeout(function () { t.classList.remove('is-on'); }, 2200);
+  }
+
+  /* ---------- speech ---------- */
+  var canSpeak = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+  var jaVoice = null;
+  function pickVoice() {
+    if (!canSpeak) return;
+    var vs = speechSynthesis.getVoices();
+    jaVoice = vs.filter(function (v) { return /^ja/i.test(v.lang); })[0] || null;
+  }
+  if (canSpeak) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+  function speak(text, btn) {
+    if (!canSpeak) return;
+    speechSynthesis.cancel();
+    document.querySelectorAll('.say.is-on').forEach(function (b) { b.classList.remove('is-on'); });
+    var u = new SpeechSynthesisUtterance(strip(text));
+    u.lang = 'ja-JP'; u.rate = 0.92; if (jaVoice) u.voice = jaVoice;
+    if (btn) { btn.classList.add('is-on'); u.onend = u.onerror = function () { btn.classList.remove('is-on'); }; }
+    speechSynthesis.speak(u);
+  }
+  function sayBtn(text) {
+    if (!canSpeak || !S.set.tts) return '';
+    return '<button class="say" type="button" data-act="say" data-text="' + esc(strip(text)) + '" aria-label="朗读">' + ICON.say + '</button>';
+  }
+
+  /* ---------- progress model ---------- */
+  function card(id) { return S.cards[id]; }
+  function status(id) { var c = card(id); if (!c) return 'new'; return c.b >= MASTER ? 'mastered' : 'learning'; }
+  function inScope(i) { return S.set.scope === 'all' || i.lv === S.set.scope; }
+  function logDay(ok) {
+    var d = today(); var x = S.days[d] || (S.days[d] = { n: 0, ok: 0 });
+    x.n++; if (ok) x.ok++;
+  }
+  function grade(id, ok, mode) {
+    var t = today();
+    var c = S.cards[id];
+    if (mode === 'daily') {
+      if (!c) c = S.cards[id] = { b: 0, r: 0, w: 0, due: t };
+      if (ok) { c.b = Math.min(c.b + 1, INTERVAL.length - 1); c.r++; c.due = addDays(t, INTERVAL[c.b]); }
+      else { c.b = 0; c.w++; c.due = addDays(t, 1); }
+      c.last = t;
+    } else if (c) {
+      if (ok) c.r++;
+      else { c.w++; c.b = Math.min(c.b, 1); if (c.due > addDays(t, 1)) c.due = addDays(t, 1); }
+    }
+  }
+  function streak() {
+    var d = today(); var n = 0;
+    if (!(S.days[d] && S.days[d].n)) d = addDays(d, -1);
+    while (S.days[d] && S.days[d].n) { n++; d = addDays(d, -1); }
+    return n;
+  }
+  function totals() {
+    var learned = 0, mastered = 0, r = 0, w = 0;
+    Object.keys(S.cards).forEach(function (k) { var c = S.cards[k]; learned++; if (c.b >= MASTER) mastered++; r += c.r; w += c.w; });
+    return { learned: learned, mastered: mastered, acc: r + w ? Math.round(r / (r + w) * 100) : null };
+  }
+  function dueOn(date) {
+    return ITEMS.filter(function (i) { var c = card(i.id); return c && inScope(i) && c.due <= date; }).length;
+  }
+
+  /* ---------- sessions ---------- */
+  function newSession(mode, entries, title) {
+    var s = { mode: mode, title: title || '', date: today(), q: entries, total: entries.length, pos: 0, phase: 'idle', opts: null, pick: null, res: [] };
+    enter(s); return s;
+  }
+  function enter(s) {
+    s.pick = null; s.opts = null;
+    if (s.pos >= s.q.length) { s.phase = 'done'; return; }
+    var e = s.q[s.pos];
+    if (e.k === 'new') s.phase = 'learn'; else startQuiz(s);
+  }
+  function startQuiz(s) {
+    var it = BY[s.q[s.pos].id];
+    s.opts = shuffle([answerOf(it)].concat(it.d));
+    s.phase = 'quiz';
+  }
+  function answerOf(it) { var m = it.ex[0][0].match(/【([^】]*)】/); return m ? m[1] : ''; }
+
+  function buildDaily() {
+    var t = today();
+    var pool = ITEMS.filter(inScope);
+    var due = pool.filter(function (i) { var c = card(i.id); return c && c.due <= t; })
+      .sort(function (a, b) { var ca = card(a.id), cb = card(b.id); return ca.due < cb.due ? -1 : ca.due > cb.due ? 1 : ca.b - cb.b; })
+      .slice(0, 50);
+    var unseen = pool.filter(function (i) { return !card(i.id); });
+    if (S.set.order === 'rand') unseen.sort(function (a, b) { return hash(S.seed + ':' + a.id) - hash(S.seed + ':' + b.id); });
+    var neu = unseen.slice(0, +S.set.per || 8);
+    var q = due.map(function (i) { return { id: i.id, k: 'review' }; }).concat(neu.map(function (i) { return { id: i.id, k: 'new' }; }));
+    S.daily = newSession('daily', q, '今日练习');
+    save();
+  }
+  function ensureDaily() {
+    if (!S.daily || S.daily.date !== today()) buildDaily();
+    return S.daily;
+  }
+  var EXTRA = null;
+  function activeSession() { return EXTRA && EXTRA.phase !== 'gone' ? EXTRA : ensureDaily(); }
+
+  function answer(s, pick) {
+    if (s.phase !== 'quiz') return;
+    var e = s.q[s.pos]; var it = BY[e.id];
+    var ok = pick === answerOf(it);
+    s.pick = pick; s.phase = 'answer';
+    if (e.k !== 'retry') {
+      grade(e.id, ok, s.mode); logDay(ok);
+      s.res.push({ id: e.id, ok: ok, k: e.k });
+      if (!ok) s.q.push({ id: e.id, k: 'retry' });
+    }
+    save();
+  }
+  function next(s) {
+    if (s.phase === 'learn') { startQuiz(s); }
+    else if (s.phase === 'answer') { s.pos++; enter(s); }
+    if (s.mode === 'daily') save();
+  }
+
+  function startExtra(entries, title) {
+    if (!entries.length) { toast('没有可以练习的语法'); return; }
+    EXTRA = newSession('extra', entries, title);
+    if (location.hash === '#/study') render(); else location.hash = '#/study';
+  }
+  function practiceLearned() {
+    var learned = ITEMS.filter(function (i) { return card(i.id); });
+    if (!learned.length) { toast('先完成一次今日练习，再来巩固吧'); return; }
+    learned.sort(function (a, b) { return (card(a.id).b - card(b.id).b) || (Math.random() - 0.5); });
+    var pickN = shuffle(learned.slice(0, Math.max(20, Math.ceil(learned.length / 3)))).slice(0, 10);
+    startExtra(pickN.map(function (i) { return { id: i.id, k: 'review' }; }), '巩固练习');
+  }
+  function uniqByPattern(ids) {
+    var seen = {}; return ids.filter(function (id) { var p = BY[id].p; if (seen[p]) return false; seen[p] = 1; return true; });
+  }
+  function practiceGroup(gid) {
+    var g = GBY[gid]; if (!g) return;
+    startExtra(shuffle(uniqByPattern(g.items)).map(function (id) { return { id: id, k: 'review' }; }), '辨析练习');
+  }
+
+  /* ---------- shared item blocks ---------- */
+  function coreOf(p) { return p.replace(/^～/, '').replace(/（[^）]*）/g, '').trim(); }
+  var CORE = {}; ITEMS.forEach(function (i) { coreOf(i.p).split('／').forEach(function (c) { c = c.replace(/^～/, ''); if (c && !CORE[c]) CORE[c] = i.id; }); });
+  var CORE_KEYS = Object.keys(CORE);
+  function lookupOpt(o) {
+    var c = [o, o + 'に', o + 'だ', 'て' + o, o.replace(/だ$/, ''), o.replace(/た$/, 'る')];
+    for (var i = 0; i < c.length; i++) if (CORE[c[i]]) return CORE[c[i]];
+    if (o.length >= 2) for (var k = 0; k < CORE_KEYS.length; k++) if (CORE_KEYS[k].indexOf(o) === 0) return CORE[CORE_KEYS[k]];
+    return null;
+  }
+
+  function exList(it, from) {
+    return '<ul class="exs">' + it.ex.slice(from || 0).map(function (e) {
+      return '<li class="ex"><span class="ex__ja" lang="ja">' + hl(e[0]) + '</span>' + sayBtn(e[0]) + '<span class="ex__zh">' + esc(e[1]) + '</span></li>';
+    }).join('') + '</ul>';
+  }
+  function confuseBlock(it) {
+    if (!it.g || !it.g.length) return '';
+    return '<div class="block"><h4>易混淆</h4><div class="confuse">' + it.g.map(function (gid) {
+      var g = GBY[gid]; if (!g) return '';
+      var sibs = uniqByPattern(g.items).filter(function (id) { return BY[id].p !== it.p; }).slice(0, 8);
+      return '<div><a class="confuse__g" href="#/compare/' + g.id + '"><b>' + esc(g.t) + '</b><span>' + esc(g.s) + '</span></a>' +
+        (sibs.length ? '<div class="sibs">' + sibs.map(function (id) { return '<a class="chip chip--ja" href="#/item/' + id + '">' + esc(BY[id].p) + '</a>'; }).join('') + '</div>' : '') + '</div>';
+    }).join('') + '</div></div>';
+  }
+  function itemBody(it, opts) {
+    opts = opts || {};
+    var st = status(it.id);
+    var stText = { 'new': '未学', learning: '学习中', mastered: '已掌握' }[st];
+    return '' +
+      (opts.noHead ? '' : '<div class="kind">第 ' + it.id + ' 条</div><h1 class="pattern" lang="ja">' + jp(it.p) + '</h1>') +
+      '<p class="meaning">' + esc(it.m) + '</p>' +
+      '<div class="meta">' + lvTag(it.lv) + '<span class="tag">' + esc(it.cat) + '</span><span class="tag">' + stText + '</span></div>' +
+      '<div class="block"><h4>接续</h4><div class="conn">' + esc(it.c) + '</div></div>' +
+      '<div class="block"><h4>要点</h4><p class="note">' + esc(it.n) + '</p></div>' +
+      '<div class="block"><h4>例句<span class="h4-hint">点汉字显示假名</span></h4>' + exList(it) + '</div>' +
+      confuseBlock(it);
+  }
+
+  /* ---------- views ---------- */
+  function viewToday() {
+    var s = ensureDaily();
+    var t = today(); var d = new Date();
+    var doneN = s.res.length; var total = s.total;
+    var reviewN = s.q.filter(function (e, i) { return i < s.total && e.k === 'review'; }).length;
+    var newN = s.total - reviewN;
+    var pct = total ? Math.min(1, doneN / total) : 1;
+    var C = 2 * Math.PI * 54;
+    var head, body, btns;
+    if (!total) {
+      head = '今天没有安排'; body = S.set.scope === 'all' && Object.keys(S.cards).length >= ITEMS.length ? '297 条都已经学过，今天也没有到期的复习。' : '当前范围内没有新语法，也没有到期的复习。';
+      btns = '<button class="btn" data-act="practice">随便练 10 题</button>';
+    } else if (s.phase === 'done') {
+      var ok = s.res.filter(function (r) { return r.ok; }).length;
+      head = '今天的练习完成了'; body = '答对 ' + ok + ' / ' + s.res.length + ' 题。明天还有 ' + dueOn(addDays(t, 1)) + ' 条到期复习。';
+      btns = '<button class="btn" data-act="practice">再练一组</button><a class="btn btn--ghost" href="#/study" data-act="daily">查看结果</a>';
+    } else if (doneN || s.pos || s.phase === 'quiz' && s.q[0] && s.q[0].k === 'new') {
+      head = '已完成 ' + doneN + ' / ' + total; body = '复习 ' + reviewN + ' 条 · 新学 ' + newN + ' 条，进度会自动保存。';
+      btns = '<a class="btn" href="#/study" data-act="daily">继续练习</a>';
+    } else {
+      head = '复习 ' + reviewN + ' 条 · 新学 ' + newN + ' 条'; body = reviewN ? '先把到期的复习做完，再学今天的新语法。' : '每条新语法先看讲解，再做一道选择题。';
+      btns = '<a class="btn" href="#/study" data-act="daily">开始练习</a>';
+    }
+    var T = totals();
+    var days = ''; for (var k = 13; k >= 0; k--) {
+      var ds = addDays(t, -k); var x = S.days[ds]; var n = x ? x.n : 0;
+      var l = n === 0 ? 0 : n < 5 ? 1 : n < 15 ? 2 : 3;
+      days += '<i data-l="' + l + '"' + (k === 0 ? ' class="today"' : '') + ' title="' + ds + '：' + n + ' 题"></i>';
+    }
+    var stars = GROUPS.filter(function (g) { return g.star; });
+    var dayIdx = Math.floor(new Date(+t.slice(0, 4), +t.slice(5, 7) - 1, +t.slice(8, 10)).getTime() / 864e5);
+    var gt = (dayIdx % 3 === 0 ? GROUPS : stars)[dayIdx % (dayIdx % 3 === 0 ? GROUPS.length : stars.length)];
+
+    return '<div class="wrap page fade-in">' +
+      '<div class="eyebrow">' + (d.getMonth() + 1) + '月' + d.getDate() + '日 · 星期' + WEEK[d.getDay()] + '</div>' +
+      '<h1 class="h1">每日语法</h1>' +
+      '<div class="hero"><div class="ring" role="img" aria-label="今日进度 ' + Math.round(pct * 100) + '%"><svg viewBox="0 0 120 120"><circle class="ring__track" cx="60" cy="60" r="54" fill="none" stroke-width="10"/><circle class="ring__bar" cx="60" cy="60" r="54" fill="none" stroke-width="10" stroke-linecap="round" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + (C * (1 - pct)).toFixed(1) + '"/></svg>' +
+      '<div class="ring__label"><span class="ring__big num">' + (total ? doneN + '<span class="muted" style="font-size:18px">/' + total + '</span>' : '—') + '</span><span class="ring__small">今日</span></div></div>' +
+      '<div class="hero__body"><h2>' + head + '</h2><p>' + body + '</p><div class="btn-row">' + btns + '</div></div></div>' +
+
+      '<section class="section"><div class="section__head"><h2>学习记录</h2><a href="#/list">语法库</a></div>' +
+      '<div class="stats">' +
+      '<div class="stat"><b class="num">' + T.learned + '<span class="muted" style="font-size:15px"> / ' + ITEMS.length + '</span></b><span>已学</span></div>' +
+      '<div class="stat"><b class="num">' + T.mastered + '</b><span>已掌握</span></div>' +
+      '<div class="stat"><b class="num">' + streak() + '</b><span>连续天数</span></div>' +
+      '<div class="stat"><b class="num">' + (T.acc === null ? '—' : T.acc + '%') + '</b><span>正确率</span></div>' +
+      '</div><div class="days" aria-label="最近 14 天">' + days + '</div><div class="days__legend"><span>14 天前</span><span>今天</span></div></section>' +
+
+      (gt ? '<section class="section"><div class="section__head"><h2>今日辨析</h2><a href="#/compare">全部 ' + GROUPS.length + ' 组</a></div>' +
+        '<a class="card teaser" href="#/compare/' + gt.id + '"><div class="eyebrow">' + (gt.star ? '★ 重点辨析' : '辨析') + '</div><h3 lang="ja">' + esc(gt.t) + '</h3><p>' + esc(gt.s) + '</p></a></section>' : '') +
+
+      '<section class="section"><div class="card card--flat"><p class="small muted">每天先复习到期的语法，再学新的。答对后间隔会拉长（1 → 3 → 7 → 14 → 30 天……），答错的第二天会再出现，并且当场在最后再考一次。连续答对到 30 天间隔就算“已掌握”。右上角可以设置每天新学几条。</p></div></section>' +
+      '</div>';
+  }
+
+  function viewStudy() {
+    var s = activeSession();
+    if (s.phase === 'done') return viewDone(s);
+    var e = s.q[s.pos]; var it = BY[e.id];
+    var kinds = { 'new': ['kind--new', '新语法'], review: ['kind--review', '复习'], retry: ['kind--retry', '错题重做'] };
+    var kd = kinds[e.k];
+    var bar = '<div class="study__bar"><a class="icon-btn" href="#/" aria-label="返回">' + ICON.back + '</a><div class="progress"><i style="width:' + Math.round(Math.min(s.pos, s.q.length) / s.q.length * 100) + '%"></i></div><span class="study__count num">' + (s.pos + 1) + ' / ' + s.q.length + '</span></div>';
+    var inner;
+    if (s.phase === 'learn') {
+      inner = '<div class="card fade-in"><div class="kind ' + kd[0] + '">' + kd[1] + ' · 第 ' + it.id + ' 条</div><h1 class="pattern" lang="ja">' + jp(it.p) + '</h1>' + itemBody(it, { noHead: true }) + '</div>' +
+        '<div class="sticky-next"><button class="btn btn--block" data-act="next">记住了，做一道题</button><p class="hint">按 Enter 继续</p></div>';
+    } else {
+      var ans = answerOf(it);
+      var src = it.ex[0][0]; var m = (FURI[src] || src).match(/^(.*?)【([^】]*)】(.*)$/);
+      var answered = s.phase === 'answer'; var ok = answered && s.pick === ans;
+      var blank = answered ? '<span class="blank ok">' + rb(m[2]) + '</span>' : '<span class="blank" aria-label="空格">　</span>';
+      var qhtml = rb(m[1]) + blank + rb(m[3]);
+      var opts = s.opts.map(function (o, idx) {
+        var cls = 'opt';
+        if (answered) { if (o === ans) cls += ' is-right'; else if (o === s.pick) cls += ' is-wrong'; else cls += ' is-dim'; }
+        return '<button class="' + cls + '" type="button" data-act="pick" data-opt="' + esc(o) + '"' + (answered ? ' disabled' : '') + '><kbd>' + (idx + 1) + '</kbd><span lang="ja">' + esc(o) + '</span></button>';
+      }).join('');
+      inner = '<div class="card fade-in"><div class="kind ' + kd[0] + '">' + kd[1] + (e.k === 'new' ? ' · 小测' : '') + '</div>' +
+        '<p class="small muted" style="margin-top:6px">选出填入空格最合适的一项 · 点汉字看读音</p>' +
+        '<p class="q" lang="ja">' + qhtml + '</p>' + (answered ? '<p class="q__zh">' + esc(it.ex[0][1]) + '</p>' : '') +
+        '<div class="opts">' + opts + '</div>';
+      if (answered) {
+        var others = s.opts.filter(function (o) { return o !== ans; }).map(function (o) { var id = lookupOpt(o); return id ? [o, id] : null; }).filter(Boolean);
+        inner += '<div class="verdict ' + (ok ? 'verdict--ok' : 'verdict--bad') + '">' + (ok ? ICON.ok + '答对了' : ICON.bad + '答错了，正确答案是「' + esc(ans) + '」') + (e.k === 'retry' ? '' : '<small>' + (ok ? nextText(e.id, s.mode) : '稍后再考一次') + '</small>') + '</div>' +
+          '<div class="explain"><div class="kind">第 ' + it.id + ' 条</div><h2 class="pattern" lang="ja">' + jp(it.p) + '</h2>' + itemBody(it, { noHead: true }) +
+          (others.length ? '<div class="block"><h4>其他选项是什么意思</h4><div class="sibs">' + others.map(function (x) { return '<a class="chip chip--ja" href="#/item/' + x[1] + '">' + esc(x[0]) + '<span class="muted">· ' + esc(BY[x[1]].m) + '</span></a>'; }).join('') + '</div></div>' : '') +
+          '</div>';
+      }
+      inner += '</div>';
+      if (answered) inner += '<div class="sticky-next"><button class="btn btn--block" data-act="next" id="nextBtn">' + (s.pos + 1 >= s.q.length ? '完成' : '下一题') + '</button><p class="hint">按 Enter 继续</p></div>';
+      else inner += '<p class="hint" style="margin-top:14px">可以按 1–4 选择</p>';
+    }
+    return '<div class="wrap page"><div class="study">' + bar + inner + '</div></div>';
+  }
+  function nextText(id, mode) {
+    if (mode !== 'daily') return '';
+    var c = card(id); if (!c) return '';
+    var days = INTERVAL[c.b];
+    return c.b >= MASTER ? '已掌握 · ' + days + ' 天后复习' : days + ' 天后复习';
+  }
+
+  function viewDone(s) {
+    var ok = s.res.filter(function (r) { return r.ok; }).length;
+    var wrong = []; var seen = {};
+    s.res.forEach(function (r) { if (!r.ok && !seen[r.id]) { seen[r.id] = 1; wrong.push(r.id); } });
+    var isDaily = s.mode === 'daily';
+    var newN = s.res.filter(function (r) { return r.k === 'new'; }).length;
+    if (!s.res.length) {
+      return '<div class="wrap page"><div class="study done fade-in"><div class="done__icon">' + ICON.ok + '</div><h2>今天没有要练的</h2><p class="muted" style="margin-top:8px">可以去语法库看看，或者随便练几题。</p><div class="btn-row"><button class="btn" data-act="practice">随便练 10 题</button><a class="btn btn--ghost" href="#/list">语法库</a></div></div></div>';
+    }
+    return '<div class="wrap page"><div class="study done fade-in">' +
+      '<div class="done__icon">' + ICON.ok + '</div><h2>' + (isDaily ? '今天的练习完成了' : esc(s.title) + '完成') + '</h2>' +
+      '<p class="muted" style="margin-top:8px">' + (isDaily ? '明天还有 ' + dueOn(addDays(today(), 1)) + ' 条到期复习。' : '这组练习不会打乱每日复习的安排。') + '</p>' +
+      '<div class="stats"><div class="stat"><b class="num">' + ok + ' / ' + s.res.length + '</b><span>首次答对</span></div><div class="stat"><b class="num">' + Math.round(ok / s.res.length * 100) + '%</b><span>正确率</span></div>' +
+      (isDaily ? '<div class="stat"><b class="num">' + newN + '</b><span>新学</span></div><div class="stat"><b class="num">' + streak() + '</b><span>连续天数</span></div>' : '<div class="stat"><b class="num">' + wrong.length + '</b><span>答错</span></div><div class="stat"><b class="num">' + streak() + '</b><span>连续天数</span></div>') + '</div>' +
+      '<div class="btn-row">' + (wrong.length ? '<button class="btn" data-act="redo" data-ids="' + wrong.join(',') + '">错题再练</button>' : '') + '<button class="btn ' + (wrong.length ? 'btn--ghost' : '') + '" data-act="practice">再练一组</button><a class="btn btn--plain" href="#/">回到今日</a></div>' +
+      (wrong.length ? '<div class="wrong-list"><h3>这次答错的</h3><ul class="rows">' + wrong.map(rowHtml).join('') + '</ul></div>' : '') +
+      '</div></div>';
+  }
+
+  /* list */
+  var LF = { q: '', lv: 'all', st: 'all' };
+  function rowHtml(id) {
+    var it = BY[id];
+    return '<li><a class="row" href="#/item/' + id + '"><span class="row__id">' + id + '</span><span class="row__p" lang="ja">' + esc(it.p) + '</span><span class="row__m">' + esc(it.m) + '</span><span class="row__s">' + lvTag(it.lv) + '<i class="status" data-s="' + status(id) + '" title="' + { 'new': '未学', learning: '学习中', mastered: '已掌握' }[status(id)] + '"></i></span></a></li>';
+  }
+  function filterItems() {
+    var q = LF.q.trim().toLowerCase().replace(/[～~]/g, '');
+    return ITEMS.filter(function (i) {
+      if (LF.lv !== 'all' && i.lv !== LF.lv) return false;
+      if (LF.st !== 'all' && status(i.id) !== LF.st) return false;
+      if (!q) return true;
+      if (/^\d+$/.test(q)) return String(i.id) === q;
+      var hay = (i.p + ' ' + i.m + ' ' + i.n + ' ' + i.ex.map(function (e) { return strip(e[0]) + ' ' + e[1]; }).join(' ')).toLowerCase().replace(/[～~]/g, '');
+      return hay.indexOf(q) >= 0;
+    });
+  }
+  function listResults() {
+    var list = filterItems();
+    if (!list.length) return '<div class="empty">没有找到符合条件的语法</div>';
+    var out = ''; var cur = null; var buf = [];
+    function flush() { if (buf.length) out += '<div class="cat"><h3>' + esc(cur) + '</h3><ul class="rows">' + buf.join('') + '</ul></div>'; buf = []; }
+    list.forEach(function (i) { var key = i.lv + '｜' + i.cat; if (key !== cur) { flush(); cur = key; } buf.push(rowHtml(i.id)); });
+    flush();
+    return '<p class="small muted" style="margin-top:4px">' + list.length + ' 条</p>' + out;
+  }
+  function chip(group, val, label) { return '<button class="chip" type="button" data-act="filter" data-k="' + group + '" data-v="' + val + '" aria-pressed="' + (LF[group] === val) + '">' + label + '</button>'; }
+  function viewList() {
+    var T = totals();
+    return '<div class="wrap page fade-in"><div class="eyebrow">共 ' + ITEMS.length + ' 条 · 已学 ' + T.learned + ' · 已掌握 ' + T.mastered + '</div><h1 class="h1">语法库</h1>' +
+      '<div class="toolbar"><label class="search">' + ICON.search + '<input id="q" type="search" placeholder="搜索句型、意思、例句或编号" value="' + esc(LF.q) + '" autocomplete="off"></label>' +
+      '<div class="chips">' + chip('lv', 'all', '全部') + chip('lv', 'N3', 'N3') + chip('lv', 'N2', 'N2') + '<span style="width:8px"></span>' + chip('st', 'all', '全部状态') + chip('st', 'new', '未学') + chip('st', 'learning', '学习中') + chip('st', 'mastered', '已掌握') + '</div></div>' +
+      '<div id="results">' + listResults() + '</div></div>';
+  }
+
+  function viewItem(id) {
+    var it = BY[id]; if (!it) return viewNotFound();
+    var prev = BY[id - 1], nxt = BY[id + 1];
+    return '<div class="wrap page fade-in"><a class="back" href="#/list">' + ICON.back + '语法库</a>' +
+      '<div class="card" style="margin-top:16px">' + itemBody(it) +
+      '<div class="block btn-row">' + (it.g.length ? '<button class="btn btn--sm" data-act="group" data-g="' + it.g[0] + '">练习这组易混淆</button>' : '') + '<button class="btn btn--ghost btn--sm" data-act="one" data-id="' + it.id + '">做一道题</button></div></div>' +
+      '<nav class="pager">' + (prev ? '<a href="#/item/' + prev.id + '"><small>上一条 · ' + prev.id + '</small><span lang="ja">' + esc(prev.p) + '</span></a>' : '<span></span>') +
+      (nxt ? '<a href="#/item/' + nxt.id + '"><small>下一条 · ' + nxt.id + '</small><span lang="ja">' + esc(nxt.p) + '</span></a>' : '<span></span>') + '</nav></div>';
+  }
+
+  function groupHtml(g, open) {
+    var ids = uniqByPattern(g.items);
+    return '<details class="card group" id="g-' + g.id + '"' + (open ? ' open' : '') + '><summary><h3 lang="ja">' + (g.star ? '<span class="star">★ 重点</span>' : '') + esc(g.t) + '</h3><p>' + esc(g.s) + '</p><span class="chev">' + ICON.chev + '</span></summary>' +
+      '<div class="group__body"><table class="cmp"><tbody>' + g.pts.map(function (p) { return '<tr><th lang="ja">' + jp(p[0]) + '</th><td>' + esc(p[1]) + '</td></tr>'; }).join('') + '</tbody></table>' +
+      '<div class="block"><h4>对比例句</h4><ul class="pairs">' + g.ex.map(function (e) {
+        return '<li class="pair' + (e[2] ? '' : ' pair--bad') + '"><span class="pair__mk ' + (e[2] ? 'ok' : 'bad') + '">' + (e[2] ? '✓' : '✗') + '</span><span class="pair__ja" lang="ja">' + hl(e[0]) + '</span><span class="pair__zh">' + esc(e[1]) + '</span></li>';
+      }).join('') + '</ul></div>' +
+      '<div class="block"><h4>相关条目</h4><div class="sibs">' + ids.map(function (id) { return '<a class="chip chip--ja" href="#/item/' + id + '">' + esc(BY[id].p) + '</a>'; }).join('') + '</div></div>' +
+      '<div class="block"><button class="btn btn--sm" data-act="group" data-g="' + g.id + '">练这组 · ' + ids.length + ' 题</button></div></div></details>';
+  }
+  function viewCompare(gid) {
+    var list = GROUPS.filter(function (g) { return g.star; }).concat(GROUPS.filter(function (g) { return !g.star; }));
+    return '<div class="wrap page fade-in"><div class="eyebrow">' + GROUPS.length + ' 组 · ★ 为原文档重点辨析索引</div><h1 class="h1">易混淆辨析</h1>' +
+      '<p class="lead">每组列出区别要点和对比例句，✗ 是常见的错误用法。点“练这组”可以把这组句型放在一起做题。</p>' +
+      '<div class="groups">' + list.map(function (g) { return groupHtml(g, g.id === gid); }).join('') + '</div></div>';
+  }
+  function viewNotFound() { return '<div class="wrap page"><div class="empty">没有这个页面。<a href="#/">回到今日</a></div></div>'; }
+
+  /* ---------- router ---------- */
+  function route() {
+    var h = location.hash.replace(/^#/, '') || '/';
+    var parts = h.split('/').filter(Boolean);
+    return { name: parts[0] || 'today', arg: parts[1] };
+  }
+  function render() {
+    var r = route(); var main = $('#main'); var html; var tab = r.name;
+    if (r.name === 'today') html = viewToday();
+    else if (r.name === 'study') { html = viewStudy(); tab = 'today'; }
+    else if (r.name === 'list') html = viewList();
+    else if (r.name === 'item') { html = viewItem(+r.arg); tab = 'list'; }
+    else if (r.name === 'compare') html = viewCompare(r.arg);
+    else html = viewNotFound();
+    main.innerHTML = html;
+    document.querySelectorAll('.nav__tabs a').forEach(function (a) { if (a.dataset.tab === tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    var titles = { today: '每日语法', study: '练习', list: '语法库', item: '语法', compare: '易混淆辨析' };
+    document.title = (r.name === 'item' && BY[+r.arg] ? BY[+r.arg].p + ' · ' : (titles[r.name] && r.name !== 'today' ? titles[r.name] + ' · ' : '')) + '每日语法 · labagound';
+    if (r.name === 'compare' && r.arg) {
+      var el = document.getElementById('g-' + r.arg);
+      if (el) { setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); }, 30); }
+    }
+  }
+  var lastRoute = '';
+  function onHash() {
+    var h = location.hash;
+    if (h === '#/study' && !EXTRA) ensureDaily();
+    render();
+    if (h !== lastRoute) { if (!/^#\/compare\/./.test(h)) window.scrollTo(0, 0); lastRoute = h; }
+  }
+  window.addEventListener('hashchange', onHash);
+
+  /* ---------- events ---------- */
+  document.addEventListener('click', function (ev) {
+    var fg = ev.target.closest('ruby.fg');
+    if (fg && !fg.closest('button, a, summary')) { fg.classList.toggle('on'); return; }
+    var el = ev.target.closest('[data-act]'); if (!el) return;
+    var act = el.dataset.act;
+    if (act === 'say') { ev.preventDefault(); speak(el.dataset.text, el); return; }
+    if (act === 'daily') { EXTRA = null; return; }
+    if (act === 'pick') { var s = activeSession(); answer(s, el.dataset.opt); render(); var nb = $('#nextBtn'); if (nb) nb.focus({ preventScroll: true }); return; }
+    if (act === 'next') {
+      var s2 = activeSession(); var wasLearn = s2.phase === 'learn'; next(s2); render(); window.scrollTo({ top: 0, behavior: wasLearn ? 'auto' : 'smooth' }); return;
+    }
+    if (act === 'practice') { practiceLearned(); return; }
+    if (act === 'group') { practiceGroup(el.dataset.g); return; }
+    if (act === 'one') { startExtra([{ id: +el.dataset.id, k: 'review' }], '单题练习'); return; }
+    if (act === 'redo') { startExtra(shuffle(el.dataset.ids.split(',').map(function (x) { return { id: +x, k: 'review' }; })), '错题练习'); return; }
+    if (act === 'filter') { LF[el.dataset.k] = el.dataset.v; render(); return; }
+  });
+  document.addEventListener('input', function (ev) {
+    if (ev.target.id === 'q') { LF.q = ev.target.value; $('#results').innerHTML = listResults(); }
+  });
+  document.addEventListener('keydown', function (ev) {
+    if (route().name !== 'study' || ev.metaKey || ev.ctrlKey || ev.altKey) return;
+    if ($('#settings').open) return;
+    var s = activeSession();
+    if (s.phase === 'quiz' && /^[1-4]$/.test(ev.key)) { var o = s.opts[+ev.key - 1]; if (o) { answer(s, o); render(); var nb = $('#nextBtn'); if (nb) nb.focus({ preventScroll: true }); } ev.preventDefault(); }
+    else if ((s.phase === 'answer' || s.phase === 'learn') && ev.key === 'Enter' && !(ev.target.closest && ev.target.closest('a,button,input,select,summary'))) { var wl = s.phase === 'learn'; next(s); render(); window.scrollTo({ top: 0, behavior: wl ? 'auto' : 'smooth' }); ev.preventDefault(); }
+  });
+
+  /* ---------- settings ---------- */
+  var dlg = $('#settings'); var form = $('#settingsForm');
+  $('#openSettings').addEventListener('click', function () {
+    form.per.value = String(S.set.per); form.scope.value = S.set.scope; form.order.value = S.set.order; form.tts.checked = !!S.set.tts; form.furi.value = S.set.furi || 'tap';
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+  });
+  dlg.addEventListener('click', function (ev) { if (ev.target === dlg) dlg.close(); });
+  form.addEventListener('change', function () {
+    var before = S.set.per + S.set.scope + S.set.order;
+    S.set.per = +form.per.value; S.set.scope = form.scope.value; S.set.order = form.order.value; S.set.tts = form.tts.checked; S.set.furi = form.furi.value; applyFuri();
+    var d = S.daily;
+    if (before !== S.set.per + S.set.scope + S.set.order && d && d.date === today() && !d.res.length) { buildDaily(); toast('已按新设置重新安排今天的练习'); }
+    else toast('已保存');
+    save(); render();
+  });
+  $('#exportBtn').addEventListener('click', function () {
+    var blob = new Blob([JSON.stringify(S, null, 1)], { type: 'application/json' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'grammar-progress-' + today() + '.json';
+    document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  });
+  $('#importInput').addEventListener('change', function (ev) {
+    var f = ev.target.files[0]; if (!f) return;
+    var rd = new FileReader();
+    rd.onload = function () {
+      try {
+        var data = JSON.parse(rd.result);
+        if (!data || typeof data.cards !== 'object') throw new Error('bad');
+        localStorage.setItem(KEY, JSON.stringify(data)); S = load(); EXTRA = null; dlg.close(); render(); toast('进度已导入');
+      } catch (e) { toast('这个文件不是有效的进度文件'); }
+      ev.target.value = '';
+    };
+    rd.readAsText(f);
+  });
+  $('#resetBtn').addEventListener('click', function () {
+    if (!confirm('确定清空所有学习记录吗？这一步不能撤销。')) return;
+    var keep = S.set; S = fresh(); S.set = keep; EXTRA = null; save(); dlg.close(); render(); toast('记录已清空');
+  });
+
+  function applyFuri() { document.documentElement.classList.toggle('furi-all', S.set.furi === 'always'); }
+  applyFuri();
+  onHash();
+})();
