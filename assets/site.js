@@ -227,6 +227,15 @@
       '<div class="wrap nav__in"><a class="nav__mark" href="#" aria-label="' + name + '">' + mark() + "</a>" +
       '<nav class="nav__links" aria-label="' + esc(u("menu")) + '">' + linkHtml + "</nav>" + langSwitch("nav") +
       '<button class="nav__menu" type="button" aria-expanded="false" aria-controls="sheet" aria-label="' + esc(u("menu")) + '">' + ICON.menu + "</button></div>";
+    // during the entrance, the logo and menu fade in on the page's clock, not from when the script rebuilt them
+    var navEl = document.getElementById("nav");
+    if (navEl.hasAttribute("data-intro") && window.performance) {
+      var sec = performance.now() / 1000, base = [0.35, 0.45, 0.55, 0.62];
+      Array.prototype.forEach.call(navEl.querySelectorAll(".nav__in > *"), function (el, i) {
+        var d = Math.max(0, base[Math.min(i, 3)] - sec).toFixed(2) + "s";
+        el.style.webkitAnimationDelay = d; el.style.animationDelay = d;
+      });
+    }
     // the phone menu lives outside the blurred nav bar, so it can cover the whole screen
     var feat = byId(SITE.featuredWork) || WORKS[0];
     var prof = SITE.profile || {};
@@ -863,12 +872,6 @@
     }, 220);
   });
   render(false);
-  // the top bar plays its entrance once, on first load only — starting now that it has its logo and menu
-  (function () {
-    var n = document.getElementById("nav"); if (!n) return;
-    requestAnimationFrame(function () {
-      n.setAttribute("data-ready", "");
-      setTimeout(function () { n.removeAttribute("data-intro"); }, 1700);
-    });
-  })();
+  // the top bar plays its entrance once, on first load only
+  setTimeout(function () { var n = document.getElementById("nav"); if (n) n.removeAttribute("data-intro"); }, 1800);
 })();

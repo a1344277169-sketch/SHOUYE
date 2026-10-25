@@ -124,10 +124,16 @@ html:lang(en) h3 { letter-spacing: -0.012em; }
 /* ---------- nav ---------- */
 .nav {
   position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+  border-bottom: 1px solid var(--line);
+}
+/* the frosted glass sits on its own layer behind the bar's content: in iPhone WebKit, content inside an
+   element that has backdrop-filter can stop repainting after an animation and vanish (an empty bar) */
+.nav::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background: var(--nav-bg);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid var(--line);
+  transition: background-color .4s var(--ease);
 }
 .nav__in { display: flex; align-items: center; gap: 28px; height: 52px; }
 .nav__mark { font-weight: 600; font-size: 19px; color: var(--ink); letter-spacing: -0.02em; margin-right: auto; }
@@ -517,7 +523,7 @@ html:lang(ja) .prose, html:lang(zh-CN) .prose { font-size: 18px; line-height: 1.
 .nav__mark .dot { width: .26em; height: .26em; }
 
 /* nav goes dark while it sits over the cinema hero */
-.nav { transition: background-color .4s var(--ease), border-color .4s var(--ease); }
+.nav { transition: border-color .4s var(--ease); }
 .nav[data-tone="dark"] {
   --nav-bg: rgba(0, 0, 0, 0.38); --ink: #f5f5f7; --ink-2: #a1a1a6; --chip: rgba(255, 255, 255, 0.14);
   --surface: rgba(255, 255, 255, 0.24); --line: rgba(255, 255, 255, 0.08); --bg: #000000; color: #f5f5f7;
@@ -865,14 +871,13 @@ body::before { display: none; }
 /* top bar entrance: the bar slides down, then the logo and menu fade in */
 @keyframes navDrop { from { -webkit-transform: translate3d(0, -100%, 0); transform: translate3d(0, -100%, 0); } }
 @keyframes navItem { from { opacity: 0; -webkit-transform: translate3d(0, -8px, 0); transform: translate3d(0, -8px, 0); } }
-/* it waits until the script has filled the bar (data-ready), so it never plays as an empty frame,
-   and it uses fill "backwards" so the finished bar never depends on the animation's last frame (WebKit) */
+/* plays from the first paint (logo and menu are already in index.html); fill "backwards" means the
+   finished bar is just the bar's normal style and never depends on the animation's last frame */
 @media (prefers-reduced-motion: no-preference) {
-  .nav[data-intro]:not([data-ready]) { -webkit-transform: translate3d(0, -100%, 0); transform: translate3d(0, -100%, 0); }
-  .nav[data-intro]:not([data-ready]) .nav__in > * { opacity: 0; }
-  .nav[data-intro][data-ready] { -webkit-animation: navDrop .8s cubic-bezier(.22, 1, .36, 1) backwards; animation: navDrop .8s cubic-bezier(.22, 1, .36, 1) backwards; }
-  .nav[data-intro][data-ready] .nav__in > * { -webkit-animation: navItem .7s cubic-bezier(.22, 1, .36, 1) .3s backwards; animation: navItem .7s cubic-bezier(.22, 1, .36, 1) .3s backwards; }
-  .nav[data-intro][data-ready] .nav__in > :nth-child(2) { -webkit-animation-delay: .4s; animation-delay: .4s; }
-  .nav[data-intro][data-ready] .nav__in > :nth-child(3) { -webkit-animation-delay: .5s; animation-delay: .5s; }
-  .nav[data-intro][data-ready] .nav__in > :nth-child(n+4) { -webkit-animation-delay: .58s; animation-delay: .58s; }
+  .nav[data-intro] { -webkit-animation: navDrop .8s cubic-bezier(.22, 1, .36, 1) backwards; animation: navDrop .8s cubic-bezier(.22, 1, .36, 1) backwards; }
+  .nav[data-intro] .nav__in > * { -webkit-animation: navItem .7s cubic-bezier(.22, 1, .36, 1) .35s backwards; animation: navItem .7s cubic-bezier(.22, 1, .36, 1) .35s backwards; }
+  .nav[data-intro] .nav__in > :nth-child(2) { -webkit-animation-delay: .45s; animation-delay: .45s; }
+  .nav[data-intro] .nav__in > :nth-child(3) { -webkit-animation-delay: .55s; animation-delay: .55s; }
+  .nav[data-intro] .nav__in > :nth-child(n+4) { -webkit-animation-delay: .62s; animation-delay: .62s; }
+}
 }
