@@ -4,3 +4,11 @@
   X-Robots-Tag: noindex
 /media/*
   Cache-Control: public, max-age=604800
+/
+  Cache-Control: no-cache
+/index.html
+  Cache-Control: no-cache
+/assets/*
+  Cache-Control: no-cache
+/content/*
+  Cache-Control: no-cache
