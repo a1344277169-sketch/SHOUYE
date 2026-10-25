@@ -1,0 +1,9 @@
+// jlpt.labagound.cc 的部署配置（Cloudflare Workers 静态资源）
+// name 必须和 Cloudflare 里这个 Worker 的名字一致
+{
+  "name": "jlpt",
+  "compatibility_date": "2025-09-01",
+  "assets": {
+    "directory": "."
+  }
+}
