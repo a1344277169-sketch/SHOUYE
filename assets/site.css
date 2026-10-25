@@ -803,3 +803,11 @@ body::before { display: none; }
 #main { padding-top: calc(53px + env(safe-area-inset-top, 0px)); }
 .lead { margin-top: calc(-53px - env(safe-area-inset-top, 0px)); min-height: 100svh; }
 @supports (height: 100dvh) { .lead { min-height: 100dvh; } }
+
+/* iPhone (WebKit): keep the top bar on its own layer above the animated cover */
+.nav { z-index: 1000; -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+.lead { z-index: 0; }
+@media (max-width: 720px) { .sheet[data-open="true"] { z-index: 999; } }
+@keyframes bgIn { from { opacity: 0; } }
+@media (prefers-reduced-motion: no-preference) { .lead__bg { animation: bgIn 2.4s ease both; } }
+.lead__bg { animation: bgIn 2.4s ease both; }
