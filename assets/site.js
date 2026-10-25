@@ -39,7 +39,7 @@
     skip: { zh: "跳到正文", ja: "本文へ移動", en: "Skip to content" },
     works: { zh: "作品", ja: "作品", en: "Work" },
     journal: { zh: "随笔", ja: "ジャーナル", en: "Journal" },
-    about: { zh: "关于", ja: "About", en: "About" },
+    about: { zh: "关于", ja: "プロフィール", en: "About" },
     menu: { zh: "菜单", ja: "メニュー", en: "Menu" },
     language: { zh: "语言", ja: "言語", en: "Language" },
     watchFilm: { zh: "观看影片", ja: "本編を見る", en: "Watch the film" },
@@ -82,6 +82,7 @@
     pause: { zh: "暂停播放", ja: "一時停止", en: "Pause" },
     play: { zh: "继续播放", ja: "再生", en: "Play" },
     slide: { zh: "第 {n} 张", ja: "{n} 枚目", en: "Slide {n}" },
+    email: { zh: "邮箱", ja: "メール", en: "Email" },
     navHome: { zh: "首页", ja: "ホーム", en: "Home" },
     aboutMore: { zh: "了解更多", ja: "プロフィールを見る", en: "More about me" },
     findMe: { zh: "在这些地方找到我", ja: "ほかの場所でも", en: "Elsewhere" },
@@ -221,6 +222,7 @@
       '<div class="wrap"><div class="foot__mark" aria-hidden="true">' + mark() + "</div>" +
       '<div class="foot__row"><nav class="foot__links" aria-label="footer">' + linkHtml +
       (SITE.links || []).filter(function (l) { return l.url; }).map(function (l) { return '<a href="' + esc(safeUrl(l.url)) + '" target="_blank" rel="noopener">' + esc(t(l.label)) + (l.handle ? " · " + esc(l.handle) : "") + "</a>"; }).join("") +
+      (SITE.email ? '<a href="mailto:' + esc(SITE.email) + '">' + esc(SITE.email) + "</a>" : "") +
       "</nav>" + langSwitch() + "</div>" +
       '<p class="foot__copy">© ' + year + " " + name + ". " + esc(u("rights")) + "</p></div>";
   }
@@ -365,7 +367,7 @@
     return (links.length ? '<ul class="socials">' + links.map(function (l) {
         return '<li><a href="' + esc(safeUrl(l.url)) + '" target="_blank" rel="noopener"><span class="socials__k">' + esc(t(l.label)) + '</span><span class="socials__v">' + esc(l.handle || t(l.label)) + "</span>" + ICON.ext + "</a></li>";
       }).join("") + "</ul>" : "") +
-      (email ? '<div class="copy"><span class="socials__k">' + esc(u("contact")) + '</span><code id="email">' + esc(email) + '</code><button type="button" data-copy="email">' + esc(u("copy")) + "</button></div>" : "");
+      (email ? '<div class="copy mail"><span class="socials__k">' + esc(u("email")) + '</span><a class="mail__addr" href="mailto:' + esc(email) + '"><code id="email">' + esc(email) + '</code></a><button type="button" data-copy="email">' + esc(u("copy")) + "</button></div>" : "");
   }
   function aboutTeaser() {
     var prof = SITE.profile || {};

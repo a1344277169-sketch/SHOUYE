@@ -786,3 +786,12 @@ html:lang(en) .me-text p { line-height: 1.65; }
   .band--cinema .btn--ghost { color: var(--link) !important; }
   .lead + .band--cinema { padding-top: var(--band); }
 }
+
+/* about: work email */
+.mail { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 18px; padding: 16px 0; border-bottom: 1px solid var(--line); margin-top: 0 !important; }
+.mail .socials__k { width: 7.5em; flex: none; }
+.mail__addr { color: var(--ink) !important; font-weight: 600; }
+.mail__addr:hover { color: var(--link) !important; text-decoration: none; }
+.mail code { font-family: inherit; font-size: var(--t-lead); user-select: all; word-break: break-all; }
+.mail button { margin-left: auto; height: 30px; padding: 0 14px; border-radius: 999px; border: 0; background: var(--chip); color: var(--ink); font-size: 13px; cursor: pointer; }
+.mail button:hover { background: var(--line); }

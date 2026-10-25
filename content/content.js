@@ -32,7 +32,7 @@ window.SITE_CONTENT = {
       "ja": "監督 · 脚本 · 編集 · カラー · モーション · 美術",
       "en": "Directing · Writing · Editing · Color · Motion · Art direction"
     },
-    "email": "",
+    "email": "a1344277169@gmail.com",
     "links": [
       {
         "label": {
