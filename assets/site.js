@@ -108,6 +108,8 @@
   /* ---------- helpers ---------- */
   function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
   function safeUrl(s) { s = String(s || "").trim(); return /^(https?:|mailto:|#|media\/|\.{0,2}\/|[\w-]+\/)/i.test(s) || /^[\w.-]+\.(webp|jpe?g|png|gif|avif|svg)$/i.test(s) ? s : "#"; }
+  // images hosted elsewhere (e.g. WeChat) refuse to load when they see another site as the referrer
+  function noRef(s) { return /^https?:/i.test(String(s || "")) ? ' referrerpolicy="no-referrer"' : ""; }
   function isExternal(s) { return /^https?:/i.test(s); }
   var ICON = {
     chev: '<svg viewBox="0 0 10 16" aria-hidden="true"><path d="M2 1.5 8.5 8 2 14.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -123,7 +125,7 @@
   }
   function img(src, alt, cls, eager) {
     if (!src) return "";
-    return '<img src="' + esc(safeUrl(src)) + '" alt="' + esc(alt || "") + '"' + (cls ? ' class="' + cls + '"' : "") + (eager ? ' fetchpriority="high"' : ' loading="lazy"') + ' decoding="async">';
+    return '<img src="' + esc(safeUrl(src)) + '"' + noRef(src) + ' alt="' + esc(alt || "") + '"' + (cls ? ' class="' + cls + '"' : "") + (eager ? ' fetchpriority="high"' : ' loading="lazy"') + ' decoding="async">';
   }
   function fmtDate(s) {
     var m = String(s || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
@@ -169,7 +171,7 @@
       if (!stripped) {
         var figs = [];
         b.replace(IMG_RE, function (_, alt, href) {
-          figs.push('<figure><img src="' + esc(safeUrl(href)) + '" alt="' + esc(alt) + '" loading="lazy" decoding="async">' + (alt ? "<figcaption>" + esc(alt) + "</figcaption>" : "") + "</figure>");
+          figs.push('<figure><img src="' + esc(safeUrl(href)) + '"' + noRef(href) + ' alt="' + esc(alt) + '" loading="lazy" decoding="async">' + (alt ? "<figcaption>" + esc(alt) + "</figcaption>" : "") + "</figure>");
         });
         return out.push(figs.length > 1 ? '<div class="fig-row" style="--n:' + Math.min(figs.length, 3) + '">' + figs.join("") + "</div>" : figs[0]);
       }

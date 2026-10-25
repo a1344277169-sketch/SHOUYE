@@ -543,6 +543,32 @@ window.SITE_CONTENT = {
   ],
   "posts": [
     {
+      "id": "wx-hide",
+      "date": "2026-10-25",
+      "tag": {
+        "zh": "随笔",
+        "ja": "随筆",
+        "en": "Essay"
+      },
+      "title": {
+        "zh": "躲",
+        "ja": "逃げ",
+        "en": "Dodging"
+      },
+      "excerpt": {
+        "zh": "这副担子背得太久了，久到我好几次想就地放下，转身不认账。",
+        "ja": "この荷物を背負ってきた時間は長すぎた。何度もその場に下ろして、背を向けて知らないふりをしたくなるほどに。",
+        "en": "I have carried this load for so long that, more than once, I wanted to set it down where I stood."
+      },
+      "cover": "https://mmbiz.qpic.cn/sz_mmbiz_jpg/riaHLD1xF12ibj0IK4O3RYyKABfTK5QHDXfHDeXQUwY8nmEyVJic90Mf0709gtBX43hyg5aIaSthCD2RrarQVibqlsEDmvoLYa6OcChvaZB0bsM/0?wx_fmt=jpeg",
+      "source": "https://mp.weixin.qq.com/s?__biz=Mzg3NzcyOTIzMg==&mid=2247483777&idx=1&sn=edcf22e622699390b236f69ba0915ae4",
+      "body": {
+        "zh": "这副担子背得太久了，久到我好几次想就地放下，转身不认账。如今尘埃还悬在半空，没有落定，可我想趁着这段悬而未决的安静，把来路记一记。\n\n说实话，留学不过是一个借口。我只是想离父母远一点，远到隔着一片海，又体面到无人可以反驳。\n\n他们自然是反对的。我原以为争执一场，这件事便会和从前许多念头一样，悄无声息地沉下去。可他们没有停在反对里。他们一点一点，把自己说服了。\n\n而我没有。\n\n一句随口的借口，被他们郑重地接过去，当了真。我欲停，才发现身后的路已经没了。像刀架在颈上，可那把刀，是我亲手递出去的。\n\n![](https://mmbiz.qpic.cn/mmbiz_jpg/riaHLD1xF12ibglnGorOgZl4dkDwaFmzSmxJdPk6H9lnuvJAjG6tW3h7qkWTtSKYld5Sbib9Yz5SE2PbDFlFXGEjeQUsy1nibjibgN9BeK9OiaCeo/0?wx_fmt=jpeg)\n\n连方向，都是躲出来的。我怕雅思，怕面试，便挑了一个不说英语的地方，后来才知道，这里的考试一场接一场，面试一道接一道，比我躲开的还要多。兜兜转转，我恰好走进了自己最想绕开的那间屋子。\n\n于是我真的隔着一片海了。在语校的教室里，像把自己拆开，再一个音一个音地拼回去。可拼回去的，总不是想要的样子。我屡屡碰壁，连那张自以为十拿九稳的N2，也没有过。看到结果的那天我才明白，自信有时也是一种躲，躲着不去看自己究竟还差多远。\n\n那之后的日子，只剩往前。后悔像潮水，一阵涨，一阵退，从不提前打招呼。每回想停下，先浮上来的不是我自己，而是他们说服自己时，那一段我看不透的沉默。\n\n![](https://mmbiz.qpic.cn/mmbiz_jpg/riaHLD1xF129KUbibadKVJmNY7BrPhnCC1IAAdPWOpMCiatF1xclboWShVeNf3N4dRiaCZMX91CeJ93aYekZSjwjfcLSfBpwQLt9oBxGbDoGl08/0?wx_fmt=jpeg)\n\n面试那天终于来了，又终于过去了。\n\n现在，结果还在路上。若是尘埃落定，我便要走进另一扇校门，做回一个真正的学生。我仍旧说不清，自己是真的想去，还是只是回不了头。只是偶尔回望，那个当初只想逃开的人，已经站在了当初想逃去的远方。\n\n只差临门一脚了。在它落下之前，先写下这些，敬过往。",
+        "ja": "この荷物を背負ってきた時間は長すぎた。何度もその場に下ろして、背を向けて知らないふりをしたくなるほどに。塵はまだ宙に浮いたまま、落ち着いてはいない。それでも、この決着のつかない静けさのうちに、ここまでの道のりを書き留めておきたい。\n\n正直に言えば、留学はただの口実だった。私はただ両親から少し離れたかった。海をひとつ隔てるほど遠く、それでいて誰にも反論できないほど体裁のいい距離まで。\n\nもちろん二人は反対した。一度言い争えば、この話も以前の多くの思いつきと同じように、音もなく沈んでいくのだと思っていた。けれど二人は、反対のままでは終わらなかった。少しずつ、自分たちを説得していった。\n\n私は、説得されなかった。\n\n何気なく口にした口実を、二人は大切に受け取り、本気にした。立ち止まろうとして初めて、背後の道がもう消えていることに気づいた。首に刃を当てられているようだった。けれどその刃は、私が自分の手で差し出したものだった。\n\n![](https://mmbiz.qpic.cn/mmbiz_jpg/riaHLD1xF12ibglnGorOgZl4dkDwaFmzSmxJdPk6H9lnuvJAjG6tW3h7qkWTtSKYld5Sbib9Yz5SE2PbDFlFXGEjeQUsy1nibjibgN9BeK9OiaCeo/0?wx_fmt=jpeg)\n\n行き先さえ、逃げた末に決めたものだった。IELTSが怖くて、面接が怖くて、英語を話さない場所を選んだ。後になって知った。ここでは試験が次から次へと続き、面接もひとつ、またひとつと待っていて、逃げてきたものよりずっと多いのだと。巡り巡って、私はいちばん避けたかった部屋に、ちょうど足を踏み入れていた。\n\nこうして本当に、海をひとつ隔てた。日本語学校の教室で、自分をばらばらにして、一音ずつ組み立て直すように過ごした。けれど組み上がったものは、いつも望んだ形ではなかった。何度も壁にぶつかり、確実だと思っていたN2にさえ受からなかった。結果を見たその日にやっと分かった。自信もときには一種の逃げで、自分があとどれだけ足りないのかを見ないための逃げなのだと。\n\nそれからの日々は、ただ前に進むだけだった。後悔は潮のように満ちては引き、前触れもなくやって来た。立ち止まろうとするたび、最初に浮かんでくるのは自分ではなく、二人が自分たちを説得していたときの、私には読み取れなかったあの沈黙だった。\n\n![](https://mmbiz.qpic.cn/mmbiz_jpg/riaHLD1xF129KUbibadKVJmNY7BrPhnCC1IAAdPWOpMCiatF1xclboWShVeNf3N4dRiaCZMX91CeJ93aYekZSjwjfcLSfBpwQLt9oBxGbDoGl08/0?wx_fmt=jpeg)\n\n面接の日がとうとう来て、そしてとうとう過ぎていった。\n\n結果はまだ届いていない。もし塵が落ち着けば、私はもうひとつの校門をくぐり、本当の学生に戻る。本当に行きたいのか、それともただ引き返せないだけなのか、今でもうまく言えない。ただ時々振り返ると、あの頃ただ逃げ出したかった人は、もう、あの頃逃げて行きたかった遠い場所に立っている。\n\nあと一歩のところまで来た。それが決まる前に、まずこれを書き留めて、過ぎた日々に杯を上げる。",
+        "en": "I have carried this load for so long that, more than once, I wanted to set it down where I stood, turn around and deny it was ever mine. The dust is still hanging in the air; nothing has settled. But in this quiet, while nothing is decided, I want to write down the road that brought me here.\n\nTo be honest, studying abroad was only an excuse. I just wanted to get a little further from my parents: far enough to put a sea between us, and respectable enough that no one could argue.\n\nOf course they were against it. I thought there would be one argument, and then the idea would sink without a sound, like so many before it. But they didn't stop at no. Little by little, they talked themselves into it.\n\nAnd I didn't.\n\nAn excuse I had tossed out lightly, they took up solemnly and made real. When I wanted to stop, I found the road behind me was already gone. It was like a blade at my throat, except that I was the one who had handed them the blade.\n\n![](https://mmbiz.qpic.cn/mmbiz_jpg/riaHLD1xF12ibglnGorOgZl4dkDwaFmzSmxJdPk6H9lnuvJAjG6tW3h7qkWTtSKYld5Sbib9Yz5SE2PbDFlFXGEjeQUsy1nibjibgN9BeK9OiaCeo/0?wx_fmt=jpeg)\n\nEven the direction was something I chose while running away. I was afraid of IELTS, afraid of interviews, so I picked a place where people don't speak English. Only later did I learn that here the exams come one after another, and the interviews too, more than the ones I had run from. After all that wandering, I had walked straight into the very room I most wanted to avoid.\n\nSo now there really is a sea between us. In the language school classroom I took myself apart and put myself back together one sound at a time. But what came back together was never quite what I wanted. I kept hitting walls; I didn't even pass the N2 I was sure of. The day I saw the result, I understood that confidence can be a way of hiding too: hiding from how far you still have to go.\n\nAfter that, there was only going forward. Regret came like the tide, rising and falling, never giving warning. Every time I wanted to stop, what surfaced first wasn't me, but the silence I couldn't read, the silence while they talked themselves into it.\n\n![](https://mmbiz.qpic.cn/mmbiz_jpg/riaHLD1xF129KUbibadKVJmNY7BrPhnCC1IAAdPWOpMCiatF1xclboWShVeNf3N4dRiaCZMX91CeJ93aYekZSjwjfcLSfBpwQLt9oBxGbDoGl08/0?wx_fmt=jpeg)\n\nThe day of the interview finally came, and finally passed.\n\nNow the result is still on its way. If the dust settles, I'll walk through another school gate and become a real student again. I still can't say whether I truly want to go, or simply can't turn back. Only, now and then, looking back, I see that the person who once only wanted to get away is already standing in the distant place they wanted to escape to.\n\nOne last step to go. Before it lands, I'm writing this down, a toast to the road behind me."
+      }
+    },
+    {
       "id": "wx-cage",
       "date": "2025-12-03",
       "tag": {
