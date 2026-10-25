@@ -149,12 +149,18 @@ html:lang(en) h3 { letter-spacing: -0.012em; }
   .nav__menu { display: grid; }
   .nav__in { gap: 12px; }
   .sheet[data-open="true"] {
-    display: flex; flex-direction: column; position: fixed; inset: calc(53px + env(safe-area-inset-top, 0px)) 0 0; z-index: 49;
-    background: var(--bg); overflow-y: auto; overscroll-behavior: contain;
-    padding-block: 8px calc(24px + env(safe-area-inset-bottom, 0px));
-    animation: sheet .35s var(--ease);
+    display: block; position: fixed; inset: calc(53px + env(safe-area-inset-top, 0px)) 0 0; z-index: 49;
+    background: rgba(0, 0, 0, 0.14); animation: sheet .3s var(--ease);
   }
-  .sheet__in { display: flex; flex-direction: column; width: 100%; }
+  .sheet__in {
+    display: flex; flex-direction: column; width: 100%; min-height: 50svh; max-width: none;
+    padding-block: 14px 28px;
+    background: var(--nav-bg);
+    -webkit-backdrop-filter: saturate(180%) blur(24px); backdrop-filter: saturate(180%) blur(24px);
+    border-radius: 0 0 24px 24px; box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.28);
+    animation: panelIn .45s var(--ease) both;
+  }
+  @keyframes panelIn { from { opacity: 0; transform: translateY(-18px); } }
   .sheet__link {
     display: block; padding: 10px 0; font-size: 30px; font-weight: 600; color: var(--ink) !important;
     animation: sheetItem .45s var(--ease) both; animation-delay: calc(var(--i) * 50ms + 40ms);

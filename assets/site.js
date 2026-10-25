@@ -534,7 +534,13 @@
         mb.innerHTML = open ? ICON.close : ICON.menu;
         document.body.style.overflow = open ? "hidden" : "";
       });
-      sheet.onclick = function (e) { if (e.target.closest("a")) { sheet.setAttribute("data-open", "false"); document.body.style.overflow = ""; } };
+      // tapping a link or the dimmed area below the panel closes the menu
+      sheet.onclick = function (e) {
+        if (e.target === sheet || e.target.closest("a")) {
+          sheet.setAttribute("data-open", "false"); document.body.style.overflow = "";
+          mb.setAttribute("aria-expanded", "false"); mb.innerHTML = ICON.menu;
+        }
+      };
     }
     var skip = document.querySelector("[data-skip]");
     if (skip) skip.addEventListener("click", function (e) { e.preventDefault(); var m = document.getElementById("main"); m.setAttribute("tabindex", "-1"); m.focus(); });
