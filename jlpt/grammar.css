@@ -440,3 +440,12 @@ mark ruby.fg rt { color: var(--mark-ink); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .nav__tabs { background: #2c2c2e; } }
 :root[data-theme="dark"] .nav__tabs { background: #2c2c2e; }
 @media (min-width: 561px) { :root .nav__tabs { background: none; } }
+
+/* settings: slider icon in a soft chip; small green round close */
+#openSettings { background: var(--chip); width: 34px; height: 34px; }
+#openSettings:hover { background: var(--line); }
+#openSettings svg { width: 17px; height: 17px; }
+.sheet__close { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; border: 0; padding: 0; background: var(--btn); color: #fff; cursor: pointer; flex: none; transition: background .2s, transform .2s var(--ease); }
+.sheet__close:hover { background: var(--btn-hover); }
+.sheet__close:active { transform: scale(.92); }
+.sheet__close svg { width: 12px; height: 12px; }
