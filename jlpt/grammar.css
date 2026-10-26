@@ -448,3 +448,7 @@ mark ruby.fg rt { color: var(--mark-ink); }
 .sheet__close:hover { background: var(--btn-hover); }
 .sheet__close:active { transform: scale(.92); }
 .sheet__close svg { width: 12px; height: 12px; }
+
+.tb__shuf { margin: 2px 0 8px; }
+.tb__shuf .chip { display: inline-flex; align-items: center; gap: 6px; }
+.tb__shuf svg { width: 15px; height: 15px; }

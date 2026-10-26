@@ -56,6 +56,7 @@
     bad: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
     back: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2.5L4.5 7 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     chev: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 5.2L7 9.2l4-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    shuf: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4.5h2.6c1.5 0 2.4.7 3.2 2l1.4 2.9c.7 1.4 1.7 2.1 3.2 2.1H14M2 11.5h2.6c1.1 0 1.9-.4 2.5-1.1M9.3 5.6c.6-.7 1.4-1.1 2.5-1.1H14M12.3 2.8 14 4.5l-1.7 1.7M12.3 9.8 14 11.5l-1.7 1.7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     search: '<svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12.2 12.2L16 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'
   };
 
@@ -554,18 +555,21 @@
   }
   var LEVELS = ['', '未学', '复习中', '已掌握'];
   function tbs() { var t = S.tb || (S.tb = {}); t.lv = t.lv || {}; return t; }
-  var TL = { key: 'words', q: '', cat: '', lv: '', n: 150 };
+  var TL = { key: 'words', q: '', cat: '', lv: '', n: 150, shuf: 0 };
   var JA_COLS = { words: [2, 3, 5], kanji: [0, 2, 3, 4, 5, 6, 7], yomi: [1, 2], pairs: [0, 1, 3], parts: [0, 1, 3] };
   function sheetOf(key) { return T.sheets.filter(function (x) { return x.key === key; })[0] || T.sheets[0]; }
   function tableRowsFor(sh) {
     var q = TL.q.trim().toLowerCase(), st = tbs();
-    return sh.rows.filter(function (r) {
+    var list = sh.rows.map(function (r, i) { return [r, i]; }).filter(function (x) {
+      var r = x[0];
       if (sh.key === 'words') {
         if (TL.cat && r[1] !== TL.cat) return false;
         if (TL.lv !== '' && String(st.lv[r[0]] || 0) !== TL.lv) return false;
       }
       return !q || r.join(' ').toLowerCase().indexOf(q) >= 0;
     });
+    if (TL.shuf) list.sort(function (a, b) { return TL.rank[a[1]] - TL.rank[b[1]]; });
+    return list.map(function (x) { return x[0]; });
   }
   function cellHtml(sh, r, i) {
     var v = r[i];
@@ -589,9 +593,13 @@
       '</tbody></table></div>' +
       (more ? '<div class="btn-row tb__more"><button class="btn btn--ghost btn--sm" data-act="tmore">再显示 ' + Math.min(150, list.length - TL.n) + ' 行</button><button class="btn btn--plain btn--sm" data-act="tall">全部显示</button></div>' : '');
   }
+  function shufBar() {
+    return '<div class="chips tb__shuf" id="tshuf"><button class="chip" type="button" data-act="tshuf" aria-pressed="' + !!TL.shuf + '">' + ICON.shuf + '打乱顺序</button>' +
+      (TL.shuf ? '<button class="chip" type="button" data-act="treshuf">再打乱一次</button>' : '') + '</div>';
+  }
   function viewTable(key) {
     if (!T) { loadTable(render); return '<div class="wrap page"><div class="empty">正在加载表格……</div></div>'; }
-    if (key && key !== TL.key) { TL.key = key; TL.q = ''; TL.cat = ''; TL.lv = ''; TL.n = 150; }
+    if (key && key !== TL.key) { TL.key = key; TL.q = ''; TL.cat = ''; TL.lv = ''; TL.n = 150; TL.shuf = 0; }
     var sh = sheetOf(TL.key);
     var tabs = '<nav class="chips chips--scroll" aria-label="工作表">' + T.sheets.map(function (x) {
       return '<a class="chip" href="#/table/' + x.key + '" aria-pressed="' + (x.key === sh.key) + '">' + esc(x.name) + '</a>';
@@ -607,7 +615,7 @@
       '<p class="lead lead--sm">6 张工作表，内容和原 Excel 一样。<a href="JLPT_N2_Vocabulary_Kanji.xlsx" download>下载 Excel</a></p>' +
       '<div class="tb__tabs">' + tabs + '</div>' +
       '<div class="tb__head">' + (sh.title !== T.sheets[0].title ? '<h2>' + esc(sh.title) + '</h2>' : '') + sh.notes.map(function (n) { return '<p>' + esc(n) + '</p>'; }).join('') + '</div>' +
-      (sh.key !== 'about' ? '<div class="toolbar tb__bar"><label class="search">' + ICON.search + '<input id="tq" type="search" placeholder="在「' + esc(sh.name) + '」里搜索" value="' + esc(TL.q) + '" autocomplete="off"></label>' + filters + '</div>' : '') +
+      (sh.key !== 'about' ? '<div class="toolbar tb__bar"><label class="search">' + ICON.search + '<input id="tq" type="search" placeholder="在「' + esc(sh.name) + '」里搜索" value="' + esc(TL.q) + '" autocomplete="off"></label>' + filters + '</div>' + shufBar() : '') +
       '<div id="tresults">' + tableBody() + '</div></div>';
   }
   /* ---------- router ---------- */
@@ -686,6 +694,11 @@
     if (act === 'wpeek') { if (WL.hide) el.classList.toggle('is-peek'); return; }
     if (act === 'wmore') { WL.n += 80; $('#wresults').innerHTML = wordRows(); return; }
     if (act === 'tmore') { TL.n += 150; $('#tresults').innerHTML = tableBody(); return; }
+    if (act === 'tshuf' || act === 'treshuf') {
+      TL.shuf = act === 'tshuf' && TL.shuf ? 0 : 1; TL.n = 150;
+      if (TL.shuf) { var nr = sheetOf(TL.key).rows.length, order = shuffle(Array.from({ length: nr }, function (_, i) { return i; })); TL.rank = []; order.forEach(function (ri, pos) { TL.rank[ri] = pos; }); }
+      $('#tshuf').outerHTML = shufBar(); $('#tresults').innerHTML = tableBody(); return;
+    }
     if (act === 'tall') { TL.n = 1e9; $('#tresults').innerHTML = tableBody(); return; }
   });
   document.addEventListener('input', function (ev) {
