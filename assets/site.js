@@ -417,7 +417,7 @@
     var first = (t(SITE.about) || "").split(/\n{2,}/).pop();
     return '<section class="band band--cinema" id="about-teaser" aria-labelledby="about-t"><div class="wrap teaser">' +
       (prof.photo ? '<a class="teaser__photo rise" href="#about" tabindex="-1" aria-hidden="true">' + img(prof.photo, "") + "</a>" : "") +
-      '<div class="rise-2"><h2 id="about-t" class="teaser__name">' + esc(t(prof.name) || u("about")) + "</h2>" +
+      '<div class="rise-2"><h2 id="about-t" class="teaser__name">' + esc(u("about")) + "</h2>" +
       (t(SITE.skills) ? '<p class="teaser__skills">' + esc(t(SITE.skills)) + "</p>" : "") +
       (first ? '<p class="teaser__text">' + esc(first) + "</p>" : "") +
       '<div class="actions">' + more("#about", u("aboutMore")) + "</div></div></div></section>";
@@ -427,7 +427,7 @@
     var paras = (t(SITE.about) || "").split(/\n{2,}/).filter(Boolean);
     var facts = (prof.facts || []).filter(function (f) { return t(f.value); });
     return '<section class="wrap me-head">' +
-      '<div class="me-head__txt fade-in"><h1>' + esc(t(prof.name) || u("about")) + "</h1>" +
+      '<div class="me-head__txt fade-in"><h1' + (t(prof.name) ? altLangAttr(t(prof.name), {}) : "") + ">" + esc(t(prof.name) || u("about")) + "</h1>" +
       (t(prof.reading) ? '<p class="me-head__reading">' + esc(t(prof.reading)) + "</p>" : "") +
       (t(SITE.skills) ? '<p class="me-head__skills">' + esc(t(SITE.skills)) + "</p>" : "") + "</div>" +
       (prof.photo ? '<figure class="me-photo fade-in">' + img(prof.photo, t(prof.name), "", true) + "</figure>" : "") +

@@ -109,7 +109,7 @@ window.SITE_CONTENT = {
     "profile": {
       "name": {
         "zh": "",
-        "ja": "",
+        "ja": "コウ キンイ",
         "en": ""
       },
       "reading": {
