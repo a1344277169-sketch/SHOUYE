@@ -437,9 +437,8 @@ mark ruby.fg rt { color: var(--mark-ink); }
   .nav__tabs a { display: flex; align-items: center; height: 42px; padding: 0 14px !important; font-size: 15px !important; border-radius: 9px; opacity: 1; }
   .nav__tabs a[aria-current="page"] { color: var(--link); }
 }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .nav__tabs { background: #2c2c2e; } }
-:root[data-theme="dark"] .nav__tabs { background: #2c2c2e; }
-@media (min-width: 561px) { :root .nav__tabs { background: none; } }
+@media (max-width: 560px) and (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .nav__tabs { background: #2c2c2e; } }
+@media (max-width: 560px) { :root[data-theme="dark"] .nav__tabs { background: #2c2c2e; } }
 
 /* settings: slider icon in a soft chip; small green round close */
 #openSettings { background: var(--chip); width: 34px; height: 34px; }
