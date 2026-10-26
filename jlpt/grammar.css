@@ -379,3 +379,39 @@ mark ruby.fg rt { color: var(--mark-ink); }
 .lead--sm { font-size: 15px; margin-top: 6px; }
 .flash { margin-top: 18px; }
 @media (max-width: 560px) { .flash__card { min-height: 260px; } }
+
+/* ---------- 总表（原 Excel 照搬） ---------- */
+.wrap--wide { max-width: calc(1240px + 44px); }
+.tb__tabs { margin-top: 22px; }
+.tb__head { margin-top: 28px; }
+.tb__head h2 { font-size: 24px; letter-spacing: -.01em; }
+.tb__head p { color: var(--ink-2); font-size: 14px; margin-top: 4px; }
+.tb__bar { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+.tb__filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.tb__sel { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-2); }
+.tb__sel select, .tb__lv select { font: inherit; font-size: 13px; color: var(--ink); background: var(--bg-alt); border: 0; border-radius: 9px; height: 34px; padding: 0 10px; }
+@media (max-width: 640px) { .tb__bar { grid-template-columns: 1fr; } }
+.tb__count { margin: 6px 0 10px; }
+.tb__scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface); }
+.tb { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.55; }
+.tb th, .tb td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+.tb th { background: var(--bg-alt); font-size: 12.5px; font-weight: 600; color: var(--ink-2); white-space: nowrap; }
+.tb tbody tr:last-child td { border-bottom: 0; }
+.tb tbody tr:hover td { background: var(--chip); }
+.tb td.num { color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tb td[lang="ja"] { font-family: var(--f-latin), var(--f-ja); }
+.tb--words td:nth-child(3), .tb--kanji td:first-child, .tb--yomi td:nth-child(2), .tb--pairs td:first-child, .tb--parts td:first-child { font-weight: 600; white-space: nowrap; }
+.tb--words td:nth-child(2), .tb--yomi td:first-child { color: var(--ink-2); font-size: 13px; white-space: nowrap; }
+.tb--words td:nth-child(4), .tb--kanji td:nth-child(even):not(:nth-child(2)) { white-space: nowrap; }
+.tb--words { min-width: 980px; } .tb--kanji { min-width: 820px; } .tb--pairs, .tb--parts, .tb--yomi { min-width: 760px; }
+.tb--kanji td:first-child { font-size: 20px; line-height: 1.2; }
+.tb--about td:first-child { white-space: nowrap; font-weight: 600; width: 1%; }
+.tb__lv select[data-v="1"] { color: var(--warn); background: var(--warn-bg); }
+.tb__lv select[data-v="2"] { color: var(--link); background: var(--mark); }
+.tb__lv select[data-v="3"] { color: var(--ok); background: var(--ok-bg); font-weight: 600; }
+.tb__more { justify-content: center; margin-top: 18px; }
+/* five tabs on phones: tighten so the bar never scrolls sideways */
+@media (max-width: 560px) { .nav__tabs { gap: 0; } .nav__tabs a { padding: 6px 7px; } }
+@media (max-width: 360px) { .nav__in { gap: 4px; } .nav__tabs a { padding: 6px 5px; font-size: 12.5px; } .nav__mark { font-size: 15.5px; } .icon-btn { width: 32px; } }
+.toolbar { grid-template-columns: minmax(0, 1fr); } .toolbar > * { min-width: 0; }
+@media (min-width: 641px) { .tb__bar { grid-template-columns: minmax(0, 1fr) auto; } }

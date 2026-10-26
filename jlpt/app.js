@@ -542,6 +542,74 @@
     return viewFlash();
   }
 
+
+  /* ---------- table（N2 文字・词汇重点表：原表照搬，6 张工作表） ---------- */
+  var T = null;
+  function loadTable(cb) {
+    if (window.TABLE) { T = window.TABLE; cb(); return; }
+    var sc = document.createElement('script'); sc.src = 'table.js';
+    sc.onload = function () { T = window.TABLE; cb(); };
+    sc.onerror = function () { $('#main').innerHTML = '<div class="wrap page"><div class="empty">表格数据加载失败，请刷新重试。</div></div>'; };
+    document.head.appendChild(sc);
+  }
+  var LEVELS = ['', '未学', '复习中', '已掌握'];
+  function tbs() { var t = S.tb || (S.tb = {}); t.lv = t.lv || {}; return t; }
+  var TL = { key: 'words', q: '', cat: '', lv: '', n: 150 };
+  var JA_COLS = { words: [2, 3, 5], kanji: [0, 2, 3, 4, 5, 6, 7], yomi: [1, 2], pairs: [0, 1, 3], parts: [0, 1, 3] };
+  function sheetOf(key) { return T.sheets.filter(function (x) { return x.key === key; })[0] || T.sheets[0]; }
+  function tableRowsFor(sh) {
+    var q = TL.q.trim().toLowerCase(), st = tbs();
+    return sh.rows.filter(function (r) {
+      if (sh.key === 'words') {
+        if (TL.cat && r[1] !== TL.cat) return false;
+        if (TL.lv !== '' && String(st.lv[r[0]] || 0) !== TL.lv) return false;
+      }
+      return !q || r.join(' ').toLowerCase().indexOf(q) >= 0;
+    });
+  }
+  function cellHtml(sh, r, i) {
+    var v = r[i];
+    if (sh.key === 'words' && i === 6) {
+      var cur = tbs().lv[r[0]] || 0;
+      return '<td class="tb__lv"><select data-tblv="' + r[0] + '" aria-label="掌握程度" data-v="' + cur + '">' + LEVELS.map(function (l, k) { return '<option value="' + k + '"' + (k === cur ? ' selected' : '') + '>' + (l || '—') + '</option>'; }).join('') + '</select></td>';
+    }
+    var ja = (JA_COLS[sh.key] || []).indexOf(i) >= 0;
+    var cls = (typeof v === 'number' ? 'num' : '') + (sh.key === 'about' && i === 1 ? ' tb__wide' : '');
+    var txt = esc(v);
+    if (sh.key === 'about') txt = txt.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+    return '<td' + (cls.trim() ? ' class="' + cls.trim() + '"' : '') + (ja ? ' lang="ja"' : '') + '>' + txt + '</td>';
+  }
+  function tableBody() {
+    var sh = sheetOf(TL.key); var list = tableRowsFor(sh);
+    if (!list.length) return '<div class="empty">没有找到</div>';
+    var more = list.length > TL.n;
+    return '<p class="small muted tb__count">' + list.length + ' 行' + (list.length !== sh.rows.length ? ' / 共 ' + sh.rows.length + ' 行' : '') + '</p>' +
+      '<div class="tb__scroll"><table class="tb tb--' + sh.key + '"><thead><tr>' + sh.head.map(function (h) { return '<th scope="col">' + esc(h) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      list.slice(0, TL.n).map(function (r) { return '<tr>' + r.map(function (v, i) { return cellHtml(sh, r, i); }).join('') + '</tr>'; }).join('') +
+      '</tbody></table></div>' +
+      (more ? '<div class="btn-row tb__more"><button class="btn btn--ghost btn--sm" data-act="tmore">再显示 ' + Math.min(150, list.length - TL.n) + ' 行</button><button class="btn btn--plain btn--sm" data-act="tall">全部显示</button></div>' : '');
+  }
+  function viewTable(key) {
+    if (!T) { loadTable(render); return '<div class="wrap page"><div class="empty">正在加载表格……</div></div>'; }
+    if (key && key !== TL.key) { TL.key = key; TL.q = ''; TL.cat = ''; TL.lv = ''; TL.n = 150; }
+    var sh = sheetOf(TL.key);
+    var tabs = '<nav class="chips chips--scroll" aria-label="工作表">' + T.sheets.map(function (x) {
+      return '<a class="chip" href="#/table/' + x.key + '" aria-pressed="' + (x.key === sh.key) + '">' + esc(x.name) + '</a>';
+    }).join('') + '</nav>';
+    var filters = '';
+    if (sh.key === 'words') {
+      var cats = []; sh.rows.forEach(function (r) { if (cats.indexOf(r[1]) < 0) cats.push(r[1]); });
+      filters = '<div class="tb__filters"><label class="tb__sel"><span>类别</span><select data-tbf="cat"><option value="">全部</option>' + cats.map(function (c) { return '<option' + (TL.cat === c ? ' selected' : '') + '>' + esc(c) + '</option>'; }).join('') + '</select></label>' +
+        '<label class="tb__sel"><span>掌握程度</span><select data-tbf="lv"><option value="">全部</option>' + LEVELS.map(function (l, k) { return '<option value="' + k + '"' + (TL.lv === String(k) ? ' selected' : '') + '>' + (l || '未标记') + '</option>'; }).join('') + '</select></label></div>';
+    }
+    return '<div class="wrap wrap--wide page fade-in">' +
+      '<div class="eyebrow">JLPT N2 · 原表</div><h1 class="h1 h1--sm">' + esc(T.sheets[0].title) + '</h1>' +
+      '<p class="lead lead--sm">6 张工作表，内容和原 Excel 一样。<a href="JLPT_N2_Vocabulary_Kanji.xlsx" download>下载 Excel</a></p>' +
+      '<div class="tb__tabs">' + tabs + '</div>' +
+      '<div class="tb__head">' + (sh.title !== T.sheets[0].title ? '<h2>' + esc(sh.title) + '</h2>' : '') + sh.notes.map(function (n) { return '<p>' + esc(n) + '</p>'; }).join('') + '</div>' +
+      (sh.key !== 'about' ? '<div class="toolbar tb__bar"><label class="search">' + ICON.search + '<input id="tq" type="search" placeholder="在「' + esc(sh.name) + '」里搜索" value="' + esc(TL.q) + '" autocomplete="off"></label>' + filters + '</div>' : '') +
+      '<div id="tresults">' + tableBody() + '</div></div>';
+  }
   /* ---------- router ---------- */
   function route() {
     var h = location.hash.replace(/^#/, '') || '/';
@@ -556,10 +624,11 @@
     else if (r.name === 'item') { html = viewItem(+r.arg); tab = 'list'; }
     else if (r.name === 'compare') html = viewCompare(r.arg);
     else if (r.name === 'words') html = viewWords(r.arg);
+    else if (r.name === 'table') html = viewTable(r.arg);
     else html = viewNotFound();
     main.innerHTML = html;
     document.querySelectorAll('.nav__tabs a').forEach(function (a) { if (a.dataset.tab === tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-    var titles = { today: '每日目标', study: '练习', list: '语法库', item: '语法', compare: '易混淆辨析', words: '单词' };
+    var titles = { today: '每日目标', study: '练习', list: '语法库', item: '语法', compare: '易混淆辨析', words: '单词', table: '词汇重点表' };
     document.title = (r.name === 'item' && BY[+r.arg] ? BY[+r.arg].p + ' · ' : (titles[r.name] && r.name !== 'today' ? titles[r.name] + ' · ' : '')) + '每日目标 · labagound';
     if (r.name === 'compare' && r.arg) {
       var el = document.getElementById('g-' + r.arg);
@@ -601,10 +670,18 @@
     if (act === 'whide') { WL.hide = !WL.hide; render(); return; }
     if (act === 'wpeek') { if (WL.hide) el.classList.toggle('is-peek'); return; }
     if (act === 'wmore') { WL.n += 80; $('#wresults').innerHTML = wordRows(); return; }
+    if (act === 'tmore') { TL.n += 150; $('#tresults').innerHTML = tableBody(); return; }
+    if (act === 'tall') { TL.n = 1e9; $('#tresults').innerHTML = tableBody(); return; }
   });
   document.addEventListener('input', function (ev) {
     if (ev.target.id === 'q') { LF.q = ev.target.value; $('#results').innerHTML = listResults(); }
     if (ev.target.id === 'wq') { WL.q = ev.target.value; WL.n = 80; $('#wresults').innerHTML = wordRows(); }
+    if (ev.target.id === 'tq') { TL.q = ev.target.value; TL.n = 150; $('#tresults').innerHTML = tableBody(); }
+  });
+  document.addEventListener('change', function (ev) {
+    var t = ev.target;
+    if (t.dataset && t.dataset.tblv) { var v = +t.value; if (v) tbs().lv[t.dataset.tblv] = v; else delete tbs().lv[t.dataset.tblv]; t.setAttribute('data-v', v); save(); return; }
+    if (t.dataset && t.dataset.tbf) { TL[t.dataset.tbf] = t.value; TL.n = 150; $('#tresults').innerHTML = tableBody(); }
   });
   document.addEventListener('keydown', function (ev) {
     if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
