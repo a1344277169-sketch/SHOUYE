@@ -628,6 +628,8 @@
     else html = viewNotFound();
     main.innerHTML = html;
     document.querySelectorAll('.nav__tabs a').forEach(function (a) { if (a.dataset.tab === tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    var curA = document.querySelector('.nav__tabs a[data-tab="' + tab + '"]'); var nc = document.getElementById('navCur'); if (nc) nc.textContent = curA ? curA.textContent : '菜单';
+    navMenu(false);
     var titles = { today: '每日目标', study: '练习', list: '语法库', item: '语法', compare: '易混淆辨析', words: '单词', table: '词汇重点表' };
     document.title = (r.name === 'item' && BY[+r.arg] ? BY[+r.arg].p + ' · ' : (titles[r.name] && r.name !== 'today' ? titles[r.name] + ' · ' : '')) + '每日目标 · labagound';
     if (r.name === 'compare' && r.arg) {
@@ -643,6 +645,19 @@
     if (h !== lastRoute) { if (!/^#\/compare\/./.test(h)) window.scrollTo(0, 0); lastRoute = h; }
   }
   window.addEventListener('hashchange', onHash);
+
+  /* ---------- phone: the page tabs fold into one dropdown ---------- */
+  function navMenu(open) {
+    var pick = document.querySelector('.nav__pick'); if (!pick) return;
+    pick.setAttribute('data-open', open ? 'true' : 'false');
+    pick.querySelector('.nav__dd').setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  document.addEventListener('click', function (ev) {
+    var dd = ev.target.closest('.nav__dd');
+    if (dd) { navMenu(dd.getAttribute('aria-expanded') !== 'true'); return; }
+    if (!ev.target.closest('.nav__tabs')) navMenu(false);
+  });
+  document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && document.querySelector('.nav__pick[data-open="true"]')) { navMenu(false); document.querySelector('.nav__dd').focus(); } });
 
   /* ---------- events ---------- */
   document.addEventListener('click', function (ev) {
