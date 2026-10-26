@@ -66,8 +66,12 @@
     <label class="field field--row"><span>例句朗读按钮</span><input type="checkbox" name="tts"></label>
     <p class="sheet__note">修改“每天新学”和范围会从明天的练习开始生效；今天如果还没开始，会立刻生效。</p>
     <div class="sheet__group">
+      <h3>多设备同步</h3>
+      <div class="sync" id="syncBox"></div>
+    </div>
+    <div class="sheet__group">
       <h3>学习记录</h3>
-      <p class="sheet__note">进度只保存在这台设备的浏览器里。换设备前可以先导出，再在新设备导入。</p>
+      <p class="sheet__note">进度保存在这台设备的浏览器里，开了同步会自动合并到其他设备。也可以导出成文件备份。</p>
       <div class="btn-row">
         <button class="btn btn--ghost btn--sm" type="button" id="exportBtn">导出进度</button>
         <label class="btn btn--ghost btn--sm">导入进度<input type="file" accept="application/json,.json" id="importInput" hidden></label>

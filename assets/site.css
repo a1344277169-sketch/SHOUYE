@@ -632,7 +632,7 @@ html:lang(en) .cine__title { letter-spacing: -0.035em; }
 .socials li:last-child a { border-bottom: 1px solid rgba(255,255,255,.14); }
 .socials a:hover { text-decoration: none; }
 .socials a:hover .socials__v { color: var(--cinema-link); }
-.socials__k { width: 7.5em; flex: none; font-size: 14px; color: var(--cinema-2); }
+.socials__k { width: 7.5em; flex: none; font-size: 14px; color: var(--cinema-2); word-break: keep-all; overflow-wrap: anywhere; }
 .socials__v { font-size: var(--t-lead); font-weight: 600; transition: color .2s; }
 .socials svg { width: 12px; height: 12px; margin-left: auto; color: var(--cinema-2); align-self: center; }
 

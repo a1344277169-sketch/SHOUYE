@@ -1,5 +1,5 @@
 /* labagound · 每日目标（JLPT 语法 + 单词）
-   纯静态，无需构建。进度保存在浏览器 localStorage（labagound-grammar-v1）。
+   纯静态，无需构建。进度保存在浏览器 localStorage（labagound-grammar-v1）；输入同步码后经 /api/sync 在多设备间合并。
    复习采用间隔重复：答对后间隔 1→3→7→14→30→60→120 天；答错回到第二天重来。连续答对到 30 天间隔算“已掌握”。 */
 (function () {
   'use strict';
@@ -24,6 +24,9 @@
   function load() {
     var s = null;
     try { s = JSON.parse(localStorage.getItem(KEY)); } catch (e) { s = null; }
+    return norm(s);
+  }
+  function norm(s) {
     var base = fresh();
     if (!s || typeof s !== 'object') return base;
     s.set = Object.assign(base.set, s.set || {});
@@ -32,7 +35,74 @@
     return s;
   }
   var S = load();
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* 隐私模式等情况下忽略 */ } }
+  function store() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* 隐私模式等情况下忽略 */ } }
+  function save() { S.t = Date.now(); store(); syncSoon(); }
+
+  /* ---------- 多设备同步（同步码） ----------
+     各设备输入同一个同步码；进度发到 /api/sync/<码>，服务器合并后返回（规则见 sync-worker.js）。 */
+  var SYNC_KEY = 'labagound-sync-code';
+  var HOST = location.hostname;
+  var API = (/(^|\.)labagound\.cc$/.test(HOST) && HOST !== 'jlpt.labagound.cc') ? 'https://jlpt.labagound.cc' : '';
+  var SY = { code: '', busy: false, again: false, last: 0, err: '', timer: null };
+  try { SY.code = localStorage.getItem(SYNC_KEY) || ''; } catch (e) { /* ignore */ }
+  function syncSoon() { if (!SY.code) return; clearTimeout(SY.timer); SY.timer = setTimeout(function () { syncNow(); }, 2500); }
+  function syncNow(opt) {
+    opt = opt || {};
+    if (!SY.code) return Promise.resolve(false);
+    if (SY.busy) { SY.again = true; return Promise.resolve(false); }
+    clearTimeout(SY.timer);
+    SY.busy = true; syncUI();
+    var sent = JSON.stringify(S), code = SY.code;
+    return fetch(API + '/api/sync/' + encodeURIComponent(code), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: sent, keepalive: !!opt.keep && sent.length < 60000 })
+      .then(function (r) { if (!r.ok) throw new Error(r.status === 400 ? 'bad' : 'net'); return r.json(); })
+      .then(function (res) {
+        SY.err = ''; SY.last = Date.now();
+        if (code !== SY.code) return false;
+        var m = res && res.data; if (!m) return false;
+        if (JSON.stringify(S) !== sent) { SY.again = true; return false; } // 同步途中本机又有改动：再同步一次
+        if (JSON.stringify(m) === sent) return false;
+        S = norm(m); store(); wordOrder = null; applyFuri();
+        if (opt.render) render();
+        return true;
+      })
+      .catch(function (e) { SY.err = e && e.message === 'bad' ? '同步码格式不对' : '同步失败，网络恢复后会自动重试'; return false; })
+      .then(function (changed) {
+        SY.busy = false; syncUI();
+        if (SY.again) { SY.again = false; syncSoon(); }
+        return changed;
+      });
+  }
+  function hm(t) { var d = new Date(t); return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+  function syncUI() {
+    var box = document.getElementById('syncBox'); if (!box) return;
+    if (!SY.code) {
+      box.innerHTML = '<p class="sheet__note">在每台设备上输入同一个同步码，语法进度和重点表的掌握程度会自动合并。同步码自己定（字母或数字，至少 6 位）；知道这个码的人也能看到和改动进度，别设得太简单。</p>' +
+        '<div class="sync__row"><input class="sync__in" id="syncInput" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="40" placeholder="输入同步码"><button class="btn btn--sm" type="button" id="syncStart">开始同步</button></div>';
+      return;
+    }
+    var st = SY.busy ? '正在同步…' : SY.err ? SY.err : SY.last ? '已同步 · ' + hm(SY.last) : '已开启';
+    box.innerHTML = '<div class="sync__on"><span class="sync__dot' + (SY.err ? ' is-err' : '') + '" aria-hidden="true"></span><span>同步码 <b>' + esc(SY.code) + '</b></span><span class="sync__st">' + esc(st) + '</span></div>' +
+      '<div class="btn-row"><button class="btn btn--ghost btn--sm" type="button" id="syncGo"' + (SY.busy ? ' disabled' : '') + '>立即同步</button><button class="btn btn--plain btn--sm" type="button" id="syncOff">停止同步</button></div>';
+  }
+  function syncStart() {
+    var inp = document.getElementById('syncInput'); var v = (inp && inp.value || '').trim();
+    if (!/^[0-9A-Za-z_-]{6,40}$/.test(v)) { toast('同步码要 6 位以上，只能用字母、数字、- 和 _'); if (inp) inp.focus(); return; }
+    SY.code = v; SY.err = ''; SY.last = 0;
+    try { localStorage.setItem(SYNC_KEY, v); } catch (e) { /* ignore */ }
+    syncNow({ render: true }).then(function () { toast(SY.err ? SY.err : '已开启同步'); });
+  }
+  document.addEventListener('click', function (ev) {
+    var t = ev.target.closest && ev.target.closest('#syncStart,#syncGo,#syncOff'); if (!t) return;
+    if (t.id === 'syncStart') syncStart();
+    else if (t.id === 'syncGo') syncNow({ render: true }).then(function (ch) { if (!SY.err) toast(ch ? '已同步，进度已更新' : '已同步'); });
+    else { SY.code = ''; SY.err = ''; SY.last = 0; clearTimeout(SY.timer); try { localStorage.removeItem(SYNC_KEY); } catch (e) { /* ignore */ } syncUI(); toast('已停止同步，本机记录保留'); }
+  });
+  document.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' && ev.target && ev.target.id === 'syncInput') { ev.preventDefault(); syncStart(); } });
+  document.addEventListener('visibilitychange', function () {
+    if (!SY.code) return;
+    if (document.visibilityState === 'hidden') { if (SY.timer) syncNow({ keep: true }); }
+    else syncNow({ render: true });
+  });
 
   /* ---------- utils ---------- */
   function pad(n) { return (n < 10 ? '0' : '') + n; }
@@ -554,7 +624,7 @@
     document.head.appendChild(sc);
   }
   var LEVELS = ['', '未学', '复习中', '已掌握'];
-  function tbs() { var t = S.tb || (S.tb = {}); t.lv = t.lv || {}; return t; }
+  function tbs() { var t = S.tb || (S.tb = {}); t.lv = t.lv || {}; t.lt = t.lt || {}; return t; }
   var TL = { key: 'words', q: '', cat: '', lv: '', n: 150, shuf: 0 };
   var JA_COLS = { words: [2, 3, 5], kanji: [0, 2, 3, 4, 5, 6, 7], yomi: [1, 2], pairs: [0, 1, 3], parts: [0, 1, 3] };
   function sheetOf(key) { return T.sheets.filter(function (x) { return x.key === key; })[0] || T.sheets[0]; }
@@ -708,7 +778,7 @@
   });
   document.addEventListener('change', function (ev) {
     var t = ev.target;
-    if (t.dataset && t.dataset.tblv) { var v = +t.value; if (v) tbs().lv[t.dataset.tblv] = v; else delete tbs().lv[t.dataset.tblv]; t.setAttribute('data-v', v); save(); return; }
+    if (t.dataset && t.dataset.tblv) { var v = +t.value, tb = tbs(); if (v) tb.lv[t.dataset.tblv] = v; else delete tb.lv[t.dataset.tblv]; tb.lt[t.dataset.tblv] = Date.now(); t.setAttribute('data-v', v); save(); return; }
     if (t.dataset && t.dataset.tbf) { TL[t.dataset.tbf] = t.value; TL.n = 150; $('#tresults').innerHTML = tableBody(); }
   });
   document.addEventListener('keydown', function (ev) {
@@ -734,11 +804,13 @@
   /* ---------- settings ---------- */
   var dlg = $('#settings'); var form = $('#settingsForm');
   $('#openSettings').addEventListener('click', function () {
+    syncUI();
     form.per.value = String(S.set.per); form.scope.value = S.set.scope; form.order.value = S.set.order; form.tts.checked = !!S.set.tts; form.furi.value = S.set.furi || 'tap';
     if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
   });
   dlg.addEventListener('click', function (ev) { if (ev.target === dlg) dlg.close(); });
-  form.addEventListener('change', function () {
+  form.addEventListener('change', function (ev) {
+    if (ev.target && ev.target.id === 'syncInput') return;
     var before = S.set.per + S.set.scope + S.set.order;
     S.set.per = +form.per.value; S.set.scope = form.scope.value; S.set.order = form.order.value; S.set.tts = form.tts.checked; S.set.furi = form.furi.value; applyFuri();
     var d = S.daily;
@@ -758,15 +830,15 @@
       try {
         var data = JSON.parse(rd.result);
         if (!data || typeof data.cards !== 'object') throw new Error('bad');
-        localStorage.setItem(KEY, JSON.stringify(data)); S = load(); EXTRA = null; dlg.close(); render(); toast('进度已导入');
+        localStorage.setItem(KEY, JSON.stringify(data)); S = load(); save(); EXTRA = null; dlg.close(); render(); toast('进度已导入');
       } catch (e) { toast('这个文件不是有效的进度文件'); }
       ev.target.value = '';
     };
     rd.readAsText(f);
   });
   $('#resetBtn').addEventListener('click', function () {
-    if (!confirm('确定清空所有学习记录吗？这一步不能撤销。')) return;
-    var keep = S.set; S = fresh(); S.set = keep; EXTRA = null; save(); dlg.close(); render(); toast('记录已清空');
+    if (!confirm(SY.code ? '确定清空所有学习记录吗？开着同步，其他设备上的记录也会一起清空。这一步不能撤销。' : '确定清空所有学习记录吗？这一步不能撤销。')) return;
+    var keep = S.set; S = fresh(); S.set = keep; S.rs = Date.now(); EXTRA = null; save(); dlg.close(); render(); toast('记录已清空');
   });
 
   var tsx = null, tsy = 0;
@@ -779,4 +851,5 @@
   function applyFuri() { document.documentElement.classList.toggle('furi-all', S.set.furi === 'always'); }
   applyFuri();
   onHash();
+  if (SY.code) syncNow({ render: true });
 })();

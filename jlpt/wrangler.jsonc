@@ -1,9 +1,17 @@
-// jlpt.labagound.cc 的部署配置（Cloudflare Workers 静态资源）
+// jlpt.labagound.cc 的部署配置（Cloudflare Workers 静态资源 + 同步接口）
 // name 必须和 Cloudflare 里这个 Worker 的名字一致
+// sync-worker.js 处理 /api/sync/<同步码>，其它请求都是静态页面
+// 同步数据存在 Durable Object 里（免费套餐可用，部署时自动创建，不用在后台建数据库）
 {
   "name": "jlpt",
+  "main": "sync-worker.js",
   "compatibility_date": "2025-09-01",
   "assets": {
-    "directory": "."
-  }
+    "directory": ".",
+    "binding": "ASSETS"
+  },
+  "durable_objects": {
+    "bindings": [{ "name": "SYNC", "class_name": "SyncStore" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["SyncStore"] }]
 }

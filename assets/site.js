@@ -110,6 +110,20 @@
 
   /* ---------- helpers ---------- */
   function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  // Chinese names (account handles like 杂念树屋 / 百不动) shown on the Japanese or English page:
+  // tag them zh-CN so the whole name uses one Chinese font instead of mixing Japanese and fallback glyphs
+  var ZH_NAMES = null;
+  function zhNames() {
+    if (ZH_NAMES) return ZH_NAMES;
+    ZH_NAMES = (SITE.links || []).map(function (l) { return l.handle; }).filter(function (h) { return h && /[\u3400-\u9fff]/.test(h); });
+    if (ZH_NAMES.indexOf("杂念树屋") < 0) ZH_NAMES.push("杂念树屋");
+    return ZH_NAMES;
+  }
+  function zhm(html) {
+    if (LANG === "zh") return html;
+    zhNames().forEach(function (n) { var e = esc(n); html = html.split(e).join('<span lang="zh-CN">' + e + "</span>"); });
+    return html;
+  }
   function safeUrl(s) { s = String(s || "").trim(); return /^(https?:|mailto:|#|media\/|\.{0,2}\/|[\w-]+\/)/i.test(s) || /^[\w.-]+\.(webp|jpe?g|png|gif|avif|svg)$/i.test(s) ? s : "#"; }
   // images hosted elsewhere (e.g. WeChat) refuse to load when they see another site as the referrer
   function noRef(s) { return /^https?:/i.test(String(s || "")) ? ' referrerpolicy="no-referrer"' : ""; }
@@ -257,7 +271,7 @@
     document.getElementById("foot").innerHTML =
       '<div class="wrap"><div class="foot__mark" aria-hidden="true">' + mark() + "</div>" +
       '<div class="foot__row"><nav class="foot__links" aria-label="footer">' + linkHtml +
-      (SITE.links || []).filter(function (l) { return l.url; }).map(function (l) { return '<a href="' + esc(safeUrl(l.url)) + '" target="_blank" rel="noopener">' + esc(t(l.label)) + (l.handle ? " · " + esc(l.handle) : "") + "</a>"; }).join("") +
+      (SITE.links || []).filter(function (l) { return l.url; }).map(function (l) { return '<a href="' + esc(safeUrl(l.url)) + '" target="_blank" rel="noopener">' + esc(t(l.label)) + (l.handle ? " · " + zhm(esc(l.handle)) : "") + "</a>"; }).join("") +
       (SITE.email ? '<a href="mailto:' + esc(SITE.email) + '">' + esc(SITE.email) + "</a>" : "") +
       "</nav>" + langSwitch("foot") + "</div>" +
       '<p class="foot__copy">© ' + year + " " + name + ". " + esc(u("rights")) + "</p></div>";
@@ -395,7 +409,7 @@
 
     // journal
     if (POSTS.length) {
-      h.push('<section class="band band--alt" id="latest" aria-labelledby="latest-title"><div class="wrap"><div class="head"><div><h2 id="latest-title" class="rise">' + esc(u("journalTitle")) + "</h2><p>" + esc(t(SITE.journalText) || u("journalText")) + "</p></div>" + more("#journal", u("allPosts")) + "</div>" +
+      h.push('<section class="band band--alt" id="latest" aria-labelledby="latest-title"><div class="wrap"><div class="head"><div><h2 id="latest-title" class="rise">' + esc(u("journalTitle")) + "</h2><p>" + zhm(esc(t(SITE.journalText) || u("journalText"))) + "</p></div>" + more("#journal", u("allPosts")) + "</div>" +
         '<div class="posts">' + POSTS.slice(0, 3).map(function (p) { return postCard(p); }).join("") + "</div></div></section>");
     }
 
@@ -408,7 +422,7 @@
     var links = (SITE.links || []).filter(function (l) { return l.url; });
     var email = SITE.email ? String(SITE.email).trim() : "";
     return (links.length ? '<ul class="socials">' + links.map(function (l) {
-        return '<li><a href="' + esc(safeUrl(l.url)) + '" target="_blank" rel="noopener"><span class="socials__k">' + esc(t(l.label)) + '</span><span class="socials__v">' + esc(l.handle || t(l.label)) + "</span>" + ICON.ext + "</a></li>";
+        return '<li><a href="' + esc(safeUrl(l.url)) + '" target="_blank" rel="noopener"><span class="socials__k">' + esc(t(l.label)) + '</span><span class="socials__v">' + zhm(esc(l.handle || t(l.label))) + "</span>" + ICON.ext + "</a></li>";
       }).join("") + "</ul>" : "") +
       (email ? '<div class="copy mail"><span class="socials__k">' + esc(u("email")) + '</span><a class="mail__addr" href="mailto:' + esc(email) + '"><code id="email">' + esc(email) + '</code></a><button type="button" data-copy="email">' + esc(u("copy")) + "</button></div>" : "");
   }
@@ -495,7 +509,7 @@
   }
 
   function pageJournal() {
-    return '<section class="wrap page-head fade-in"><h1>' + esc(u("journalTitle")) + "</h1><p>" + esc(t(SITE.journalText) || u("journalText")) + "</p></section>" +
+    return '<section class="wrap page-head fade-in"><h1>' + esc(u("journalTitle")) + "</h1><p>" + zhm(esc(t(SITE.journalText) || u("journalText"))) + "</p></section>" +
       '<section class="wrap" style="padding-bottom:var(--band)"><div class="posts posts--list">' + POSTS.map(function (p) { return postCard(p, true); }).join("") + "</div></section>";
   }
 

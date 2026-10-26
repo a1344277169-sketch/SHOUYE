@@ -1,2 +1,5 @@
 wrangler.jsonc
 .assetsignore
+sync-worker.js
+node_modules
+.wrangler

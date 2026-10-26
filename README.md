@@ -60,6 +60,7 @@ media/              图片；编辑器新加的图片会放进 media/uploads/
 - `data.js`：全部语法、例句、辨析组和假名注音
 - `words.js`：N2 单词 1439 个，以及易错读音、近义同音、构词法（来自 JLPT_N2_Vocabulary_Kanji.xlsx）。“单词”页只用来翻卡片混眼熟，不计分、不安排复习
 - `app.js` / `grammar.css` / `index.html`：页面本体，学习进度存在访客浏览器里
+- `sync-worker.js`：多设备同步接口（`/api/sync/<同步码>`）。设置里输入同一个同步码，各设备的语法进度和重点表掌握程度会自动合并；数据存在 Cloudflare Durable Object 里，`wrangler.jsonc` 已配置好，部署时自动创建，不用在后台建数据库。只有 Workers 部署（jlpt.labagound.cc）带这个接口，labagound.cc/jlpt/ 打开时会请求 jlpt.labagound.cc 的接口
 
 让 jlpt.labagound.cc 指向这个文件夹：在 Cloudflare 新建一个 Pages 项目，连接同一个仓库，构建设置里把“根目录（Root directory）”设为 `jlpt`，构建命令留空、输出目录留空，然后在“自定义域”里添加 `jlpt.labagound.cc`。之后这个文件夹有改动，两个站点都会自动更新。
 
