@@ -108,9 +108,9 @@ window.SITE_CONTENT = {
     },
     "profile": {
       "name": {
-        "zh": "",
+        "zh": "江昕炜",
         "ja": "コウ キンイ",
-        "en": ""
+        "en": "Jiang Xinwei"
       },
       "reading": {
         "zh": "",

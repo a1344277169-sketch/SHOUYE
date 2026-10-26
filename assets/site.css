@@ -881,3 +881,6 @@ body::before { display: none; }
   .nav[data-intro] .nav__in > :nth-child(n+4) { -webkit-animation-delay: .62s; animation-delay: .62s; }
 }
 }
+
+/* names break only at the space between parts */
+.nowrap { display: inline-block; white-space: nowrap; }

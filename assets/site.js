@@ -427,7 +427,7 @@
     var paras = (t(SITE.about) || "").split(/\n{2,}/).filter(Boolean);
     var facts = (prof.facts || []).filter(function (f) { return t(f.value); });
     return '<section class="wrap me-head">' +
-      '<div class="me-head__txt fade-in"><h1' + (t(prof.name) ? altLangAttr(t(prof.name), {}) : "") + ">" + esc(t(prof.name) || u("about")) + "</h1>" +
+      '<div class="me-head__txt fade-in"><h1' + (t(prof.name) ? altLangAttr(t(prof.name), {}) : "") + ">" + (t(prof.name) ? t(prof.name).split(/\s+/).map(function (w) { return '<span class="nowrap">' + esc(w) + "</span>"; }).join(" ") : esc(u("about"))) + "</h1>" +
       (t(prof.reading) ? '<p class="me-head__reading">' + esc(t(prof.reading)) + "</p>" : "") +
       (t(SITE.skills) ? '<p class="me-head__skills">' + esc(t(SITE.skills)) + "</p>" : "") + "</div>" +
       (prof.photo ? '<figure class="me-photo fade-in">' + img(prof.photo, t(prof.name), "", true) + "</figure>" : "") +
