@@ -476,9 +476,8 @@ mark ruby.fg rt { color: var(--mark-ink); }
 .a2hs__x svg { width: 11px; height: 11px; }
 /* 从主屏幕全屏打开时，底部留出 Home 指示条的位置 */
 @media (display-mode: standalone) { .foot { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); } }
-/* 从主屏幕打开（App 模式）：顶栏钉死在最上面，页面拉到顶也不回弹 */
+/* 从主屏幕打开（App 模式）：顶栏钉在最上面；页面照常回弹，从顶栏下面滑过 */
 @media (display-mode: standalone) {
-  html, body { overscroll-behavior-y: none; }
   .nav { position: fixed; top: 0; left: 0; right: 0; }
   body { padding-top: calc(53px + env(safe-area-inset-top, 0px)); }
 }
