@@ -884,3 +884,7 @@ body::before { display: none; }
 
 /* names break only at the space between parts */
 .nowrap { display: inline-block; white-space: nowrap; }
+
+/* hide the page's side scrollbar (scrolling still works); inner scroll areas keep theirs */
+html { scrollbar-width: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; height: 0; }
