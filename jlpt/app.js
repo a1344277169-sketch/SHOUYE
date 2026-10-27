@@ -127,6 +127,8 @@
     back: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2.5L4.5 7 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     chev: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 5.2L7 9.2l4-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     shuf: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4.5h2.6c1.5 0 2.4.7 3.2 2l1.4 2.9c.7 1.4 1.7 2.1 3.2 2.1H14M2 11.5h2.6c1.1 0 1.9-.4 2.5-1.1M9.3 5.6c.6-.7 1.4-1.1 2.5-1.1H14M12.3 2.8 14 4.5l-1.7 1.7M12.3 9.8 14 11.5l-1.7 1.7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    share: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 10V2M5 4.8 8 1.8l3 3M4.5 7H3.5v7h9V7h-1" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    x: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 3.5l5 5M8.5 3.5l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
     search: '<svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12.2 12.2L16 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'
   };
 
@@ -310,6 +312,16 @@
   }
 
   /* ---------- views ---------- */
+  /* ---------- 添加到主屏幕（iPhone / iPad 的 Safari 里才提示） ---------- */
+  var STANDALONE = window.navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+  function installHint() {
+    var ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var dismissed = false; try { dismissed = localStorage.getItem('labagound-a2hs') === '1'; } catch (e) {}
+    if (!ios || STANDALONE || dismissed) return '';
+    return '<div class="card a2hs"><img src="icons/icon-180.png" alt="" width="48" height="48"><div><b>装到主屏幕，当 App 用</b>' +
+      '<p>点 Safari 的「分享」' + ICON.share + '（新版 iOS 在「···」菜单里），再选「添加到主屏幕」。之后从桌面图标打开，全屏、没网也能用。</p></div>' +
+      '<button class="a2hs__x" type="button" data-act="a2hs" aria-label="不再提示">' + ICON.x + '</button></div>';
+  }
   function viewToday() {
     var s = ensureDaily();
     var t = today(); var d = new Date();
@@ -344,7 +356,7 @@
     var dayIdx = Math.floor(new Date(+t.slice(0, 4), +t.slice(5, 7) - 1, +t.slice(8, 10)).getTime() / 864e5);
     var gt = (dayIdx % 3 === 0 ? GROUPS : stars)[dayIdx % (dayIdx % 3 === 0 ? GROUPS.length : stars.length)];
 
-    return '<div class="wrap page fade-in">' +
+    return '<div class="wrap page fade-in">' + installHint() +
       '<div class="eyebrow">' + (d.getMonth() + 1) + '月' + d.getDate() + '日 · 星期' + WEEK[d.getDay()] + '</div>' +
       '<h1 class="h1">每日目标</h1>' +
       '<div class="hero"><div class="ring" role="img" aria-label="今日进度 ' + Math.round(pct * 100) + '%"><svg viewBox="0 0 120 120"><circle class="ring__track" cx="60" cy="60" r="54" fill="none" stroke-width="10"/><circle class="ring__bar" cx="60" cy="60" r="54" fill="none" stroke-width="10" stroke-linecap="round" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + (C * (1 - pct)).toFixed(1) + '"/></svg>' +
@@ -769,6 +781,7 @@
       if (TL.shuf) { var nr = sheetOf(TL.key).rows.length, order = shuffle(Array.from({ length: nr }, function (_, i) { return i; })); TL.rank = []; order.forEach(function (ri, pos) { TL.rank[ri] = pos; }); }
       $('#tshuf').outerHTML = shufBar(); $('#tresults').innerHTML = tableBody(); return;
     }
+    if (act === 'a2hs') { try { localStorage.setItem('labagound-a2hs', '1'); } catch (e) {} var box = el.closest('.a2hs'); if (box) box.remove(); return; }
     if (act === 'tall') { TL.n = 1e9; $('#tresults').innerHTML = tableBody(); return; }
   });
   document.addEventListener('input', function (ev) {
@@ -852,4 +865,10 @@
   applyFuri();
   onHash();
   if (SY.code) syncNow({ render: true });
+  // 离线支持：装到主屏幕后没网也能打开
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+  }
+  // 从主屏幕打开时，回到前台就同步一次
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible' && SY.code && STANDALONE) syncNow({ render: true }); });
 })();

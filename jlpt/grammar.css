@@ -465,3 +465,14 @@ mark ruby.fg rt { color: var(--mark-ink); }
 .sync__st { color: var(--ink-2); font-size: 13px; margin-left: auto; }
 .btn[disabled] { opacity: .5; pointer-events: none; }
 .sheet { max-height: calc(100svh - 24px); overflow-y: auto; overscroll-behavior: contain; }
+
+/* 添加到主屏幕提示 */
+.a2hs { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; gap: 14px; align-items: start; padding: 16px; margin-bottom: 22px; }
+.a2hs img { border-radius: 11px; display: block; }
+.a2hs b { font-size: 15px; }
+.a2hs p { font-size: 13.5px; color: var(--ink-2); margin-top: 3px; line-height: 1.55; }
+.a2hs p svg { width: 14px; height: 14px; vertical-align: -2px; color: var(--link); }
+.a2hs__x { width: 26px; height: 26px; border-radius: 50%; border: 0; background: var(--chip); color: var(--ink-2); display: grid; place-items: center; cursor: pointer; }
+.a2hs__x svg { width: 11px; height: 11px; }
+/* 从主屏幕全屏打开时，底部留出 Home 指示条的位置 */
+@media (display-mode: standalone) { .foot { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); } }
