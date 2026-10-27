@@ -22,7 +22,8 @@ function json(body, status, extra) {
    cards（语法复习记录）：每条取答题次数多的那一边，次数相同取复习日期更晚的
    days（每日统计）：每天取做题数多的那一边
    tb.lv（重点表掌握程度）：每个词取最后改动的那一边（tb.lt 记录改动时间）
-   其它（设置、今日练习、单词卡位置等）：取最后保存的那台设备
+   daily（今日练习）：同一天取答题更多的那份，不同天取更新的
+   其它（设置、单词卡位置等）：取最后保存的那台设备
    清空记录（rs）之后，比清空更早的记录不再合并回来 */
 function obj(x) { return x && typeof x === 'object' && !Array.isArray(x) ? x : {}; }
 function score(c) { return (+c.r || 0) + (+c.w || 0); }
@@ -58,6 +59,15 @@ function mergeTb(a, b, bNewer) {
   out.lv = lv; out.lt = lt;
   return out;
 }
+/* 今日练习（daily）：同一天取答题更多的那份（刚装好、还没做题的设备不会把进度盖掉）；不同天取更新的那天 */
+function pickDaily(a, b, bNewer) {
+  const da = obj(a), db = obj(b);
+  if (!da.date) return b || a; if (!db.date) return a;
+  if (da.date !== db.date) return da.date > db.date ? a : b;
+  const ra = (da.res || []).length, rb = (db.res || []).length;
+  if (ra !== rb) return ra > rb ? a : b;
+  return bNewer ? b : a;
+}
 function merge(a, b) {
   if (!a) return b;
   const ta = +a.t || 0, tb = +b.t || 0;
@@ -70,6 +80,7 @@ function merge(a, b) {
   out.cards = mergeCards(obj(a.cards), obj(b.cards));
   out.days = mergeDays(obj(a.days), obj(b.days));
   if (a.tb || b.tb) out.tb = mergeTb(a.tb, b.tb, bNewer);
+  if (a.daily || b.daily) out.daily = pickDaily(a.daily, b.daily, bNewer);
   return out;
 }
 

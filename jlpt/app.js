@@ -61,7 +61,10 @@
         var m = res && res.data; if (!m) return false;
         if (JSON.stringify(S) !== sent) { SY.again = true; return false; } // 同步途中本机又有改动：再同步一次
         if (JSON.stringify(m) === sent) return false;
-        S = norm(m); store(); wordOrder = null; applyFuri();
+        S = norm(m);
+        // 今天还没开始做：按合并后的学习记录重新排今天的题（已经学过的不会再当新题出现）
+        if (S.daily && S.daily.date === today() && !(S.daily.res || []).length && !EXTRA) buildDaily();
+        store(); wordOrder = null; applyFuri();
         if (opt.render) render();
         return true;
       })
