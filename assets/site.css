@@ -389,7 +389,6 @@ html:lang(en) .hero__text { max-width: 30em; }
 .plan__title { font-size: var(--t-h3); line-height: 1.2; font-weight: 600; transition: color .2s; }
 .plan:hover .plan__title { color: var(--link); }
 .plan__sub { color: var(--ink-2); line-height: 1.5; }
-.plan__meta { font-size: var(--t-small); color: var(--ink-3); }
 .plan-intro { max-width: 760px; margin: clamp(36px, 4.5vw, 64px) auto 0; }
 .plan-intro__sum { font-size: var(--t-lead); line-height: 1.65; }
 .plan-intro__note { margin-top: 14px; color: var(--ink-2); font-size: var(--t-small); }
@@ -403,15 +402,9 @@ html:lang(en) .hero__text { max-width: 30em; }
 .deck--tall { max-width: calc(760px + 44px); }
 .slide { position: relative; margin: 0; border-radius: clamp(8px, 1.1vw, 16px); overflow: hidden; background: var(--bg-alt); box-shadow: 0 0 0 1px var(--line), 0 18px 40px -24px rgba(0, 0, 0, .35); }
 .slide img { width: 100%; height: auto; }
-.slide__n {
-  position: absolute; right: 10px; bottom: 10px; padding: 3px 9px; border-radius: 999px;
-  background: rgba(0, 0, 0, .45); color: #fff; font-size: 11px; line-height: 1.4; letter-spacing: .02em;
-  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); pointer-events: none;
-}
 @media (max-width: 760px) {
   .plans { grid-template-columns: 1fr; gap: 36px; }
   .deck { padding-inline: max(12px, env(safe-area-inset-left, 0px)) max(12px, env(safe-area-inset-right, 0px)); gap: 12px; }
-  .slide__n { right: 6px; bottom: 6px; font-size: 10px; padding: 2px 7px; }
 }
 
 /* ---------- tools ---------- */

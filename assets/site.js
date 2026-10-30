@@ -44,7 +44,6 @@
     tools: { zh: "工具", ja: "ツール", en: "Tools" },
     plans: { zh: "策划", ja: "企画", en: "Campaigns" },
     plansText: { zh: "品牌营销与传播策划：从市场分析、传播策略，到创意呈现和媒介排期。", ja: "ブランドのマーケティング・コミュニケーション企画。市場分析と戦略から、クリエイティブ、メディアプランまで。", en: "Brand marketing and communication plans, from market analysis and strategy to creative work and media planning." },
-    pagesN: { zh: "{n} 页", ja: "{n} ページ", en: "{n} pages" },
     planPrev: { zh: "上一份", ja: "前の企画", en: "Previous" },
     planNext: { zh: "下一份", ja: "次の企画", en: "Next" },
     planLang: { zh: "", ja: "企画書は中国語で作成しています。", en: "The proposal pages are in Chinese." },
@@ -561,8 +560,7 @@
         return '<a class="plan rise" href="' + planHref(p) + '"><div class="plan__img">' + img(p.cover, t(p.title)) + "</div>" +
           '<div class="plan__body">' + (tag ? '<p class="plan__tag">' + esc(tag) + "</p>" : "") +
           '<h3 class="plan__title"' + zhAttr() + ">" + esc(t(p.title)) + "</h3>" +
-          (t(p.subtitle) ? '<p class="plan__sub">' + esc(t(p.subtitle)) + "</p>" : "") +
-          (p.pages ? '<p class="plan__meta">' + esc(u("pagesN", { n: p.pages })) + "</p>" : "") + "</div></a>";
+          (t(p.subtitle) ? '<p class="plan__sub">' + esc(t(p.subtitle)) + "</p>" : "") + "</div></a>";
       }).join("") + "</div></section>";
   }
 
@@ -576,13 +574,12 @@
     for (var i = 1; i <= (+p.pages || 0); i++) {
       var src = String(p.folder || "").replace(/\/$/, "") + "/" + (i < 10 ? "0" : "") + i + ".webp";
       slides.push('<figure class="slide"><img src="' + esc(safeUrl(src)) + '" width="' + w + '" height="' + hgt + '" alt="' + esc(t(p.title) + " · " + u("pageOf", { n: i })) + '"' +
-        (i <= 2 ? ' fetchpriority="' + (i === 1 ? "high" : "auto") + '"' : ' loading="lazy"') + ' decoding="async"><figcaption class="slide__n num">' + i + " / " + p.pages + "</figcaption></figure>");
+        (i <= 2 ? ' fetchpriority="' + (i === 1 ? "high" : "auto") + '"' : ' loading="lazy"') + ' decoding="async"></figure>");
     }
     var note = LANG === "zh" ? "" : u("planLang");
     return '<header class="wrap w-head fade-in">' + (tag ? '<p class="w-head__client">' + esc(tag) + "</p>" : "") +
       "<h1" + zhAttr() + ">" + esc(t(p.title)) + "</h1>" +
-      (t(p.subtitle) ? '<p class="w-head__alt">' + esc(t(p.subtitle)) + "</p>" : "") +
-      (p.pages ? '<p class="w-head__meta"><span>' + esc(u("pagesN", { n: p.pages })) + "</span></p>" : "") + "</header>" +
+      (t(p.subtitle) ? '<p class="w-head__alt">' + esc(t(p.subtitle)) + "</p>" : "") + "</header>" +
       (t(p.summary) || note ? '<section class="wrap"><div class="plan-intro">' + (t(p.summary) ? '<p class="plan-intro__sum">' + esc(t(p.summary)) + "</p>" : "") +
         (note ? '<p class="plan-intro__note">' + esc(note) + "</p>" : "") + '<p class="plan-intro__hint">' + esc(u("pinch")) + "</p></div></section>" : "") +
       '<section class="deck' + (tall ? " deck--tall" : "") + '" aria-label="' + esc(t(p.title)) + '">' + slides.join("") + "</section>" +
