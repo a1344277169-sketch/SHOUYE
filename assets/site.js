@@ -574,7 +574,7 @@
     for (var i = 1; i <= (+p.pages || 0); i++) {
       var src = String(p.folder || "").replace(/\/$/, "") + "/" + (i < 10 ? "0" : "") + i + ".webp";
       slides.push('<figure class="slide"><img src="' + esc(safeUrl(src)) + '" width="' + w + '" height="' + hgt + '" alt="' + esc(t(p.title) + " · " + u("pageOf", { n: i })) + '"' +
-        (i <= 2 ? ' fetchpriority="' + (i === 1 ? "high" : "auto") + '"' : ' loading="lazy"') + ' decoding="async"></figure>");
+        (i <= 2 ? ' fetchpriority="' + (i === 1 ? "high" : "auto") + '"' : ' loading="lazy"') + ' decoding="async"></figure>');
     }
     var note = LANG === "zh" ? "" : u("planLang");
     return '<header class="wrap w-head fade-in">' + (tag ? '<p class="w-head__client">' + esc(tag) + "</p>" : "") +

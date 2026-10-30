@@ -730,39 +730,6 @@ window.SITE_CONTENT = {
       }
     },
     {
-      "id": "wutao",
-      "folder": "media/plans/wutao",
-      "cover": "media/plans/wutao/cover.webp",
-      "pages": 28,
-      "w": 1600,
-      "h": 1108,
-      "brand": {
-        "zh": "赤尾",
-        "ja": "赤尾（ZIOXX）",
-        "en": "ZIOXX"
-      },
-      "field": {
-        "zh": "个人护理",
-        "ja": "パーソナルケア",
-        "en": "Personal care"
-      },
-      "title": {
-        "zh": "恋爱脑守护企划",
-        "ja": "恋爱脑守护企划",
-        "en": "恋爱脑守护企划"
-      },
-      "subtitle": {
-        "zh": "赤尾玻尿酸安全套营销策划全案",
-        "ja": "赤尾 ヒアルロン酸コンドーム マーケティング企画",
-        "en": "Marketing plan for a hyaluronic acid condom"
-      },
-      "summary": {
-        "zh": "「恋爱脑」常被拿来调侃，方案把它变成一种关怀：一恋爱就把心思全放在对方身上的人，更需要有人守护。和线条小狗联名的短视频、表情包与周边，赞助华语辩论老友赛，情感博主内容植入和微博故事征集，按「行为重演—情感解析—意识培养」三步，把品牌和「自爱」连在一起。",
-        "ja": "「恋愛脳」はよくからかいの言葉として使われますが、この企画ではそれを思いやりに変えます。恋をすると相手のことしか見えなくなる人こそ、守ってくれる存在が必要です。人気キャラクター「線条小狗」とのコラボ動画やスタンプ、グッズ、ディベート番組への協賛、恋愛系クリエイターとのタイアップ、Weibo でのストーリー募集を三段階で展開し、ブランドを「自分を大切にすること」と結びつけます。",
-        "en": "“Love-brain” is usually a joke about people who lose themselves in a relationship. This plan turns it into care: those people need looking after most. Short videos, stickers and merch with the Maltese cartoon dog, a sponsored debate show, relationship creators and a Weibo story call run in three steps and tie the brand to self-love."
-      }
-    },
-    {
       "id": "jissbon",
       "folder": "media/plans/jissbon",
       "cover": "media/plans/jissbon/cover.webp",
