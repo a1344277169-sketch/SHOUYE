@@ -571,10 +571,14 @@
     var tag = [t(p.field), t(p.brand)].filter(Boolean).join(" · ");
     var w = +p.w || 16, hgt = +p.h || 9, tall = hgt > w;
     var slides = [];
+    // one line under each page explaining it, in the visitor's language (falls back to another language if missing)
+    var nt = p.notes || {}, notes = nt[LANG] || nt.zh || nt.en || nt.ja || [];
     for (var i = 1; i <= (+p.pages || 0); i++) {
       var src = String(p.folder || "").replace(/\/$/, "") + "/" + (i < 10 ? "0" : "") + i + ".webp";
-      slides.push('<figure class="slide"><img src="' + esc(safeUrl(src)) + '" width="' + w + '" height="' + hgt + '" alt="' + esc(t(p.title) + " · " + u("pageOf", { n: i })) + '"' +
-        (i <= 2 ? ' fetchpriority="' + (i === 1 ? "high" : "auto") + '"' : ' loading="lazy"') + ' decoding="async"></figure>');
+      var note = notes[i - 1] || "";
+      slides.push('<figure class="slide"><div class="slide__img"><img src="' + esc(safeUrl(src)) + '" width="' + w + '" height="' + hgt + '" alt="' + esc(t(p.title) + " · " + u("pageOf", { n: i })) + '"' +
+        (i <= 2 ? ' fetchpriority="' + (i === 1 ? "high" : "auto") + '"' : ' loading="lazy"') + ' decoding="async"></div>' +
+        (note ? '<figcaption class="slide__note">' + esc(note) + "</figcaption>" : "") + "</figure>");
     }
     var note = LANG === "zh" ? "" : u("planLang");
     return '<header class="wrap w-head fade-in">' + (tag ? '<p class="w-head__client">' + esc(tag) + "</p>" : "") +
