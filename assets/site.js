@@ -13,6 +13,7 @@
   }
   var SITE = DATA.site || {};
   var WORKS = DATA.works || [];
+  var PLANS = DATA.plans || [];
   var POSTS = (DATA.posts || []).slice().sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); });
 
   /* ---------- language ---------- */
@@ -41,6 +42,14 @@
     journal: { zh: "树屋", ja: "樹屋", en: "Treehouse" },
     about: { zh: "关于", ja: "プロフィール", en: "About" },
     tools: { zh: "工具", ja: "ツール", en: "Tools" },
+    plans: { zh: "策划", ja: "企画", en: "Campaigns" },
+    plansText: { zh: "品牌营销与传播策划：从市场分析、传播策略，到创意呈现和媒介排期。", ja: "ブランドのマーケティング・コミュニケーション企画。市場分析と戦略から、クリエイティブ、メディアプランまで。", en: "Brand marketing and communication plans, from market analysis and strategy to creative work and media planning." },
+    pagesN: { zh: "{n} 页", ja: "{n} ページ", en: "{n} pages" },
+    planPrev: { zh: "上一份", ja: "前の企画", en: "Previous" },
+    planNext: { zh: "下一份", ja: "次の企画", en: "Next" },
+    planLang: { zh: "", ja: "企画書は中国語で作成しています。", en: "The proposal pages are in Chinese." },
+    pinch: { zh: "双指可以放大页面看细节", ja: "ピンチで拡大して細部を見られます", en: "Pinch to zoom in on the pages" },
+    pageOf: { zh: "第 {n} 页", ja: "{n} ページ目", en: "page {n}" },
     toolsText: { zh: "自己做的小工具，学习和工作时用得上。", ja: "自分で作った、勉強や仕事に役立つ小さな道具。", en: "Small things I built for studying and work." },
     openTool: { zh: "打开", ja: "開く", en: "Open" },
     menu: { zh: "菜单", ja: "メニュー", en: "Menu" },
@@ -155,6 +164,10 @@
   function postById(id) { for (var i = 0; i < POSTS.length; i++) if (POSTS[i].id === id) return POSTS[i]; return null; }
   function workHref(w) { return "#w-" + w.id; }
   function postHref(p) { return "#p-" + p.id; }
+  function planById(id) { for (var i = 0; i < PLANS.length; i++) if (PLANS[i].id === id) return PLANS[i]; return null; }
+  function planHref(p) { return "#pl-" + p.id; }
+  // campaign titles are Chinese slogans kept as they are; tag them so the Chinese font is used on other languages
+  function zhAttr() { return LANG === "zh" ? "" : ' lang="zh-CN"'; }
   function cats() { return ["film", "commercial", "photo", "writing"]; }
   function linkable(w) { return w && w.category === "film"; }
   function photoItem(w) {
@@ -231,6 +244,7 @@
     var cur = route.type;
     var links = [
       ["#works", u("works"), cur === "works" || cur === "work"],
+      ["#plans", u("plans"), cur === "plans" || cur === "plan"],
       ["#journal", u("journal"), cur === "journal" || cur === "post"],
       ["#tools", u("tools"), cur === "tools"],
       ["#about", u("about"), cur === "about"]
@@ -256,6 +270,7 @@
     var items = [
       ["#", u("navHome"), (WORKS.filter(function (w) { return w.category === "photo"; })[0] || {}).cover, t(SITE.heroTitle), cur === "home"],
       ["#works", u("works"), feat && feat.cover, u("worksText"), cur === "works" || cur === "work"],
+      ["#plans", u("plans"), (PLANS[0] || {}).cover, u("plansText"), cur === "plans" || cur === "plan"],
       ["#journal", u("journal"), (POSTS[0] || {}).cover, t(SITE.journalText) || u("journalText"), cur === "journal" || cur === "post"],
       ["#tools", u("tools"), null, u("toolsText"), cur === "tools"],
       ["#about", u("about"), prof.photo, t(SITE.skills), cur === "about"]
@@ -539,6 +554,44 @@
       }).join("") + "</div></section>";
   }
 
+  function pagePlans() {
+    return '<section class="wrap page-head fade-in"><h1>' + esc(u("plans")) + "</h1><p>" + esc(t(SITE.plansText) || u("plansText")) + "</p></section>" +
+      '<section class="wrap" style="padding-bottom:var(--band)"><div class="plans">' + PLANS.map(function (p) {
+        var tag = [t(p.field), t(p.brand)].filter(Boolean).join(" · ");
+        return '<a class="plan rise" href="' + planHref(p) + '"><div class="plan__img">' + img(p.cover, t(p.title)) + "</div>" +
+          '<div class="plan__body">' + (tag ? '<p class="plan__tag">' + esc(tag) + "</p>" : "") +
+          '<h3 class="plan__title"' + zhAttr() + ">" + esc(t(p.title)) + "</h3>" +
+          (t(p.subtitle) ? '<p class="plan__sub">' + esc(t(p.subtitle)) + "</p>" : "") +
+          (p.pages ? '<p class="plan__meta">' + esc(u("pagesN", { n: p.pages })) + "</p>" : "") + "</div></a>";
+      }).join("") + "</div></section>";
+  }
+
+  function pagePlan(p) {
+    if (!p) return pageMissing();
+    var idx = PLANS.indexOf(p);
+    var prev = PLANS[(idx - 1 + PLANS.length) % PLANS.length], next = PLANS[(idx + 1) % PLANS.length];
+    var tag = [t(p.field), t(p.brand)].filter(Boolean).join(" · ");
+    var w = +p.w || 16, hgt = +p.h || 9, tall = hgt > w;
+    var slides = [];
+    for (var i = 1; i <= (+p.pages || 0); i++) {
+      var src = String(p.folder || "").replace(/\/$/, "") + "/" + (i < 10 ? "0" : "") + i + ".webp";
+      slides.push('<figure class="slide"><img src="' + esc(safeUrl(src)) + '" width="' + w + '" height="' + hgt + '" alt="' + esc(t(p.title) + " · " + u("pageOf", { n: i })) + '"' +
+        (i <= 2 ? ' fetchpriority="' + (i === 1 ? "high" : "auto") + '"' : ' loading="lazy"') + ' decoding="async"><figcaption class="slide__n num">' + i + " / " + p.pages + "</figcaption></figure>");
+    }
+    var note = LANG === "zh" ? "" : u("planLang");
+    return '<header class="wrap w-head fade-in">' + (tag ? '<p class="w-head__client">' + esc(tag) + "</p>" : "") +
+      "<h1" + zhAttr() + ">" + esc(t(p.title)) + "</h1>" +
+      (t(p.subtitle) ? '<p class="w-head__alt">' + esc(t(p.subtitle)) + "</p>" : "") +
+      (p.pages ? '<p class="w-head__meta"><span>' + esc(u("pagesN", { n: p.pages })) + "</span></p>" : "") + "</header>" +
+      (t(p.summary) || note ? '<section class="wrap"><div class="plan-intro">' + (t(p.summary) ? '<p class="plan-intro__sum">' + esc(t(p.summary)) + "</p>" : "") +
+        (note ? '<p class="plan-intro__note">' + esc(note) + "</p>" : "") + '<p class="plan-intro__hint">' + esc(u("pinch")) + "</p></div></section>" : "") +
+      '<section class="deck' + (tall ? " deck--tall" : "") + '" aria-label="' + esc(t(p.title)) + '">' + slides.join("") + "</section>" +
+      (PLANS.length > 1 ? '<nav class="wrap w-next" aria-label="' + esc(u("plans")) + '" style="padding-block:var(--band)">' + planLink(prev, u("planPrev")) + planLink(next, u("planNext")) + "</nav>" : '<div style="height:var(--band)"></div>');
+  }
+  function planLink(p, label) {
+    return '<a href="' + planHref(p) + '"><div class="w-next__img">' + (p.cover ? img(p.cover, "") : "") + "</div><div><small>" + esc(label) + "</small><strong" + zhAttr() + ">" + esc(t(p.title)) + "</strong></div></a>";
+  }
+
   function pageMissing() {
     return '<section class="wrap empty"><h1>' + esc(u("notFound")) + "</h1><p>" + esc(u("notFoundText")) + "</p>" + more("#", u("home")) + "</section>";
   }
@@ -553,6 +606,8 @@
     if (h === "journal") return { type: "journal" };
     if (h === "about") return { type: "about" };
     if (h === "tools") return { type: "tools" };
+    if (h === "plans") return { type: "plans" };
+    if (h.indexOf("pl-") === 0) return { type: "plan", id: h.slice(3) };
     return { type: "home", anchor: h };
   }
   var lastKey = null;
@@ -570,6 +625,8 @@
     else if (r.type === "journal") { html = pageJournal(); title = u("journalTitle") + " · " + title; }
     else if (r.type === "about") { html = pageAbout(); title = u("about") + " · " + title; }
     else if (r.type === "tools") { html = pageTools(); title = u("tools") + " · " + title; }
+    else if (r.type === "plans") { html = pagePlans(); title = u("plans") + " · " + title; }
+    else if (r.type === "plan") { var pl = planById(r.id); html = pagePlan(pl); if (pl) title = t(pl.title) + " · " + title; }
     else html = pageHome();
     main.innerHTML = html;
     wire.instant = !!keepScroll;
@@ -688,8 +745,8 @@
   ];
   var REVEAL_CALM = [
     [".head h2, .page-head h1, .w-head h1, .p-head h1, .me-head h1, .w-section-title, .w-gallery h2", "title"],
-    [".head p, .page-head p, .chips, .w-head__client, .w-head__alt, .w-head__meta, .p-head__meta, .p-head p, .me-head__reading, .me-head__skills, .w-intro__sum, .w-intro .actions, .me-text p, .me-side__h, .socials li, .prose > p, .prose > h2, .prose > h3, .prose > blockquote, .prose > ul, .prose > ol, .p-source", "text"],
-    [".tile, .post, .photo, .w-next a, .me-photo, .w-frame, .p-cover, .just__row .ph, .prose figure, .prose .fig-row", "fade"]
+    [".head p, .page-head p, .chips, .plan-intro, .w-head__client, .w-head__alt, .w-head__meta, .p-head__meta, .p-head p, .me-head__reading, .me-head__skills, .w-intro__sum, .w-intro .actions, .me-text p, .me-side__h, .socials li, .prose > p, .prose > h2, .prose > h3, .prose > blockquote, .prose > ul, .prose > ol, .p-source", "text"],
+    [".tile, .post, .photo, .plan, .w-next a, .me-photo, .w-frame, .p-cover, .just__row .ph, .prose figure, .prose .fig-row", "fade"]
   ];
   var GROUPS = ".cards, .strip";
   function reveal(instant) {

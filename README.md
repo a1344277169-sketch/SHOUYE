@@ -29,6 +29,7 @@ media/              图片；编辑器新加的图片会放进 media/uploads/
 - 全部作品：`/#works`，按类别：`/#works-film`、`/#works-commercial`、`/#works-photo`、`/#works-writing`
 - 单个作品：`/#w-作品网址名`，例如 `/#w-kochira`
 - 随笔：`/#journal`，单篇：`/#p-随笔网址名`
+- 策划：`/#plans`，单份：`/#pl-策划网址名`，例如 `/#pl-rio`
 - 工具：`/#tools`
 - 指定语言打开：在网址后加 `?lang=zh`、`?lang=ja` 或 `?lang=en`
 
@@ -63,4 +64,24 @@ media/              图片；编辑器新加的图片会放进 media/uploads/
 - `sync-worker.js`：多设备同步接口（`/api/sync/<同步码>`）。设置里输入同一个同步码，各设备的语法进度和重点表掌握程度会自动合并；数据存在 Cloudflare Durable Object 里，`wrangler.jsonc` 已配置好，部署时自动创建，不用在后台建数据库。只有 Workers 部署（jlpt.labagound.cc）带这个接口，labagound.cc/jlpt/ 打开时会请求 jlpt.labagound.cc 的接口
 
 让 jlpt.labagound.cc 指向这个文件夹：在 Cloudflare 新建一个 Pages 项目，连接同一个仓库，构建设置里把“根目录（Root directory）”设为 `jlpt`，构建命令留空、输出目录留空，然后在“自定义域”里添加 `jlpt.labagound.cc`。之后这个文件夹有改动，两个站点都会自动更新。
+
+## 策划页
+
+策划案写在 `content/content.js` 的 `plans` 里（编辑器暂时不能改这一项，直接改文件即可，编辑器保存时会原样保留）。每一页是一张图片，放在 `media/plans/网址名/`，命名为 `01.webp`、`02.webp`……，卡片封面是同一文件夹里的 `cover.webp`。
+
+```js
+{
+  "id": "rio",                         // 网址名：/#pl-rio
+  "folder": "media/plans/rio",         // 页面图片所在文件夹
+  "cover": "media/plans/rio/cover.webp",
+  "pages": 24, "w": 1200, "h": 1733,   // 页数，以及每页图片的宽高（竖版会自动用窄一些的版面）
+  "brand": { "zh": "RIO 强爽", "ja": "", "en": "" },
+  "field": { "zh": "酒饮", "ja": "", "en": "" },
+  "title": { "zh": "强爽不设限，性格AB面", "ja": "", "en": "" },
+  "subtitle": { "zh": "RIO 强爽营销策划专案", "ja": "", "en": "" },
+  "summary": { "zh": "一段简介", "ja": "", "en": "" }
+}
+```
+
+列表里的先后顺序就是页面上的顺序。PDF 转图片时请先去掉比赛名称、奖项和真实姓名。
 

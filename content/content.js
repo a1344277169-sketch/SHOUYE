@@ -563,6 +563,239 @@ window.SITE_CONTENT = {
       }
     }
   ],
+  "plans": [
+    {
+      "id": "fenghui",
+      "folder": "media/plans/fenghui",
+      "cover": "media/plans/fenghui/cover.webp",
+      "pages": 26,
+      "w": 1600,
+      "h": 900,
+      "brand": {
+        "zh": "丰惠镇",
+        "ja": "豊恵鎮（浙江省紹興）",
+        "en": "Fenghui Town, Shaoxing"
+      },
+      "field": {
+        "zh": "文旅",
+        "ja": "観光・文化",
+        "en": "Tourism & culture"
+      },
+      "title": {
+        "zh": "浸来，坐坐",
+        "ja": "浸来，坐坐",
+        "en": "浸来，坐坐"
+      },
+      "subtitle": {
+        "zh": "丰惠镇旅游文化网络渠道营销推广方案",
+        "ja": "豊恵鎮 観光・文化のオンライン・プロモーション企画",
+        "en": "Online marketing plan for a historic water town"
+      },
+      "summary": {
+        "zh": "「浸来，坐坐」取自「进来坐坐」的谐音：主人招呼客人进门的那句话，也是年轻人喜欢的沉浸式旅行。方案以千年古县城为底子，用宣传片、直播云游、抖音达人沉浸式拍摄、微博 VLOG 大赛和「掌上丰惠」小程序，分预热和引爆两个阶段，把年轻游客请进古镇。",
+        "ja": "タイトルは「どうぞ上がっていって（进来坐坐）」の語呂合わせ。客を迎える一言と、若い世代が好む没入型の旅を重ねました。千年の歴史をもつ古い町を舞台に、PR 映像、ライブ配信の「オンライン散策」、TikTok クリエイターとの撮影、Weibo の VLOG コンテスト、ミニアプリ「掌上豊恵」を、予熱期と拡散期の二段階で展開します。",
+        "en": "The title puns on “come in and sit for a while”, the phrase a host uses at the door, and on the immersive trips young travellers look for. Built around a thousand-year-old county town, the plan runs in two phases: a promo film, livestreamed virtual tours, immersive shoots with Douyin creators, a Weibo vlog contest and a mini-app guide to the town."
+      }
+    },
+    {
+      "id": "taohua",
+      "folder": "media/plans/taohua",
+      "cover": "media/plans/taohua/cover.webp",
+      "pages": 24,
+      "w": 1600,
+      "h": 1109,
+      "brand": {
+        "zh": "桃花姬阿胶糕",
+        "ja": "桃花姫 阿膠糕",
+        "en": "Taohuaji ejiao snacks"
+      },
+      "field": {
+        "zh": "食品",
+        "ja": "食品",
+        "en": "Food"
+      },
+      "title": {
+        "zh": "桃花盛放企划",
+        "ja": "桃花盛放企划",
+        "en": "桃花盛放企划"
+      },
+      "subtitle": {
+        "zh": "桃花姬阿胶糕 SOCIAL 传播营销策划全案",
+        "ja": "桃花姫 阿膠糕 SNS 企画",
+        "en": "Social campaign for a traditional wellness snack"
+      },
+      "summary": {
+        "zh": "以「是桃花，就盛放」为口号，向年轻女性传递「悦己」的品牌主张。美妆和剧情博主演绎「桃花气色」与「她力量」，微博发起 30 天喝水打卡，再到线下的纯女性音乐人音乐节和十校联合随机舞蹈，按「桃花初长成—桃花有暗香—桃花盛放时」三个阶段推进。",
+        "ja": "「桃の花なら、咲けばいい」をスローガンに、自分を大切にする若い女性へブランドの思いを届けます。メイク系・ドラマ系クリエイターによる「桃色の顔色」と「彼女の力」の表現、Weibo での 30 日間水分チャレンジ、女性アーティストだけの音楽フェス、10 大学合同のランダムダンスへと、三つの段階で広げていきます。",
+        "en": "Under the line “if you are a peach blossom, bloom”, the campaign speaks to young women about looking after themselves. Beauty and sketch creators, a 30-day water-drinking challenge on Weibo, a festival of women musicians and a ten-campus random dance event carry it through three stages, from bud to full bloom."
+      }
+    },
+    {
+      "id": "rio",
+      "folder": "media/plans/rio",
+      "cover": "media/plans/rio/cover.webp",
+      "pages": 24,
+      "w": 1200,
+      "h": 1733,
+      "brand": {
+        "zh": "RIO 强爽",
+        "ja": "RIO 強爽",
+        "en": "RIO Strong"
+      },
+      "field": {
+        "zh": "酒饮",
+        "ja": "飲料",
+        "en": "Drinks"
+      },
+      "title": {
+        "zh": "强爽不设限，性格AB面",
+        "ja": "强爽不设限，性格AB面",
+        "en": "强爽不设限，性格AB面"
+      },
+      "subtitle": {
+        "zh": "RIO 强爽营销策划专案",
+        "ja": "RIO 強爽 マーケティング企画",
+        "en": "Marketing plan for a canned cocktail"
+      },
+      "summary": {
+        "zh": "很多人在社交场合只给别人看一个「A 面」。方案鼓励年轻人大胆展现藏起来的「B 面」：话题 UGC 和主题 TVC 先引出概念，再通过与《王者荣耀》联名、「喝了强爽再做 MBTI 测试」下沉体验，最后用校园快闪「走直线挑战」完成裂变转化。",
+        "ja": "人づきあいの場では、多くの人が「A 面」だけを見せています。この企画は、隠している「B 面」を思い切って出そうと若い世代に呼びかけるもの。話題投稿とテーマ CM でコンセプトを伝え、人気ゲーム『王者栄耀』とのコラボや「強爽を飲んでから MBTI 診断」で体験を広げ、キャンパスでの「まっすぐ歩けるかチャレンジ」で拡散につなげます。",
+        "en": "Most of us only show our “side A” in public. This plan invites young drinkers to show the side B they keep hidden: user posts and a theme film introduce the idea, a collaboration with the game Honor of Kings and a “take the MBTI test after a Strong” challenge deepen it, and a campus “walk the line” pop-up spreads it."
+      }
+    },
+    {
+      "id": "lianhua",
+      "folder": "media/plans/lianhua",
+      "cover": "media/plans/lianhua/cover.webp",
+      "pages": 24,
+      "w": 1600,
+      "h": 1108,
+      "brand": {
+        "zh": "连花清瘟",
+        "ja": "連花清瘟",
+        "en": "Lianhua Qingwen"
+      },
+      "field": {
+        "zh": "医药",
+        "ja": "医薬品",
+        "en": "Healthcare"
+      },
+      "title": {
+        "zh": "让陪伴清而易举",
+        "ja": "让陪伴清而易举",
+        "en": "让陪伴清而易举"
+      },
+      "subtitle": {
+        "zh": "连花清瘟社交平台传播策划案",
+        "ja": "連花清瘟 SNS コミュニケーション企画",
+        "en": "Social media plan for a cold and flu remedy"
+      },
+      "summary": {
+        "zh": "疫情三年过去，很多人终于能去见那些想念却迟迟没见的人。方案把「陪伴」作为情感切口：#好久不见的我们# 话题和剧情短视频唤醒需求，冠名综艺《陪伴就现在》、蛋仔派对联名皮肤造势，再通过携程抢票助力和万达影城「陪伴放映厅」落地，分「唤醒—旺盛—落地」三步。",
+        "ja": "3 年間のコロナ禍が終わり、会いたくても会えなかった人にようやく会えるようになりました。企画は「そばにいること」を感情の入り口にしています。ハッシュタグ「#久しぶりの私たち」とショートドラマで気持ちを呼び起こし、バラエティ番組の冠スポンサーや人気ゲームのコラボスキンで盛り上げ、旅行アプリのチケット支援と映画館の「寄り添いシアター」で行動につなげる三段階です。",
+        "en": "After three years of the pandemic, people could finally see the ones they had missed. The plan uses companionship as its emotional hook: a #LongTimeNoSee hashtag and short dramas wake the need, a sponsored variety show and an Eggy Party game skin build momentum, and train-ticket help on Trip.com and “companion screenings” in cinemas turn it into action."
+      }
+    },
+    {
+      "id": "hongse",
+      "folder": "media/plans/hongse",
+      "cover": "media/plans/hongse/cover.webp",
+      "pages": 23,
+      "w": 1600,
+      "h": 900,
+      "brand": {
+        "zh": "赤尾",
+        "ja": "赤尾（ZIOXX）",
+        "en": "ZIOXX"
+      },
+      "field": {
+        "zh": "个人护理",
+        "ja": "パーソナルケア",
+        "en": "Personal care"
+      },
+      "title": {
+        "zh": "红色情人「结」",
+        "ja": "红色情人「结」",
+        "en": "红色情人「结」"
+      },
+      "subtitle": {
+        "zh": "赤尾玻尿酸安全套系列产品推广策划方案",
+        "ja": "赤尾 ヒアルロン酸コンドーム プロモーション企画",
+        "en": "Product launch plan for a hyaluronic acid condom line"
+      },
+      "summary": {
+        "zh": "把品牌的红色和「情人结」绑在一起，在每月 14 日的情人节上做文章。悬念海报和原创 IP 形象「幽兰莹」打开话题，线下快闪和与《星露谷物语》的联名活动把热度推高，再借综艺合作和高校健康讲座落到女性健康关怀，按「暧昧期—热恋期—成熟期」推进。",
+        "ja": "ブランドの赤と「恋人結び」を結びつけ、毎月 14 日の「恋人の日」を軸に展開します。ティザー広告とオリジナル IP キャラクターで話題をつくり、リアルのポップアップストアやゲーム『Stardew Valley』とのコラボで盛り上げ、バラエティ番組との連携や大学での健康講座で女性の健康への関心につなげます。",
+        "en": "The plan ties the brand's red to a “lover's knot” and builds on the 14th of each month, a lovers' day in China. Teaser posters and an original IP character open the conversation, pop-up stores and a Stardew Valley collaboration raise the heat, and a variety-show tie-in and campus health talks land the message on women's health."
+      }
+    },
+    {
+      "id": "wutao",
+      "folder": "media/plans/wutao",
+      "cover": "media/plans/wutao/cover.webp",
+      "pages": 28,
+      "w": 1600,
+      "h": 1108,
+      "brand": {
+        "zh": "赤尾",
+        "ja": "赤尾（ZIOXX）",
+        "en": "ZIOXX"
+      },
+      "field": {
+        "zh": "个人护理",
+        "ja": "パーソナルケア",
+        "en": "Personal care"
+      },
+      "title": {
+        "zh": "恋爱脑守护企划",
+        "ja": "恋爱脑守护企划",
+        "en": "恋爱脑守护企划"
+      },
+      "subtitle": {
+        "zh": "赤尾玻尿酸安全套营销策划全案",
+        "ja": "赤尾 ヒアルロン酸コンドーム マーケティング企画",
+        "en": "Marketing plan for a hyaluronic acid condom"
+      },
+      "summary": {
+        "zh": "「恋爱脑」常被拿来调侃，方案把它变成一种关怀：一恋爱就把心思全放在对方身上的人，更需要有人守护。和线条小狗联名的短视频、表情包与周边，赞助华语辩论老友赛，情感博主内容植入和微博故事征集，按「行为重演—情感解析—意识培养」三步，把品牌和「自爱」连在一起。",
+        "ja": "「恋愛脳」はよくからかいの言葉として使われますが、この企画ではそれを思いやりに変えます。恋をすると相手のことしか見えなくなる人こそ、守ってくれる存在が必要です。人気キャラクター「線条小狗」とのコラボ動画やスタンプ、グッズ、ディベート番組への協賛、恋愛系クリエイターとのタイアップ、Weibo でのストーリー募集を三段階で展開し、ブランドを「自分を大切にすること」と結びつけます。",
+        "en": "“Love-brain” is usually a joke about people who lose themselves in a relationship. This plan turns it into care: those people need looking after most. Short videos, stickers and merch with the Maltese cartoon dog, a sponsored debate show, relationship creators and a Weibo story call run in three steps and tie the brand to self-love."
+      }
+    },
+    {
+      "id": "jissbon",
+      "folder": "media/plans/jissbon",
+      "cover": "media/plans/jissbon/cover.webp",
+      "pages": 29,
+      "w": 1600,
+      "h": 1108,
+      "brand": {
+        "zh": "杰士邦",
+        "ja": "傑士邦（JISSBON）",
+        "en": "JISSBON"
+      },
+      "field": {
+        "zh": "个人护理",
+        "ja": "パーソナルケア",
+        "en": "Personal care"
+      },
+      "title": {
+        "zh": "恋爱脑守护企划",
+        "ja": "恋爱脑守护企划",
+        "en": "恋爱脑守护企划"
+      },
+      "subtitle": {
+        "zh": "杰士邦玻尿酸系列产品整合营销传播方案",
+        "ja": "傑士邦 ヒアルロン酸シリーズ 統合マーケティング企画",
+        "en": "Integrated campaign for a hyaluronic acid condom range"
+      },
+      "summary": {
+        "zh": "同一个「恋爱脑守护企划」，为杰士邦玻尿酸 003 系列重新展开：联名礼盒与线下陈列堆头，借品牌原有的「#深夜邦邦糖#」互动板块发起故事征集，在情感博主的漫画里先讲自爱、再讲零感水润的使用体验，让产品价值和情绪价值落在同一处。",
+        "ja": "同じ「恋愛脳を守る企画」を、傑士邦のヒアルロン酸 003 シリーズ向けに組み直したもの。コラボギフトボックスと店頭陳列、ブランドの既存の交流企画を使ったストーリー募集、恋愛系漫画クリエイターによる「自分を大切に」から使い心地へとつなぐ物語で、製品の価値と感情の価値を重ねます。",
+        "en": "The same “love-brain” campaign, rebuilt for JISSBON's 003 hyaluronic acid range: a co-branded gift box and in-store displays, a story call through the brand's existing late-night Weibo column, and a comic creator who starts with self-love and moves to how the product feels, so the practical and emotional value meet."
+      }
+    }
+  ],
   "posts": [
     {
       "id": "wx-hide",
