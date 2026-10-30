@@ -757,9 +757,9 @@ window.SITE_CONTENT = {
         "en": "Integrated campaign for a hyaluronic acid condom range"
       },
       "summary": {
-        "zh": "同一个「恋爱脑守护企划」，为杰士邦玻尿酸 003 系列重新展开：联名礼盒与线下陈列堆头，借品牌原有的「#深夜邦邦糖#」互动板块发起故事征集，在情感博主的漫画里先讲自爱、再讲零感水润的使用体验，让产品价值和情绪价值落在同一处。",
-        "ja": "同じ「恋愛脳を守る企画」を、傑士邦のヒアルロン酸 003 シリーズ向けに組み直したもの。コラボギフトボックスと店頭陳列、ブランドの既存の交流企画を使ったストーリー募集、恋愛系漫画クリエイターによる「自分を大切に」から使い心地へとつなぐ物語で、製品の価値と感情の価値を重ねます。",
-        "en": "The same “love-brain” campaign, rebuilt for JISSBON's 003 hyaluronic acid range: a co-branded gift box and in-store displays, a story call through the brand's existing late-night Weibo column, and a comic creator who starts with self-love and moves to how the product feels, so the practical and emotional value meet."
+        "zh": "「恋爱脑」常被拿来调侃，方案把它变成一种关怀：一恋爱就把心思全放在对方身上的人，更需要有人守护。和线条小狗联名的短视频、表情包与礼盒，赞助华语辩论老友赛，情感漫画博主先讲自爱、再讲零感水润的使用体验，配合线下陈列和微博故事征集，按「行为重演—情感解析—意识培养」三步，把杰士邦和「自爱」连在一起。",
+        "ja": "「恋愛脳」はよくからかいの言葉として使われますが、この企画ではそれを思いやりに変えます。恋をすると相手のことしか見えなくなる人こそ、守ってくれる存在が必要です。人気キャラクター「線条小狗」とのコラボ動画・スタンプ・ギフトボックス、ディベート番組への協賛、「自分を大切に」から使い心地へとつなぐ恋愛漫画クリエイターとのタイアップ、店頭陳列と Weibo のストーリー募集を三段階で展開し、ブランドを「自分を大切にすること」と結びつけます。",
+        "en": "“Love-brain” is usually a joke about people who lose themselves in a relationship. This plan turns it into care: those people need looking after most. Videos, stickers and a gift box with the Maltese cartoon dog, a sponsored debate show, a comic creator who starts with self-love and moves to how the product feels, in-store displays and a Weibo story call run in three steps and tie JISSBON to self-love."
       }
     }
   ],
