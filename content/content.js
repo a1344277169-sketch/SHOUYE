@@ -921,7 +921,7 @@ window.SITE_CONTENT = {
       "cover": "media/plans/rio/cover.webp",
       "pages": 24,
       "w": 1200,
-      "h": 1733,
+      "h": 1729,
       "brand": {
         "zh": "RIO 强爽",
         "ja": "RIO 強爽",
