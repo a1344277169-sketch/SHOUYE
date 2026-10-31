@@ -388,7 +388,7 @@
         '<div class="camp-lead__txt">' + (lpTag ? '<p class="camp-lead__tag">' + esc(lpTag) + "</p>" : "") +
         '<h3 class="camp-lead__title"' + zhAttr() + ">" + esc(t(lp.title)) + "</h3>" +
         (t(lp.subtitle) ? '<p class="camp-lead__sub">' + esc(t(lp.subtitle)) + "</p>" : "") +
-        (t(lp.summary) ? '<p class="camp-lead__sum">' + esc(t(lp.summary)) + "</p>" : "") +
+        (t(lp.teaser) || t(lp.summary) ? '<p class="camp-lead__sum">' + esc(t(lp.teaser) || t(lp.summary)) + "</p>" : "") +
         '<div class="actions"><a class="btn" href="' + planHref(lp) + '">' + esc(u("readPlan")) + "</a></div></div></div>" +
         (PLANS.length > 1 ? '<div class="camp-more">' + PLANS.slice(1, 4).map(function (p) {
           return '<a class="plan" href="' + planHref(p) + '"><div class="plan__img">' + img(p.cover, t(p.title)) + "</div>" +

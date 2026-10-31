@@ -80,6 +80,7 @@ media/              图片；编辑器新加的图片会放进 media/uploads/
   "title": { "zh": "强爽不设限，性格AB面", "ja": "", "en": "" },
   "subtitle": { "zh": "RIO 强爽营销策划专案", "ja": "", "en": "" },
   "summary": { "zh": "一段简介", "ja": "", "en": "" },
+  "teaser": { "zh": "首页用的短简介（可不填，不填就用 summary）", "ja": "", "en": "" },
   "notes": { "zh": ["第 1 页的说明", "第 2 页的说明"], "ja": [], "en": [] }
 }
 ```

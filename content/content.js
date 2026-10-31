@@ -596,6 +596,11 @@ window.SITE_CONTENT = {
         "ja": "社会に出た Z 世代がいちばん困るのは、酒席で無理に飲まされること。この企画では茅台王子酒が若者の側に立ち、「本音で話す・飲みすぎない・無理に勧めない」新しい酒席の文化を一緒につくります。予熱期は Weibo で「今の酒席文化、誰か何とかして」と問いかけ、共創期はユーザーやクリエイターと新ルールや替え歌をつくり、拡散期は 6 都市で MBTI タイプの違う 16 人による「仮面の宴」をライブ配信します。",
         "en": "For young people starting work in China, the dreaded part is often the drinking at work dinners. This plan puts Moutai Prince on their side to define a new table culture: speak honestly, drink in moderation, never force a toast. A Weibo question starts the debate, users and creators co-write the new rules and a remixed song, and “masked banquets” with 16 MBTI types in six cities are streamed live."
       },
+      "teaser": {
+        "zh": "00 后走进职场，最怕的往往是酒桌上的劝酒和套路。方案让茅台王子酒站在年轻人这一边，和他们一起定义「新酒桌文化」：真情表达、适量饮酒、不强迫敬酒。",
+        "ja": "社会に出た Z 世代がいちばん困るのは、酒席で無理に飲まされること。この企画では茅台王子酒が若者の側に立ち、「本音で話す・飲みすぎない・無理に勧めない」新しい酒席の文化を一緒につくります。",
+        "en": "For young people starting work in China, the dreaded part is often the drinking at work dinners. This plan puts Moutai Prince on their side to define a new table culture: speak honestly, drink in moderation, never force a toast."
+      },
       "notes": {
         "zh": [
           "封面：「新酒桌文化」——00 后用来整顿酒局的方式，茅台王子酒品牌事件营销传播策划方案。",
