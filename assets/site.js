@@ -45,6 +45,8 @@
     about: { zh: "关于", ja: "プロフィール", en: "About" },
     tools: { zh: "工具", ja: "ツール", en: "Tools" },
     plans: { zh: "策划", ja: "企画", en: "Campaigns" },
+    allPlans: { zh: "全部策划", ja: "すべての企画", en: "All campaigns" },
+    readPlan: { zh: "查看方案", ja: "企画書を見る", en: "View the plan" },
     plansText: { zh: "品牌营销与传播策划：从市场分析、传播策略，到创意呈现和媒介排期。", ja: "ブランドのマーケティング・コミュニケーション企画。市場分析と戦略から、クリエイティブ、メディアプランまで。", en: "Brand marketing and communication plans, from market analysis and strategy to creative work and media planning." },
     planPrev: { zh: "上一份", ja: "前の企画", en: "Previous" },
     planNext: { zh: "下一份", ja: "次の企画", en: "Next" },
@@ -374,9 +376,26 @@
       (t(SITE.heroText) ? '<p class="lead__text">' + esc(t(SITE.heroText)) + "</p>" : "") +
       '<div class="actions lead__actions"><a class="btn" href="#works" data-pick>' + esc(u("seeWork")) + "</a>" + more("#journal", u("readJournal"), true) + "</div></div>" +
       '<div class="lead__foot wrap">' + (t(SITE.skills) ? '<p class="lead__skills">' + esc(t(SITE.skills)) + "</p>" : "<span></span>") +
-      '<a class="lead__cue" href="#featured"><span>' + esc(u("scrollHint")) + '</span><i aria-hidden="true"></i></a></div>' +
+      '<a class="lead__cue" href="#' + (PLANS.length ? "campaigns" : "featured") + '"><span>' + esc(u("scrollHint")) + '</span><i aria-hidden="true"></i></a></div>' +
       "</section>");
 
+    // campaigns come first: the lead proposal large, then a few more
+    if (PLANS.length) {
+      var lp = PLANS[0], lpTag = [t(lp.field), t(lp.brand)].filter(Boolean).join(" · ");
+      h.push('<section class="band" id="campaigns" aria-labelledby="camp-title"><div class="wrap">' +
+        '<div class="head"><div><h2 id="camp-title" class="rise">' + esc(u("plans")) + "</h2><p>" + esc(t(SITE.plansText) || u("plansText")) + "</p></div>" + more("#plans", u("allPlans")) + "</div>" +
+        '<div class="camp-lead"><a class="camp-lead__img" href="' + planHref(lp) + '" tabindex="-1" aria-hidden="true">' + img(lp.cover, "") + "</a>" +
+        '<div class="camp-lead__txt">' + (lpTag ? '<p class="camp-lead__tag">' + esc(lpTag) + "</p>" : "") +
+        '<h3 class="camp-lead__title"' + zhAttr() + ">" + esc(t(lp.title)) + "</h3>" +
+        (t(lp.subtitle) ? '<p class="camp-lead__sub">' + esc(t(lp.subtitle)) + "</p>" : "") +
+        (t(lp.summary) ? '<p class="camp-lead__sum">' + esc(t(lp.summary)) + "</p>" : "") +
+        '<div class="actions"><a class="btn" href="' + planHref(lp) + '">' + esc(u("readPlan")) + "</a></div></div></div>" +
+        (PLANS.length > 1 ? '<div class="camp-more">' + PLANS.slice(1, 4).map(function (p) {
+          return '<a class="plan" href="' + planHref(p) + '"><div class="plan__img">' + img(p.cover, t(p.title)) + "</div>" +
+            '<div class="plan__body"><p class="plan__tag">' + esc([t(p.field), t(p.brand)].filter(Boolean).join(" · ")) + "</p>" +
+            '<h3 class="plan__title"' + zhAttr() + ">" + esc(t(p.title)) + "</h3></div></a>";
+        }).join("") + "</div>" : "") + "</div></section>");
+    }
     // featured film
     if (feat) {
       var alt = t(feat.subtitle);
@@ -744,8 +763,10 @@
   var REVEAL_RICH = [
     [".head h2, .feature__title, .teaser__name", "title"],
     [".head p, .head > .more, .feature__alt, .feature__roles, .feature__sum, .feature .actions, .teaser__skills, .teaser__text, .teaser .actions", "text"],
-    [".tile, .post, .stat, .brands", "block"],
-    [".feature__poster, .teaser__photo, .just__row .ph", "img"]
+    [".camp-lead__title", "title"],
+    [".camp-lead__tag, .camp-lead__sub, .camp-lead__sum, .camp-lead .actions", "text"],
+    [".tile, .post, .stat, .brands, .camp-more .plan", "block"],
+    [".feature__poster, .camp-lead__img, .teaser__photo, .just__row .ph", "img"]
   ];
   var REVEAL_CALM = [
     [".head h2, .page-head h1, .w-head h1, .p-head h1, .me-head h1, .w-section-title, .w-gallery h2", "title"],
