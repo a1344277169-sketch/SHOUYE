@@ -3,7 +3,7 @@
 纯静态网站，不需要服务器程序，也不需要构建。把整个文件夹上传到任何静态空间（Cloudflare Pages、Vercel、Netlify、GitHub Pages、或者你现在的空间）即可。
 
 ```
-index.html          网站本体（首页、作品页、随笔页都在这里，用 #网址 切换）
+index.html          网站本体（首页、影视、策划、树屋等页面都在这里，用 #网址 切换）
 admin.html          内容编辑器（只在你自己的电脑上用）
 content/content.js  全部文字和图片路径（中 / 日 / EN 三种语言）
 assets/             样式和脚本

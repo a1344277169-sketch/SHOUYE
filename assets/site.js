@@ -38,7 +38,9 @@
 
   var UI = {
     skip: { zh: "跳到正文", ja: "本文へ移動", en: "Skip to content" },
-    works: { zh: "作品", ja: "作品", en: "Work" },
+    works: { zh: "影视", ja: "映像", en: "Film" },
+    pickTitle: { zh: "想看哪一类？", ja: "どちらを見ますか？", en: "What would you like to see?" },
+    pickFilmText: { zh: "短片、品牌影像、摄影与剧本", ja: "短編映画、ブランド映像、写真、脚本", en: "Short films, brand work, photos and scripts" },
     journal: { zh: "树屋", ja: "樹屋", en: "Treehouse" },
     about: { zh: "关于", ja: "プロフィール", en: "About" },
     tools: { zh: "工具", ja: "ツール", en: "Tools" },
@@ -56,6 +58,7 @@
     watchFilm: { zh: "观看影片", ja: "本編を見る", en: "Watch the film" },
     learnMore: { zh: "了解更多", ja: "詳しく見る", en: "Learn more" },
     seeWork: { zh: "浏览作品", ja: "作品を見る", en: "See the work" },
+    pickPlanText: { zh: "品牌营销与传播策划案", ja: "ブランドのマーケティング企画書", en: "Brand marketing and communication plans" },
     allWorks: { zh: "全部作品", ja: "すべての作品", en: "All work" },
     moreFilms: { zh: "更多短片", ja: "そのほかの短編", en: "More short films" },
     brandsTitle: { zh: "为品牌而做", ja: "ブランドのための映像", en: "Made for brands" },
@@ -369,7 +372,7 @@
       '<div class="lead__bg" aria-hidden="true"><i class="orb orb--1"></i><i class="orb orb--2"></i><i class="orb orb--3"></i><i class="lead__grain"></i></div>' +
       '<div class="lead__in wrap"><h1 id="hero-title" class="lead__title" aria-label="' + esc(title.replace(/\n/g, "")) + '"><span aria-hidden="true">' + chars + "</span></h1>" +
       (t(SITE.heroText) ? '<p class="lead__text">' + esc(t(SITE.heroText)) + "</p>" : "") +
-      '<div class="actions lead__actions"><a class="btn" href="#works">' + esc(u("seeWork")) + "</a>" + more("#journal", u("readJournal"), true) + "</div></div>" +
+      '<div class="actions lead__actions"><a class="btn" href="#works" data-pick>' + esc(u("seeWork")) + "</a>" + more("#journal", u("readJournal"), true) + "</div></div>" +
       '<div class="lead__foot wrap">' + (t(SITE.skills) ? '<p class="lead__skills">' + esc(t(SITE.skills)) + "</p>" : "<span></span>") +
       '<a class="lead__cue" href="#featured"><span>' + esc(u("scrollHint")) + '</span><i aria-hidden="true"></i></a></div>' +
       "</section>");
@@ -891,6 +894,30 @@
       window.addEventListener("scroll", function () { if (!sr) sr = requestAnimationFrame(function () { sr = 0; tick(); }); }, { passive: true });
     }
   }
+
+  /* ---------- "see the work": choose film or campaigns ---------- */
+  var pick = null;
+  function openPick() {
+    if (!pick) {
+      pick = document.createElement("dialog"); pick.className = "pick";
+      pick.addEventListener("click", function (e) { if (e.target === pick || e.target.closest(".pick__close")) pick.close(); else if (e.target.closest(".pick__opt")) pick.close(); });
+      pick.addEventListener("close", function () { document.body.style.overflow = ""; });
+      document.body.appendChild(pick);
+    }
+    var feat = byId(SITE.featuredWork) || WORKS[0] || {};
+    var opt = function (href, label, text, cover) {
+      return '<a class="pick__opt" href="' + href + '"><span class="pick__img">' + (cover ? img(cover, "") : "") + '</span><span class="pick__txt"><strong>' + esc(label) + "</strong><small>" + esc(text) + "</small></span>" + ICON.chev + "</a>";
+    };
+    pick.setAttribute("aria-label", u("pickTitle"));
+    pick.innerHTML = '<div class="pick__in"><div class="pick__head"><h2>' + esc(u("pickTitle")) + '</h2><button type="button" class="pick__close" aria-label="' + esc(u("close")) + '">' + ICON.close + "</button></div>" +
+      '<div class="pick__opts">' + opt("#works", u("works"), u("pickFilmText"), feat.cover) + (PLANS.length ? opt("#plans", u("plans"), u("pickPlanText"), (PLANS[0] || {}).cover) : "") + "</div></div>";
+    if (pick.showModal) { pick.showModal(); document.body.style.overflow = "hidden"; } else location.hash = "#works";
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("[data-pick]");
+    if (!a || !PLANS.length) return;
+    e.preventDefault(); openPick();
+  });
 
   /* ---------- lightbox ---------- */
   var lb, lbList = [], lbIndex = 0, lbLabel = "";
