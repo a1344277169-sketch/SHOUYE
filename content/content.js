@@ -917,8 +917,8 @@ window.SITE_CONTENT = {
     },
     {
       "id": "rio",
-      "folder": "media/plans/rio",
-      "cover": "media/plans/rio/cover.webp",
+      "folder": "media/plans/rio-b",
+      "cover": "media/plans/rio-b/cover.webp",
       "pages": 24,
       "w": 1200,
       "h": 1729,
