@@ -251,7 +251,6 @@
       ["#works", u("works"), cur === "works" || cur === "work"],
       ["#plans", u("plans"), cur === "plans" || cur === "plan"],
       ["#journal", u("journal"), cur === "journal" || cur === "post"],
-      ["#tools", u("tools"), cur === "tools"],
       ["#about", u("about"), cur === "about"]
     ];
     var linkHtml = links.map(function (l) { return '<a href="' + l[0] + '"' + (l[2] ? ' aria-current="page"' : "") + ">" + esc(l[1]) + "</a>"; }).join("");
@@ -277,7 +276,6 @@
       ["#works", u("works"), feat && feat.cover, u("worksText"), cur === "works" || cur === "work"],
       ["#plans", u("plans"), (PLANS[0] || {}).cover, u("plansText"), cur === "plans" || cur === "plan"],
       ["#journal", u("journal"), (POSTS[0] || {}).cover, t(SITE.journalText) || u("journalText"), cur === "journal" || cur === "post"],
-      ["#tools", u("tools"), null, u("toolsText"), cur === "tools"],
       ["#about", u("about"), prof.photo, t(SITE.skills), cur === "about"]
     ];
     var sheet = document.getElementById("sheet");
@@ -916,6 +914,16 @@
       window.addEventListener("scroll", function () { if (!sr) sr = requestAnimationFrame(function () { sr = 0; tick(); }); }, { passive: true });
     }
   }
+
+  /* ---------- Tools is not in the menus: on the About page, tap the green dot in the big footer logo three times ---------- */
+  var dotTaps = 0, dotT = 0;
+  document.addEventListener("click", function (e) {
+    var dot = e.target.closest && e.target.closest(".foot__mark .dot");
+    if (!dot || parse().type !== "about") return;
+    dotTaps++; clearTimeout(dotT);
+    dotT = setTimeout(function () { dotTaps = 0; }, 1200);
+    if (dotTaps >= 3) { dotTaps = 0; location.hash = "#tools"; }
+  });
 
   /* ---------- "see the work": choose film or campaigns ---------- */
   var pick = null;

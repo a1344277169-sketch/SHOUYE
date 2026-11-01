@@ -962,3 +962,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; heig
 .pick__txt small { font-size: 14px; color: var(--ink-2); line-height: 1.45; }
 .pick__opt > svg { width: 9px; height: 15px; color: var(--ink-3); margin-right: 6px; flex: none; }
 @media (max-width: 480px) { .pick__img { width: 96px; } .pick__txt strong { font-size: 18px; } }
+
+/* the footer dot is the hidden way into Tools (about page, three taps) */
+.foot__mark .dot { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
