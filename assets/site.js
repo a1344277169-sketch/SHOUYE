@@ -14,7 +14,8 @@
   var SITE = DATA.site || {};
   var WORKS = DATA.works || [];
   var PLANS = DATA.plans || [];
-  var POSTS = (DATA.posts || []).slice().sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); });
+  // a post with "hidden": true stays in content.js but is not shown anywhere (draft preview still shows it)
+  var POSTS = (DATA.posts || []).filter(function (p) { return isDraft || !p.hidden; }).sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); });
 
   /* ---------- language ---------- */
   var LANGS = ["zh", "ja", "en"];
