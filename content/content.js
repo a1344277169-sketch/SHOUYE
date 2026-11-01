@@ -17,9 +17,9 @@ window.SITE_CONTENT = {
       "en": "A little closer to people."
     },
     "heroText": {
-      "zh": "导演、编剧与剪辑的作品集。营销策划、短片、品牌影像、摄影，还有一些诗和随笔。",
-      "ja": "監督・脚本・編集を手がける映像作家のポートフォリオ。マーケティング企画、短編映画、ブランド映像、写真、そして詩と随筆。",
-      "en": "The portfolio of a director, writer and editor. Campaign plans, short films, brand work, photographs, and a few poems."
+      "zh": "营销策划、导演、编剧与剪辑的作品集。短片、品牌影像、摄影，还有一些诗和随笔。",
+      "ja": "マーケティング企画・監督・脚本・編集のポートフォリオ。短編映画、ブランド映像、写真、そして詩と随筆。",
+      "en": "The portfolio of a campaign planner, director, writer and editor. Short films, brand work, photographs, and a few poems."
     },
     "featuredWork": "kochira",
     "about": {
