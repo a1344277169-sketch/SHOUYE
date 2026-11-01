@@ -965,3 +965,9 @@ html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; heig
 
 /* the footer dot is the hidden way into Tools (about page, three taps) */
 .foot__mark .dot { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
+
+/* phones and tablets have no hover, so film tiles keep a soft shadow at rest (like the desktop hover lift, minus the movement) */
+@media (hover: none) {
+  .tile:not(.tile--static), .card { box-shadow: 0 14px 34px -16px rgba(0, 0, 0, .26), 0 0 0 1px var(--line); }
+  .band--cinema .card, .band--cinema .tile { box-shadow: 0 0 0 1px rgba(255, 255, 255, .08); }
+}
