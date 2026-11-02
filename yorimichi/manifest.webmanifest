@@ -1,0 +1,19 @@
+{
+  "name": "よりみち — 道まちがいに、ありがとう。",
+  "short_name": "よりみち",
+  "description": "誰かの発見を、あなたの帰り道へ。",
+  "lang": "ja",
+  "start_url": "./#/forum",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
