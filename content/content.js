@@ -23,14 +23,14 @@ window.SITE_CONTENT = {
     },
     "featuredWork": "kochira",
     "about": {
-      "zh": "2003年生于中国福建省福州市。大学期间修读摄影、灯光、影视剪辑、三维动画、电影叙事美学、纪录片创作等影视制作专业课程，主要学习以人物刻画为核心的影像表达。\n\n在校期间担任学生会宣传部部长和校内演播厅摄影部部长，负责校内活动与宣传片的策划和制作。持续参加全国大学生广告艺术大赛等全国性影像比赛，由我一人担任导演、摄影、剪辑和美术的作品，获得国家级优秀奖、国家级铜奖、省级一等奖等奖项。\n\n在数字媒体公司实习期间，参与抖音、OPPO、荣耀、美团等品牌的视频制作，个人制作的视频播放量达数百万次以上；参与制作的部分电视广告在中央电视台（CCTV）播出，积累了商业影像制作的实践经验。\n\n毕业研究以中国电视剧《繁花》中人物塑造的双重性为题，探讨如何用影像表现人内心的矛盾与挣扎。我关心如何从日常不经意的瞬间里，描绘人的情感与本质。今后也想继续深入以人物刻画为中心的影像表达，创作带着安静余韵、能让人感受到深刻人性的作品。",
-      "ja": "2003年中国福建省福州市生まれ。大学では撮影、照明、映像編集、3DCG、映画叙事美学、ドキュメンタリー制作など映像制作に関する専門科目を履修し、人物描写を中心とした映像表現について学んできた。\n\n在学中は学生会宣伝部長および学内放送スタジオ撮影部長を務め、学内イベントや広報映像の企画・制作を担当した。また、全国大学生広告芸術コンテストなどの全国規模の映像コンテストに継続的に出品し、監督・撮影・編集・美術を一人で担当した作品で、国家級優秀賞、国家級銅賞、省級一等賞などを受賞した。\n\nデジタルメディア企業での実習では、TikTok、OPPO、Honor、美団などの企業向け映像制作に携わり、個人制作の映像は数百万回以上再生された。また、制作に参加したテレビCMの一部は中国中央電視台（CCTV）で放映され、商業映像制作の実践経験を積んだ。\n\n卒業研究では、中国ドラマ『繁花』における人物造形の二重性をテーマとし、人間の内面に潜む矛盾や葛藤を映像で表現する手法について考察した。私は、日常の中にある何気ない瞬間から人間の感情や本質を描き出す映像表現に関心を持っている。今後も人物描写を中心とした映像表現の研究を深め、静かな余韻と深い人間性を感じさせる作品を創作していきたい。",
-      "en": "Born in 2003 in Fuzhou, Fujian, China. At university I studied cinematography, lighting, editing, 3D CG, film narrative aesthetics and documentary production, focusing on films built around character.\n\nI led the publicity department of the student union and the camera team of the campus broadcast studio, planning and producing campus events and promotional films. I entered national competitions such as the National College Students' Advertising Art Festival year after year, and films I directed, shot, edited and designed on my own won a national excellence award, a national bronze award and a provincial first prize.\n\nAs an intern at a digital media company I made videos for brands including Douyin (TikTok), OPPO, Honor and Meituan. My own pieces have been viewed millions of times, and some of the TV commercials I worked on aired on CCTV.\n\nMy graduation research looked at the doubleness of character in the Chinese drama Blossoms Shanghai, and at how film can show the contradictions people carry inside. I'm drawn to small, ordinary moments that reveal what someone feels and who they are. I want to keep studying character-led filmmaking and make quiet work that stays with you and feels deeply human."
+      "zh": "2003年生于中国福建省福州市。大学期间修读摄影、灯光、影视剪辑、三维动画、电影叙事美学等影像制作专业课程，从策划、拍摄到剪辑，学习用影像传达想法的基础。\n\n在校期间，以团队形式持续参加全国性的大学生广告大赛，为品牌和地区策划社交媒体与数字营销方案：从市场与消费者分析出发，完成洞察、概念、分阶段执行、媒介计划和预算，整理成完整的策划书。广告策划与影像作品获得国家级铜奖、国家级优秀奖、省级一等奖等奖项。同时担任学生会宣传部部长和校内影像工作室摄影部部长，负责校内活动与宣传片的策划和制作。\n\n在广告制作公司实习期间，参与制作抖音、OPPO、荣耀、美团等企业在社交媒体和电视上投放的广告影像。国际妇女节“女性力量”传播项目《100 个她的故事》中参与策划和剪辑，相关话题总播放量达 20.3 亿次。荣耀项目由我独立完成从策划到制作，播放量超过 100 万次。\n\n研究生阶段，希望结合广告策划与影像制作两方面的经验，从面向数字平台的广告创意的策划与制作，到其效果的验证，都做深入的研究。",
+      "ja": "2003年中国福建省福州市生まれ。大学では撮影、照明、映像編集、3DCG、映画叙事美学など映像制作に関する専門科目を履修し、企画から撮影・編集まで、映像で伝えるための基礎を学んだ。\n\n在学中は、チームで全国規模の大学生広告コンテストに継続して参加し、ブランドや地域のSNS・デジタル施策を企画した。市場・消費者分析からインサイト、コンセプト、段階的な施策、媒体計画と予算までを企画書にまとめた。広告企画と映像作品で、国家級銅賞、国家級優秀賞、省級一等賞などを受賞した。また、学生会宣伝部長および学内映像スタジオ撮影部長として、学内イベントや広報映像の企画・制作を担当した。\n\n広告制作会社でのインターンでは、TikTok、OPPO、Honor、美団などの企業がSNSやテレビで発信する広告映像の制作に携わった。国際女性デーに“女性の力”を伝えたキャンペーン「100の彼女の物語」では企画と編集に参加し、関連ハッシュタグの総再生回数は20.3億回に達した。Honorの案件では企画から制作までを一人で担当し、100万回以上再生された。\n\n大学院では、広告企画と映像制作の両方の経験を生かし、デジタルプラットフォームを活用した広告クリエイティブの企画・制作から、その効果の検証までに取り組みたい。",
+      "en": "Born in 2003 in Fuzhou, Fujian, China. At university I studied cinematography, lighting, editing, 3D CG and film narrative aesthetics, learning the basics of getting ideas across with moving images, from concept to shooting and editing.\n\nAt university I took part, as part of a team, in national student advertising competitions year after year, planning social-media and digital campaigns for brands and regions. Starting from market and consumer analysis, I worked through the insight, concept, phased rollout, media plan and budget, and put them together as a full proposal. My campaign plans and films won a national bronze award, a national excellence award and a provincial first prize, among others. I also served as head of the student union's publicity department and of the camera team at the campus film studio, planning and producing campus events and promotional films.\n\nAs an intern at an advertising production company, I worked on ad films that brands such as Douyin (TikTok), OPPO, Honor and Meituan ran on social media and TV. On \"100 Stories of Her\", an International Women's Day campaign about women's strength, I took part in the planning and editing, and its hashtags passed 2.03 billion views. I handled the Honor project alone, from concept to production, and it was viewed over a million times.\n\nIn graduate school I want to build on my experience in both ad planning and filmmaking, from planning and producing advertising creative for digital platforms to testing how well it works."
     },
     "skills": {
-      "zh": "导演 · 编剧 · 剪辑 · 调色 · 动效 · 美术",
-      "ja": "監督 · 脚本 · 編集 · カラー · モーション · 美術",
-      "en": "Directing · Writing · Editing · Color · Motion · Art direction"
+      "zh": "策划 · 导演 · 编剧 · 剪辑 · 调色 · 动效 · 美术",
+      "ja": "企画 · 監督 · 脚本 · 編集 · カラー · モーション · 美術",
+      "en": "Campaign planning · Directing · Writing · Editing · Color · Motion · Art direction"
     },
     "email": "a1344277169@gmail.com",
     "links": [
@@ -97,9 +97,9 @@ window.SITE_CONTENT = {
     ],
     "brands": "百度 · 抖音 · 大众点评 · 美团 · OPPO · Honor · 字节跳动 · KPL",
     "brandsText": {
-      "zh": "在北京一家品牌内容公司做视频剪辑时参与的项目：从素材整理到成片导出，包括剪辑、After Effects 动效和 DaVinci 调色。",
-      "ja": "北京のブランドコンテンツ制作会社で映像編集を担当した案件。素材整理から書き出しまで、編集、After Effects でのモーション、DaVinci でのカラーを手がけた。",
-      "en": "Projects from my time as a video editor at a brand-content studio in Beijing, from logging footage to final export: editing, motion in After Effects and grading in DaVinci."
+      "zh": "在北京一家广告制作公司做视频剪辑时参与的项目：从素材整理到成片导出，包括剪辑、After Effects 动效和 DaVinci 调色。",
+      "ja": "北京の広告制作会社で映像編集を担当した案件。素材整理から書き出しまで、編集、After Effects でのモーション、DaVinci でのカラーを手がけた。",
+      "en": "Projects from my time as a video editor at an advertising production company in Beijing, from logging footage to final export: editing, motion in After Effects and grading in DaVinci."
     },
     "journalText": {
       "zh": "写在公众号「杂念树屋」里的诗与随笔。",
@@ -395,6 +395,27 @@ window.SITE_CONTENT = {
       "cover": "media/commercial/c61.webp"
     },
     {
+      "id": "caitang",
+      "category": "commercial",
+      "year": "",
+      "client": {
+        "zh": "彩棠",
+        "ja": "彩棠",
+        "en": "彩棠"
+      },
+      "title": {
+        "zh": "彩棠小圆管粉底液 2.0 整合营销方案",
+        "ja": "彩棠 小円管ファンデ2.0 統合企画",
+        "en": "彩棠 small-tube foundation 2.0, integrated campaign"
+      },
+      "roles": {
+        "zh": "前期策略（洞察分析 · 目标人群设计）",
+        "ja": "前期戦略（インサイト分析・ターゲット設計）",
+        "en": "Front-end strategy: insight analysis and target audience"
+      },
+      "cover": "media/commercial/caitang.webp"
+    },
+    {
       "id": "dianping",
       "category": "commercial",
       "year": "",
@@ -583,7 +604,7 @@ window.SITE_CONTENT = {
       },
       "title": {
         "zh": "新酒桌文化",
-        "ja": "新酒桌文化",
+        "ja": "新しい飲み会文化",
         "en": "新酒桌文化"
       },
       "subtitle": {
@@ -826,7 +847,7 @@ window.SITE_CONTENT = {
       },
       "title": {
         "zh": "桃花盛放企划",
-        "ja": "桃花盛放企划",
+        "ja": "桃の花 満開プロジェクト",
         "en": "桃花盛放企划"
       },
       "subtitle": {
@@ -939,7 +960,7 @@ window.SITE_CONTENT = {
       },
       "title": {
         "zh": "强爽不设限，性格AB面",
-        "ja": "强爽不设限，性格AB面",
+        "ja": "強爽で、自分を解放　性格のAB面",
         "en": "强爽不设限，性格AB面"
       },
       "subtitle": {
@@ -1052,7 +1073,7 @@ window.SITE_CONTENT = {
       },
       "title": {
         "zh": "让陪伴清而易举",
-        "ja": "让陪伴清而易举",
+        "ja": "寄り添いを、たやすく",
         "en": "让陪伴清而易举"
       },
       "subtitle": {
@@ -1165,7 +1186,7 @@ window.SITE_CONTENT = {
       },
       "title": {
         "zh": "红色情人「结」",
-        "ja": "红色情人「结」",
+        "ja": "赤い恋人の“結び”",
         "en": "红色情人「结」"
       },
       "subtitle": {
@@ -1275,7 +1296,7 @@ window.SITE_CONTENT = {
       },
       "title": {
         "zh": "恋爱脑守护企划",
-        "ja": "恋爱脑守护企划",
+        "ja": "恋愛脳守護企画",
         "en": "恋爱脑守护企划"
       },
       "subtitle": {
