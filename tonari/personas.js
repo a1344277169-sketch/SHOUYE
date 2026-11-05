@@ -1,8 +1,18 @@
 // Six fictional personas; each mood has its own cross-generation match pool.
 Object.assign(people, {
-  chiyo: {name:'千代', age:'60代', place:'福岡', asset:'grandma', role:'senior', interest:'お菓子作り・季節の花', bio:'元花屋さん。小さな喜びを一緒に見つけるのが好き。'},
-  ren: {name:'蓮', age:'20代', place:'京都', asset:'young-man', role:'young', interest:'音楽・カメラ・スマホ', bio:'大学院生。新しいことを教えるのも、昔のお話を聞くのも好き。'}
+  chiyo: {name:'千代', age:'60代', place:'福岡', asset:'chiyo', portrait:0, role:'senior', interest:'お菓子作り・季節の花', bio:'元花屋さん。小さな喜びを一緒に見つけるのが好き。'},
+  ren: {name:'蓮', age:'20代', place:'京都', asset:'ren', portrait:1, role:'young', interest:'音楽・カメラ・スマホ', bio:'大学院生。新しいことを教えるのも、昔のお話を聞くのも好き。'}
 });
+function portraitMarkup(id){
+ const p=people[id];
+ return p.portrait!==undefined?`<span class="distinct-portrait" role="img" aria-label="${p.name}さん" style="--portrait-row:${p.portrait*100}%"></span>`:`<img src="assets/${p.asset}.png" alt="${p.name}さん">`;
+}
+const originalPersonaAvatar=avatar;
+avatar=function(id,size=''){
+ if(people[id].portrait===undefined)return originalPersonaAvatar(id,size);
+ const p=people[id];
+ return `<button class="avatar ${p.role} ${size}" data-action="profile" aria-label="${p.name}さんのプロフィール（準備中）">${portraitMarkup(id)}</button>`;
+};
 Object.assign(people.kazuko,{bio:'庭しごとの合間に、相手の話をゆっくり聞くのが好き。'});
 Object.assign(people.shigeru,{bio:'元会社員。仕事の失敗も旅の思い出も、気軽に話せる先輩。'});
 Object.assign(people.misaki,{bio:'働き始めたばかり。何でもない日の話を、気負わず分けあいたい。'});
