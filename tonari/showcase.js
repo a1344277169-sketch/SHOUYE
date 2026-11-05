@@ -1,6 +1,6 @@
 // The presentation is always a phone. The guided animation uses the same real screens.
 let demoRunning=false,demoTimers=[],demoStep=0,lastScreen='';
-const demoCaptions=['日常の投稿から、交流が始まります。','シニアの画面：若い人の話を聞きたい。','シニアの画面：今日は日常を話したい。','若者の画面：今日はちょっと愚痴りたい。','若者の画面：おばあちゃんと話したい。','気分に合った、お話し相手の例です。','友だちとの会話を、ゆっくり続けます。','名前を知らない誰かから、お便りが届きます。','あなたの言葉も、別の世代へ。','友だちをビデオのおしゃべりに誘います。','顔を合わせて、笑顔も分けあう時間。','通話のあとも、トークを続けられます。','画面を直接タップして体験できます。'];
+const demoCaptions=['日常の投稿から、交流が始まります。','シニアの画面：若い人の話を聞きたい。','シニアの画面：今日は日常を話したい。','若者の画面：今日はちょっと愚痴りたい。','若者の画面：おばあちゃんと話したい。','気分に合った、お話し相手の例です。','友だちとの会話を、ゆっくり続けます。','名前を知らない誰かから、お便りが届きます。','もうひとつ、別の世代からのお便り。','友だちをビデオのおしゃべりに誘います。','顔を合わせて、笑顔も分けあう時間。','通話のあとも、トークを続けられます。','画面を直接タップして体験できます。'];
 const originalModal=modal;
 modal=function(title,body){originalModal(title,body);positionDialog()};
 function positionDialog(){if(!dialog.open)return;const box=document.querySelector('.workspace').getBoundingClientRect();dialog.style.left=(box.left+16)+'px';dialog.style.top=(box.top+30)+'px';dialog.style.width=(box.width-32)+'px';dialog.style.maxHeight=(box.height-60)+'px';dialog.style.margin='0';}
@@ -24,7 +24,7 @@ function startDemo(){stopDemo();demoRunning=true;state.filter='すべて';state.
  [17000,()=>{demoStep=5;render();match()}],
  [21000,()=>demoView('friends','young',6,{friend:'kazuko'})],
  [25500,()=>{demoView('bottles','young',7);pickLetter()}],
- [30000,()=>{demoView('bottles','young',8);writeBottle('今日、誰かに聞いてほしかったこと');const input=document.querySelector('#bottle-text');if(input)input.value='今日は少し疲れてしまったけれど、誰かのやさしい言葉で、ほっとしました。あなたの一日は、どうでしたか。'}],
+ [30000,()=>{demoView('bottles','young',8);pickLetter()}],
  [34000,()=>{state.video.status='ready';demoView('video','young',9)}],
  [37500,()=>{demoStep=10;connectVideo()}],
  [42000,()=>{demoStep=11;endVideo()}],
