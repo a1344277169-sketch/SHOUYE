@@ -91,6 +91,14 @@ const personaMessages = {
 };
 getMessages = function(id) {
   const key = chatKey(id);
+  if(!state.messages[key] && id==='shigeru' && state.persona==='young') {
+    state.messages[key]=[
+      {from:self(),text:'今日は仕事で怒られちゃって…。何をやってもうまくいかなくて、もう疲れちゃいました。',time:'14:02'},
+      {from:id,text:'それはしんどかったね。今日はよく頑張ったね。ここでは無理に元気にしなくていいから、ゆっくり話してごらん。',time:'14:03'},
+      {from:self(),text:'ありがとうございます。自分がだめなのかなって、帰り道もずっと考えちゃって。',time:'14:05'},
+      {from:id,text:'一日うまくいかなかったくらいで、あなたがだめな人になるわけじゃないよ。私も若いころは、何度も叱られたものです。まずは温かいものでも食べて、今夜はひと休みしよう。話したくなったら、また聞くからね。',time:'14:08'}
+    ];
+  }
   if (!state.messages[key]) {
     const lines = personaMessages[id];
     state.messages[key] = [
@@ -105,6 +113,11 @@ document.addEventListener('click',e=>{
   if(e.target.closest('[data-action]')?.dataset.action!=='samplechat')return;
   const current=state.pendingMatch;
   if(!current || current.persona!==state.persona || current.who!==e.target.closest('[data-action]').dataset.id)return;
+  if(current.who==='shigeru' && state.persona==='young' && current.mood===moods.young[0][1]) {
+    delete state.messages[chatKey('shigeru')];
+    getMessages('shigeru');
+    return;
+  }
   state.messages[chatKey(current.who)]=[
     {from:self(),text:`「${current.mood}」の気分で、お誘いしてみました。`,time:'たった今'},
     {from:current.who,text:current.line,time:'たった今'}
