@@ -20,6 +20,8 @@ function endVideo(){clearTimeout(videoConnectTimer);clearInterval(videoClock);st
 document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;const a=b.dataset.action;if(a!=='call'&&!a.startsWith('video-'))return;e.preventDefault();e.stopImmediatePropagation();if(typeof stopDemo==='function')stopDemo();
  if(a==='call'){state.video.partner=state.friend||opposite()[0];state.video.status='ready';state.page='video';location.hash='/video';render();return}
  if(a==='video-select'){state.video.partner=b.dataset.id;render();return}
- if(a==='video-invite'){const p=people[videoPartner()];modal('ビデオのお誘い',`<div class="video-invite-avatar">${avatar(videoPartner(),'large')}</div><p>${p.name}さんと、顔を見ながらお話しするお誘いです。</p><div class="letter" style="font-size:14px">よかったら、少しビデオでお話ししませんか？ ご都合のよいときに、ゆっくり。</div><button class="primary wide" data-action="video-connect">お話しを始める</button>`);return}
+ if(a==='video-invite')return openVideoInvite();
  if(a==='video-connect')return connectVideo();if(a==='video-end')return endVideo();if(a==='video-mic'){state.video.muted=!state.video.muted;render();return}if(a==='video-camera'){state.video.camera=!state.video.camera;render();return}if(a==='video-reset'){state.video.status='ready';render();return}if(a==='video-tochat'){state.friend=videoPartner();state.page='friends';location.hash='/friends';render()}
 },true);
+
+function openVideoInvite(){const p=people[videoPartner()];modal('ビデオのお誘い',`<div class="video-invite-avatar">${avatar(videoPartner(),'large')}</div><p>${p.name}さんと、顔を見ながらお話しするお誘いです。</p><div class="letter" style="font-size:14px">よかったら、少しビデオでお話ししませんか？ ご都合のよいときに、ゆっくり。</div><button class="primary wide" data-action="video-connect">お話しを始める</button>`);return}
