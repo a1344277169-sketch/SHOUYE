@@ -89,6 +89,8 @@ const personaMessages = {
   haru:['こんにちは！ 今日は久しぶりに自炊してみました。','今度、一人で旅行してみたいです。地元の好きな場所、よかったら教えてください。'],
   ren:['こんにちは。研究の合間に、鴨川を少し歩いてきました。','最近の音楽やスマホのこと、気になることがあったら聞いてください。昔の暮らしのお話も聞いてみたいです。']
 };
+// Replace the initial conversations seeded before this persona data was loaded.
+state.messages = {};
 getMessages = function(id) {
   const key = chatKey(id);
   if(!state.messages[key] && id==='shigeru' && state.persona==='young') {

@@ -1,6 +1,6 @@
 // The presentation is always a phone. The guided animation uses the same real screens.
 let demoRunning=false,demoTimers=[],demoStep=0,lastScreen='';
-const demoCaptions=['日常の投稿から、交流が始まります。','気分でおしゃべりを開きます。','シニアの画面に切り替えます。','今日は、日常を話したい気分。','若者の画面：今日はちょっと愚痴りたい。','今の気分に合う、お相手に出会います。','ひとこと、おしゃべりのお誘い。','友だちが、あなたの話を聞いてくれます。','ボトルレターを開きます。','別の世代からのお便りをひろいます。','今度は、顔を合わせておしゃべり。','笑顔も分けあう、ビデオの時間。','また、お話ししましょう。'];
+const demoCaptions=['日常の投稿から、交流が始まります。','気分でおしゃべりを開きます。','気になる気分を選んでみます。','話したいことに合わせて、選べます。','今の自分に近い気分で、お相手を探します。','今の気分に合う、お相手に出会います。','ひとこと、おしゃべりのお誘い。','友だちが、あなたの話を聞いてくれます。','ボトルレターを開きます。','別の世代からのお便りをひろいます。','今度は、顔を合わせておしゃべり。','笑顔も分けあう、ビデオの時間。','また、お話ししましょう。'];
 const originalModal=modal;
 modal=function(title,body){originalModal(title,body);positionDialog()};
 function positionDialog(){if(!dialog.open)return;const box=document.querySelector('.workspace').getBoundingClientRect();dialog.style.left=(box.left+16)+'px';dialog.style.top=(box.top+30)+'px';dialog.style.width=(box.width-32)+'px';dialog.style.maxHeight=(box.height-60)+'px';dialog.style.margin='0';}
@@ -21,36 +21,37 @@ function showDemoHand(selector){
   const root=dialog.open?dialog:document.querySelector('.workspace');
   const target=root.querySelector(selector);
   if(!demoRunning||!target)return;
-  target.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});
+  const scroller=dialog.open?dialog:target.closest('#main,.conversation-body,.contacts');
+  if(scroller){const t=target.getBoundingClientRect(),v=scroller.getBoundingClientRect();if(t.bottom>v.bottom)scroller.scrollTop+=t.bottom-v.bottom+12;else if(t.top<v.top)scroller.scrollTop-=v.top-t.top+12;}
   const hand=document.createElement('div');
   hand.className='demo-hand';hand.setAttribute('aria-hidden','true');
   hand.innerHTML='<span class="demo-tap-ring"></span><svg viewBox="0 0 48 60"><path d="M15 28V7a4 4 0 0 1 8 0v16-4a4 4 0 0 1 8 0v5-2a4 4 0 0 1 8 0v5a4 4 0 0 1 7 2v14c0 7-4 11-7 14H20c-1-7-6-12-10-17l-5-6c-3-4 1-9 5-6l5 4"/></svg>';
   root.appendChild(hand);
   const r=target.getBoundingClientRect(),p=root.getBoundingClientRect();
-  hand.style.left=(r.left-p.left+r.width/2-16+root.scrollLeft)+'px';
-  hand.style.top=(r.top-p.top+r.height/2-6+root.scrollTop)+'px';
+  hand.style.left=Math.max(0,Math.min(root.clientWidth-43,r.left-p.left+r.width/2-16))+'px';
+  hand.style.top=Math.max(root.scrollTop,Math.min(root.scrollTop+root.clientHeight-54,r.top-p.top+r.height/2-6+root.scrollTop))+'px';hand.style.visibility='visible';
 }
 function startDemo(){
-  stopDemo();demoRunning=true;state.filter='すべて';state.messages={};
+  const demoPersona=state.persona;stopDemo();demoRunning=true;state.filter='すべて';state.messages={};
   if(typeof matchTurns!=='undefined')Object.keys(matchTurns).forEach(k=>delete matchTurns[k]);
   state.video.status='ready';
-  demoView('forum','young',0);
+  demoView('forum',demoPersona,0);
   function at(time,fn){demoTimers.push(setTimeout(()=>{if(demoRunning)fn()},time));}
   function tap(time,selector,action){
     at(time-450,()=>showDemoHand(selector));
     at(time,()=>{document.querySelectorAll('.demo-hand').forEach(e=>e.remove());action()});
   }
-  tap(1300,'.mobile-nav a[href="#/mood"]',()=>demoView('mood','young',1));
-  tap(2400,'[data-action="persona"][data-value="senior"]',()=>demoView('mood','senior',2,{mood:0}));
-  tap(3400,'.mood-option[data-id="1"]',()=>demoView('mood','senior',3,{mood:1}));
-  tap(4500,'[data-action="persona"][data-value="young"]',()=>demoView('mood','young',4,{mood:0}));
+  tap(1300,'.mobile-nav a[href="#/mood"]',()=>demoView('mood',demoPersona,1));
+  tap(2400,'.mood-option[data-id="1"]',()=>demoView('mood',demoPersona,2,{mood:1}));
+  tap(3400,'.mood-option[data-id="2"]',()=>demoView('mood',demoPersona,3,{mood:2}));
+  tap(4500,'.mood-option[data-id="0"]',()=>demoView('mood',demoPersona,4,{mood:0}));
   tap(5500,'[data-action="match"]',()=>{demoStep=5;render();match()});
   tap(7000,'[data-action="invite"]',()=>{demoStep=6;dialog.querySelector('[data-action="invite"]').click();updateDemoControls()});
   tap(8000,'[data-action="samplechat"]',()=>{demoStep=7;dialog.querySelector('[data-action="samplechat"]').click();updateDemoControls()});
-  tap(10200,'.mobile-nav a[href="#/bottles"]',()=>demoView('bottles','young',8));
+  tap(10200,'.mobile-nav a[href="#/bottles"]',()=>demoView('bottles',demoPersona,8));
   tap(11200,'[data-action="pick"]',()=>{demoStep=9;render();pickLetter()});
   tap(13200,'[data-action="close"]',()=>{closeModal();render()});
-  tap(14100,'.mobile-nav a[href="#/video"]',()=>{state.video.status='ready';demoView('video','young',10)});
+  tap(14100,'.mobile-nav a[href="#/video"]',()=>{state.video.status='ready';demoView('video',demoPersona,10)});
   tap(15100,'[data-action="video-invite"]',()=>openVideoInvite());
   tap(16200,'[data-action="video-connect"]',()=>{demoStep=11;connectVideo()});
   tap(19000,'[data-action="video-end"]',()=>{demoStep=12;endVideo()});
